@@ -1,0 +1,45 @@
+@import '@/styles/colors.scss';
+
+.btn{
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    position: relative;
+    
+
+    svg{
+        z-index: 5;
+    }
+    &Label{
+        display: none;
+        
+    }
+}
+
+.btnActive{
+    padding: 10px 15px;
+    margin: 0 10px;
+    background-color: $primaryLight;
+    border-radius: 20px;
+    &::before{
+        display: none;
+    }
+    svg{
+        filter: drop-shadow(0 0 2px rgba($primaryAccent, 0.5));
+        path{
+            fill: $primaryAccent;
+        }
+        circle{
+            fill: $primaryAccent;
+        }
+    }
+    .btnLabel{
+        display: inline !important;
+        padding-left: 10px;
+        color: $bodyDark;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 1;
+        user-select: none;
+    }
+}

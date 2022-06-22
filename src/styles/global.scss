@@ -1,0 +1,66 @@
+@import 'colors.scss';
+@import 'container.scss';
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  color: $primaryLight;
+  background: $bodyDark;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "DM Sans";
+}
+
+div,
+span,
+p,
+a,
+img,
+i,
+ol,
+ul,
+li,
+form,
+footer,
+header,
+menu,
+nav,
+section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+}
+
+ol,
+ul {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+li {
+  display: block;
+  padding: 0;
+}
+
+input{
+  padding: 0;
+}
+input, input:focus-visible{
+  outline: none;
+}
+
+
+.container{
+  max-width: 1440px;
+  margin: 0 auto;
+}

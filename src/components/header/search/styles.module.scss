@@ -1,0 +1,27 @@
+@import '@/styles/colors.scss';
+
+.label{
+    width: 240px;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background: $primaryDark;
+    border: 2px solid transparent;
+    transition: border .2s ease;
+
+    .input{
+        width: 100%;
+        padding: 10px;
+        background-color: transparent;
+        border: none;
+        color: $primaryLightDark;
+        font-weight: bold;
+        font-size: 16px;
+
+        &::placeholder{
+            color: inherit;
+        }
+
+    }
+}

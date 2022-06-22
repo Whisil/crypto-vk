@@ -1,0 +1,61 @@
+@import '@/styles/colors.scss';
+
+.headerContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 20px;
+}
+.logoSide{
+    display: flex;
+
+    .logo{
+        display: inline-block;
+        margin-right: 20px;
+    }
+}
+
+.navSide{
+    display: flex;
+    align-items: center;
+
+    .link{
+        position: relative;
+        height: 42px;
+        width: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 10px;
+        &::before{
+            content: '';
+            display: block;
+            position: absolute;
+            background-color: $primaryLightDark;
+            opacity: 0;
+            transition: opacity .2s ease;
+            border-radius: 100%;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        &:hover{
+            &::before{
+                opacity: 1;
+            }
+        }
+    }
+    .notifications{
+        @extend .link;
+        cursor: pointer;
+    }
+}
+
+.divider{
+    display: inline-block;
+    height: 34px;
+    width: 1px;
+    background-color: rgba($primaryLightDark, 0.5);
+    margin: 0 10px;
+}

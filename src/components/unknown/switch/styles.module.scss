@@ -1,0 +1,71 @@
+@import '@/styles/colors.scss';
+
+.switch{
+    position: relative;
+    width: 60px;
+    height: 24px;
+    background-color: $primaryLightDark;
+    transition: background-color .3s ease;
+    border-radius: 20px;
+    padding: 3px;
+    cursor: pointer;
+
+    &Input{
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    &Circle{
+        display: block;
+        position: relative;
+        left: 0;
+        transition: transform .4s ease;
+        width: 18px;
+        height: 18px;
+        border-radius: 100%;
+        background-color: $primaryLight;
+    }
+
+    &Text{
+        position: absolute;
+        width: 100%;
+        padding: 0 6px;
+        height: 100%;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        left: 0;
+    }
+    .onText, .offText{
+        margin: auto 0;
+        line-height: 1;
+        display: inline-block;
+        transition: opacity .5s ease;
+    }
+    .onText{
+        opacity: 0;
+    }
+    .offText{
+        margin-left: -8px;
+    }
+
+}
+
+.switchActive{
+    background-color: $primaryAccent;
+    .switchCircle{
+        transform: translateX(36px);
+    }
+    .switchText{
+        .offText{
+            opacity: 0;
+        }
+        .onText{
+            opacity: 1;
+        }
+    }
+}
