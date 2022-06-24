@@ -1,11 +1,15 @@
+import Feed from '@/components/feed/feed';
+import ProfileBlock from '@/components/feed/profileBlock';
 import MainLayout from '@/containers/MainLayout';
-import Image from 'next/image';
+
+import styles from '../styles/home.module.scss';
 
 export default function Home() {
   return (
     <MainLayout>
-      <div className="feed__container">
-        
+      <div className={styles.homeContainer}>
+        <ProfileBlock />
+        <Feed />
       </div>
     </MainLayout>
   );

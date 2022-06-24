@@ -16,7 +16,7 @@ a {
 
 * {
   box-sizing: border-box;
-  font-family: "DM Sans";
+  font-family: 'DM Sans';
 }
 
 div,
@@ -39,6 +39,12 @@ section {
   border: 0;
   font: inherit;
 }
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+}
 
 ol,
 ul {
@@ -52,15 +58,15 @@ li {
   padding: 0;
 }
 
-input{
+input {
   padding: 0;
 }
-input, input:focus-visible{
+input,
+input:focus-visible {
   outline: none;
 }
 
-
-.container{
+.container {
   max-width: 1440px;
   margin: 0 auto;
 }

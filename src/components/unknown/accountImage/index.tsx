@@ -8,7 +8,7 @@ interface Props {
   image?: string;
 }
 
-const accountImage = ({ small, large, image = '' }: Props) => {
+const AccountImage = ({ small, large, image = '' }: Props) => {
   return (
     <span className={styles.imageBox}>
       <Image
@@ -20,4 +20,4 @@ const accountImage = ({ small, large, image = '' }: Props) => {
   );
 };
 
-export default accountImage;
+export default AccountImage;
