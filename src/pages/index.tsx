@@ -1,5 +1,6 @@
-import Feed from '@/components/feed/feed';
-import ProfileBlock from '@/components/feed/profileBlock';
+import Feed from '@/components/feedScreen/feed';
+import ProfileBlock from '@/components/feedScreen/profileBlock';
+import WhoToFollow from '@/components/feedScreen/whoToFollow';
 import MainLayout from '@/containers/MainLayout';
 
 import styles from '../styles/home.module.scss';
@@ -10,6 +11,7 @@ export default function Home() {
       <div className={styles.homeContainer}>
         <ProfileBlock />
         <Feed />
+        <WhoToFollow />
       </div>
     </MainLayout>
   );

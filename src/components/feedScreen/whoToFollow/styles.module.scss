@@ -1,0 +1,50 @@
+@import '@/styles/colors.scss';
+
+.container{
+    max-width: 384px;
+    height: fit-content;
+    width: 100%;
+    border-radius: 20px;
+    background: $primaryDark;
+    overflow: hidden;
+
+    .title{
+        font-size: 24px;
+        line-height: 1.15;
+        font-weight: bold;
+        color: $primaryLight;
+        padding: 20px 20px 10px 20px;
+    }
+
+    .followList{
+        display: flex;
+        flex-direction: column;
+
+        li:nth-child(n+5){
+            display: none;
+        }
+    }
+    .showAll{
+        li:nth-child(n+5){
+            display: block;
+        }
+    }
+
+    .showMoreBtn{
+        display: block;
+        padding: 20px 40px;
+        width: 100%;
+        text-align: center;
+        color: $primaryAccent;
+        font-size: 18px;
+        font-weight: normal;
+        line-height: 1;
+        cursor: pointer;
+        transition: background-color .2s ease;
+        border-top: 1px solid rgba($primaryLightDark, 0.5);
+
+        &:hover{
+            background-color: rgba($primaryLightDark, 0.25);
+        }
+    }
+}

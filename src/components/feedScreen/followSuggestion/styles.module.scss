@@ -1,0 +1,42 @@
+@import '@/styles/colors.scss';
+
+.item{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    padding: 10px 20px;
+    transition: background-color .2s ease;
+
+    &:hover{
+        background-color: rgba($primaryLightDark, 0.5);
+    }
+
+    &Avatar{
+        margin-right: 10px;
+    }
+
+    &Info{
+        max-width: 200px;
+        color: rgba($primaryLight, 0.5);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    &Name{
+        font-size: 16px;
+        line-height: 1.15;
+        font-weight: bold;
+        color: $primaryLight;
+    }
+
+    &Bio{
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .followBtn{
+        margin-left: auto;
+    }
+}
