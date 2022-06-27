@@ -92,6 +92,7 @@
 
         &Box{
             position: absolute;
+            z-index: 10;
             width: 200px;
             border-radius: 10px;
             display: block;
@@ -101,10 +102,12 @@
             padding: 10px;
             background-color: $primaryDark;
             box-shadow: 0px 0px 5px 0px $primaryLight;
+            transition: all .2s ease;
             
             &:hover{
                 opacity: 1;
                 visibility: visible;
+                
             }
 
             a{
@@ -126,6 +129,7 @@
     .inputRow{
         border-bottom: 1px solid $primaryLightDark;
         margin: 10px 0px;
+        position: relative;
 
         .input{
             min-height: 40px;
@@ -141,13 +145,16 @@
             border: none;
             outline: none;
             word-break: break-word;
-
-            .placeholder{
-                font-size: 16px;
-                font-weight: normal;
-                line-height: 1;
-                color: rgba($primaryLight, 0.5);
-            }
+           
+        }
+        .placeholder{
+            font-size: 16px;
+            font-weight: normal;
+            line-height: 1;
+            color: rgba($primaryLight, 0.5);
+            position: absolute;
+            top: 10px;
+            pointer-events:none
         }
     }
 

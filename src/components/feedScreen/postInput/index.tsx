@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AccountImage from '@/components/unknown/accountImage';
 import Link from 'next/link';
+import classNames from 'classnames';
 import Triangle from 'public/images/icons/triangle.svg';
 import EmojiIcon from 'public/images/icons/emoji.svg';
 import ImageIcon from 'public/images/icons/image-media.svg';
@@ -49,17 +50,17 @@ const PostInput = () => {
         </div>
 
         <div className={styles.inputRow}>
+          {showPlaceholder && inputText.length === 0 && (
+            <span className={styles.placeholder}>What's on your mind?</span>
+          )}
+
           <div
             className={styles.input}
             contentEditable="true"
             onInput={(e) => handleInput(e)}
             onFocus={() => setShowPlaceholder(false)}
             onBlur={() => setShowPlaceholder(true)}
-          >
-            {showPlaceholder && inputText.length === 0 ? (
-              <span className={styles.placeholder}>What's on your mind?</span>
-            ) : null}
-          </div>
+          />
         </div>
 
         <div className={styles.bottomRow}>

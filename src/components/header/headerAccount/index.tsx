@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import AccountImage from '@/components/unknown/accountImage';
 import Triangle from 'public/images/icons/triangle.svg';
 import DarkModeIcon from 'public/images/icons/darkmode-switch.svg';
@@ -8,7 +9,6 @@ import LogoutIcon from 'public/images/icons/log-out.svg';
 import styles from './styles.module.scss';
 import classNames from 'classnames';
 import Switch from '@/components/unknown/switch';
-import { useEffect, useRef, useState } from 'react';
 
 const HeaderAccount = () => {
   const [showMenu, setShowMenu] = useState(false);

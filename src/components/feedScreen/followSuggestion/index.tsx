@@ -1,5 +1,5 @@
 import AccentBtn from '@/components/unknown/accentBtn';
-import AccountImage from '@/components/unknown/accountImage';
+import AccountInfo from '@/components/unknown/accountInfo';
 import Link from 'next/link';
 import styles from './styles.module.scss';
 
@@ -7,13 +7,7 @@ const FollowSuggestion = () => {
   return (
     <Link href="#" passHref>
       <a className={styles.item}>
-        <AccountImage className={styles.itemAvatar} />
-        <div className={styles.itemInfo}>
-          <h4 className={styles.itemName}>David Haidamaka</h4>
-          <span className={styles.itemBio}>
-            This is my bio, it's not much but still, isn't that cool?
-          </span>
-        </div>
+        <AccountInfo bio="That's my bio, it's not much but" />
         <div
           onClick={(e) => {
             e.stopPropagation();

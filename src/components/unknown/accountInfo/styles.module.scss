@@ -1,0 +1,34 @@
+@import '@/styles/colors.scss';
+
+.accountInfo{
+    display: flex;
+    align-items: center;
+}
+
+.avatar{
+    margin-right: 10px;
+}
+
+.info{
+    max-width: 200px;
+}
+
+.textCut{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.name{
+    font-size: 16px;
+    line-height: 1.15;
+    font-weight: bold;
+    color: $primaryLight;
+}
+
+.infoSecondary{
+    color: rgba($primaryLight, 0.5);
+    font-size: 14px;
+    line-height: 1;
+    font-weight: normal;
+}
