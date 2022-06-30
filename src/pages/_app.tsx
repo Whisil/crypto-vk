@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import '@/styles/global.scss';
+import Login from './login';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -16,7 +17,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@300;400;500;600&display=swap');
         </style>
       </Head>
-      <Component {...pageProps} />
+      {/* <Component {...pageProps} /> */}
+      <Login />
     </>
   );
 }

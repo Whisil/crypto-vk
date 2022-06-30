@@ -1,0 +1,93 @@
+@import '@/styles/colors.scss';
+
+.wrapper{
+    display: flex;
+    height: 100vh;
+
+    .illustration{
+        width: 380px;
+        height: 100%;
+        background-image: url('../.././public/images/log-in-illustration.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+    }
+
+    .login{
+        height: fit-content;
+        align-self: center;
+        padding: 0 100px;
+        margin: 100px 0;
+
+        .logo{
+            display: block;
+            margin-bottom: 20px;
+            width: 60px;
+            height: 60px;
+            path{
+                transform: scale(1.5);
+            }
+        }
+
+        .heading{
+            font-size: 40px;
+            line-height: 1.2;
+            color: $primaryLight;
+            margin-bottom: 10px;
+        }
+
+        .subHeading{
+            font-size: 18px;
+            line-height: 1.2;
+            color: $primaryLightDark;
+            font-weight: 500;
+            margin-bottom: 30px;
+
+            a{
+                color: rgba($primaryAccent, 0.8);
+                transition: color .2s ease;
+
+                &:hover{
+                    color: rgba($primaryAccent, 1);
+                }
+            }
+        }
+
+        .wallet{
+            padding: 15px;
+            border-radius: 20px;
+            border: 1px solid rgba($primaryLightDark, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: background-color .2s ease,
+            border-color .2s ease;
+            margin-bottom: 20px;
+
+            svg{
+                width: 34px;
+                height: 34px;
+            }
+
+            span{
+                font-size: 18px;
+                font-weight: bold;
+                line-height: 1;
+                color: $primaryLight;
+            }
+
+            &:hover{
+                background-color: rgba($primaryLightDark, 0.4);
+                border-color: rgba($primaryLightDark, 0.4);
+            }
+        }
+
+        .infoText{
+            font-size: 14px;
+            font-weight: bold;
+            color: rgba($primaryLightDark, 0.5);
+        }
+    }
+    
+}
