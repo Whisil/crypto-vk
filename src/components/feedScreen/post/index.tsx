@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
+import Image from 'next/image';
 import AccountInfo from '@/components/unknown/accountInfo';
+import PostBtn from '../postBtn';
 import DotsIcon from 'public/images/icons/dots.svg';
 import SaveIcon from 'public/images/icons/save.svg';
 import NotificationsIcon from 'public/images/icons/notifications-icon.svg';
 import UnfollowIcon from 'public/images/icons/unfollow.svg';
 import ReportIcon from 'public/images/icons/report.svg';
+import Like from 'public/images/icons/like.svg';
+import image from './test.jpg';
 
 import styles from './styles.module.scss';
 
@@ -78,13 +82,36 @@ const Post = () => {
         </div>
       </div>
 
-      <div className={styles.description}></div>
+      <p className={styles.description}>
+        Let’s do something cool, developing a new social media with NFTs as a core
+        part sounds amazing doesn’t it?
+      </p>
 
-      <div className={styles.media}></div>
+      <div className={styles.media}>
+        <Image
+          className={styles.mediaContent}
+          src={image}
+          layout="fill"
+          objectFit="contain"
+        />
+      </div>
 
-      <div className={styles.info}></div>
+      <div className={styles.info}>
+        <div className={styles.likes}>
+          <Like />
+          <span className={styles.likesCount}>134 Likes</span>
+        </div>
 
-      <div className={styles.interactions}></div>
+        <div className={styles.comments}>
+          45 comments
+        </div>
+      </div>
+
+      <div className={styles.interactions}>
+        <PostBtn variant="like" />
+        <PostBtn variant="comment" />
+        <PostBtn variant="share" bgTransparent />
+      </div>
     </div>
   );
 };

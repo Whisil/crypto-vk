@@ -1,0 +1,84 @@
+@import '@/styles/colors.scss';
+
+.btn{
+    padding: 10px;
+    border-radius: 10px;
+    flex: 1;
+    background-color: rgba($primaryLightDark, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    max-width: 270px;
+    height: 40px;
+    transition: background-color .2s ease,
+    border-color .2s ease;
+
+    .label{
+        font-size: 16px;
+        line-height: 1;
+        font-weight: 500;
+        color: $primaryLight;
+        position: relative;
+        z-index: 3;
+        pointer-events: none;
+    }
+
+    svg{
+        position: relative;
+        z-index: 3;
+        pointer-events: none;
+        path{
+            fill: $primaryLight;
+        }
+    }
+
+    .bubble{
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        background: rgba(243, 243, 243, 0.623);
+        animation: anim 0.4s linear forwards;
+    }
+
+    @keyframes anim {
+        0% {
+          opacity: 0.7;
+          width: 0;
+          height: 0;
+          transform: translate(0, 0);
+        }
+        100% {
+          opacity: 0;
+          width: 400px;
+          height: 400px;
+          transform: translate(-200px, -200px);
+        }
+    }
+
+    &:hover{
+        background-color: rgba($primaryLightDark, 0.6);
+    }
+
+}
+
+.btnTransparent{
+    @extend .btn;
+
+    flex: unset;
+    background-color: transparent;
+    border: 2px solid rgba($primaryLightDark, 0.6);
+
+    svg{
+        path{
+            fill: unset;
+        }
+    }
+
+    &:hover{
+        border-color: transparent;
+    }
+}

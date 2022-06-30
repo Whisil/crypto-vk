@@ -12,6 +12,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 15px;
 
         .postMenu{
             position: relative;
@@ -56,6 +57,7 @@
 
             .menuList {
                 position: absolute;
+                z-index: 2;
                 min-width: 240px;
                 right: 0px;
                 top: 40px;
@@ -113,5 +115,68 @@
                 }
               }
         }
+    }
+
+    .description{
+        font-size: 16px;
+        font-weight: normal;
+        line-height: 1.4;
+        color: $primaryLight;
+        margin-bottom: 15px;
+    }
+
+    .media{
+        background-color: #000;
+        border-radius: 20px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        > span{
+            position: unset !important;
+        }
+        &Content{
+            position: relative !important;
+            height: unset !important;
+            max-height: 640px !important;
+            min-width: unset !important;
+            width: fit-content !important;
+            max-width: 100% !important;
+        }
+    }
+
+    .info{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+
+        .likes{
+            display: flex;
+            gap: 5px;
+            align-items: center;
+
+            &Count{
+                font-size: 12px;
+                font-weight: 500;
+                line-height: 1;
+                color: rgba($primaryLight, 0.5);
+            }
+        }
+
+        .comments{
+            @extend .likesCount;
+            transition: color .2s ease;
+            cursor: pointer;
+
+            &:hover{
+                color: rgba($primaryLight, 1);
+            }
+        }
+    }
+
+    .interactions{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
     }
 }
