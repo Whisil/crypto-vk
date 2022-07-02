@@ -1,9 +1,13 @@
 import { AppProps } from 'next/app';
+import { useMoralis, MoralisProvider } from 'react-moralis';
 import Head from 'next/head';
 import '@/styles/global.scss';
 import Login from './login';
+import AuthCheck from '@/components/unknown/authCheck';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  // const { isAuthenticated } = useMoralis();
+
   return (
     <>
       <Head>
@@ -17,8 +21,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@300;400;500;600&display=swap');
         </style>
       </Head>
-      {/* <Component {...pageProps} /> */}
-      <Login />
+      <MoralisProvider
+        appId="O9mnxbcx7wLNjr1ESxFjL8pEDP3a7R1fY3rcef0u"
+        serverUrl="https://1gwvs9r8ysys.usemoralis.com:2053/server"
+      >
+        <AuthCheck>
+          <Component {...pageProps} />
+        </AuthCheck>
+      </MoralisProvider>
+      
     </>
   );
 }

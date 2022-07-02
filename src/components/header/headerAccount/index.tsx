@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useMoralis } from 'react-moralis';
 import AccountImage from '@/components/unknown/accountImage';
 import Triangle from 'public/images/icons/triangle.svg';
 import DarkModeIcon from 'public/images/icons/darkmode-switch.svg';
@@ -13,6 +14,8 @@ import Switch from '@/components/unknown/switch';
 const HeaderAccount = () => {
   const [showMenu, setShowMenu] = useState(false);
 
+  const { logout } = useMoralis();
+
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,6 +29,10 @@ const HeaderAccount = () => {
     
     return () => window.removeEventListener('click', handleOutsideClick);
   }, [showMenu]);
+
+  async function handleLogout() {
+    await logout();
+  }
 
   return (
     <div className={styles.headerAccount}>
@@ -68,7 +75,7 @@ const HeaderAccount = () => {
 
           <span className={styles.divider} />
 
-          <div className={classNames(styles.AccountMenuItem, styles.logout)}>
+          <div className={classNames(styles.AccountMenuItem, styles.logout)} onClick={handleLogout}>
             <LogoutIcon />
             <span>Log out</span>
           </div>
