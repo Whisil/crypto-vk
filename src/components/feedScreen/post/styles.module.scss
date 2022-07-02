@@ -76,12 +76,19 @@
                   background: transparent;
                   transition: background 0.2s ease;
                   cursor: pointer;
+                  position: relative;
+                  z-index: 2;
+                  
             
                   span {
                     font-size: 16px;
                     line-height: 1;
                     font-weight: 500;
                     color: $primaryLight;
+                    pointer-events: none;
+                  }
+                  svg{
+                    pointer-events: none;
                   }
 
                   &:hover {

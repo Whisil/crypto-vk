@@ -12,6 +12,7 @@ import Like from 'public/images/icons/like.svg';
 import image from './test.jpg';
 
 import styles from './styles.module.scss';
+import RippleBtn from '@/components/unknown/rippleBtn';
 
 const Post = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -54,37 +55,45 @@ const Post = () => {
                 if (menuMounted) setShowMenu(false);
               }}
             >
-              <div className={styles.menuItem}>
-                <SaveIcon />
-                <span>Save</span>
-              </div>
+              <RippleBtn>
+                <div className={styles.menuItem}>
+                  <SaveIcon />
+                  <span>Save</span>
+                </div>
+              </RippleBtn>
 
-              <div className={styles.menuItem}>
-                <NotificationsIcon />
-                <span>Turn on notifications</span>
-              </div>
-
-              <span className={styles.divider} />
-
-              <div className={styles.menuItem}>
-                <UnfollowIcon />
-                <span>Unfollow</span>
-              </div>
+              <RippleBtn>
+                <div className={styles.menuItem}>
+                  <NotificationsIcon />
+                  <span>Turn on notifications</span>
+                </div>
+              </RippleBtn>
 
               <span className={styles.divider} />
 
-              <div className={classNames(styles.menuItem, styles.report)}>
-                <ReportIcon />
-                <span>Report</span>
-              </div>
+              <RippleBtn>
+                <div className={styles.menuItem}>
+                  <UnfollowIcon />
+                  <span>Unfollow</span>
+                </div>
+              </RippleBtn>
+
+              <span className={styles.divider} />
+
+              <RippleBtn>
+                <div className={classNames(styles.menuItem, styles.report)}>
+                  <ReportIcon />
+                  <span>Report</span>
+                </div>
+              </RippleBtn>
             </div>
           )}
         </div>
       </div>
 
       <p className={styles.description}>
-        Let’s do something cool, developing a new social media with NFTs as a core
-        part sounds amazing doesn’t it?
+        Let’s do something cool, developing a new social media with NFTs as a
+        core part sounds amazing doesn’t it?
       </p>
 
       <div className={styles.media}>
@@ -102,9 +111,7 @@ const Post = () => {
           <span className={styles.likesCount}>134 Likes</span>
         </div>
 
-        <div className={styles.comments}>
-          45 comments
-        </div>
+        <div className={styles.comments}>45 comments</div>
       </div>
 
       <div className={styles.interactions}>

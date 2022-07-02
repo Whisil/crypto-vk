@@ -1,12 +1,10 @@
 import { AppProps } from 'next/app';
-import { useMoralis, MoralisProvider } from 'react-moralis';
+import { MoralisProvider } from 'react-moralis';
 import Head from 'next/head';
 import '@/styles/global.scss';
-import Login from './login';
 import AuthCheck from '@/components/unknown/authCheck';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  // const { isAuthenticated } = useMoralis();
 
   return (
     <>

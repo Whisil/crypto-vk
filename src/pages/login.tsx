@@ -5,6 +5,7 @@ import Logo from 'public/images/icons/logo.svg';
 import styles from '../styles/login.module.scss';
 
 const Login = () => {
+
   const { authenticate } = useMoralis();
 
   const loginWalletConnect = async () => {

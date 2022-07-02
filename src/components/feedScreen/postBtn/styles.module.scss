@@ -1,21 +1,22 @@
 @import '@/styles/colors.scss';
 
 .btn{
-    padding: 10px;
-    border-radius: 10px;
     flex: 1;
-    background-color: rgba($primaryLightDark, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    max-width: 270px;
-    height: 40px;
-    transition: background-color .2s ease,
-    border-color .2s ease;
+    transition: background-color .2s ease;
+
+    &Inner{
+        padding: 10px;
+        border-radius: 10px;
+        background-color: rgba($primaryLightDark, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        max-width: 270px;
+        height: 40px;
+        transition: border-color .2s ease;
+    }
 
     .label{
         font-size: 16px;
@@ -25,6 +26,7 @@
         position: relative;
         z-index: 3;
         pointer-events: none;
+        user-select: none;
     }
 
     svg{
@@ -69,8 +71,17 @@
     @extend .btn;
 
     flex: unset;
+    max-width: unset;
     background-color: transparent;
-    border: 2px solid rgba($primaryLightDark, 0.6);
+    
+    .btnInner{
+        border: 2px solid rgba($primaryLightDark, 0.6);
+        background-color: transparent;
+
+        &:hover{
+            border-color: transparent;
+        }
+    }
 
     svg{
         path{
@@ -78,7 +89,5 @@
         }
     }
 
-    &:hover{
-        border-color: transparent;
-    }
+
 }

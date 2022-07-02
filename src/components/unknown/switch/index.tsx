@@ -16,7 +16,6 @@ const Switch = ({ variant }:SwitchProps) => {
     if(variant === 'theme-switch'){
       setSwitchActive(JSON.parse(localStorage.getItem('themeVariant') || '{}'));
     }
-    console.log(switchActive);
   }, [switchActive])
 
   const handleChange = (e:any) => {
