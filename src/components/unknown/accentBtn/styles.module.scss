@@ -12,6 +12,9 @@
         font-weight: bold;
         line-height: 1.15;
         color: $primaryLight;
+        pointer-events: none;
+        position: relative;
+        z-index: 2;
     }
 
     &:hover{

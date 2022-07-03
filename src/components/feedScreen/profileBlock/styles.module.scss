@@ -74,7 +74,9 @@
         }
     }
 
-    
+    .profileBtnRipple{
+        border-radius: 0;
+    }
     .profileBtn{
         display: block;
         padding: 20px 40px;
@@ -85,6 +87,8 @@
         font-weight: normal;
         line-height: 1;
         transition: background-color .2s ease;
+        position: relative;
+        z-index: 2;
 
         &:hover{
             background-color: rgba($primaryLightDark, 0.25);

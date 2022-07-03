@@ -38,6 +38,7 @@
 
   &Menu {
     position: absolute;
+    z-index: 3;
     min-width: 240px;
     right: 0;
     top: 60px;
@@ -45,7 +46,15 @@
     border-radius: 20px;
     padding: 10px;
     box-shadow: 0px 0px 5px 0px $primaryLight;
-
+    animation: appear .2s ease;
+    @keyframes appear {
+      0%{
+          opacity: 0;
+      }
+      100%{
+          opacity: 1;
+      }
+    }
     .AccountMenuItem {
       display: flex;
       align-items: center;
@@ -55,12 +64,20 @@
       background: transparent;
       transition: background 0.2s ease;
       cursor: pointer;
+      position: relative;
+      z-index: 2;
+      
 
       span {
         font-size: 16px;
         line-height: 1;
         font-weight: 500;
         color: $primaryLight;
+        pointer-events: none;
+      }
+
+      svg{
+        pointer-events: none;
       }
 
       &:not(.modeSwitch):hover {
@@ -86,5 +103,7 @@
       background-color: $primaryLightDark;
       opacity: 0.5;
     }
+
+    
   }
 }

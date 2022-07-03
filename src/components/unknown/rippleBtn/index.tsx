@@ -6,9 +6,10 @@ import styles from './styles.module.scss';
 interface Props {
   children: any;
   className?: string;
+  variant?: "accent";
 }
 
-const RippleBtn = ({ children, className }: Props) => {
+const RippleBtn = ({ children, className, variant }: Props) => {
   const [clicked, setClicked] = useState(false);
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
@@ -37,7 +38,7 @@ const RippleBtn = ({ children, className }: Props) => {
 
   return (
     <div
-      className={classNames(styles.rippleBtn, className)}
+      className={classNames(styles.rippleBtn, className, variant?.length != 0 && styles.rippleAccent)}
       onClick={handleRipple}
       ref={btnRef}
       onMouseOver={() => setBubbleAnim(true)}

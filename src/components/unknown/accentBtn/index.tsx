@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import RippleBtn from '../rippleBtn';
 
 import styles from './styles.module.scss';
 
@@ -10,9 +11,11 @@ interface Props{
 
 const AccentBtn = ({ text, onClick, className }: Props) => {
     return(
-        <div className={classNames(styles.btn, className)} onClick={onClick} >
-            <span>{text}</span>
-        </div>
+        <RippleBtn variant="accent">
+            <div className={classNames(styles.btn, className)} onClick={onClick} >
+                <span>{text}</span>
+            </div>
+        </RippleBtn>
     )
 }
 

@@ -1,4 +1,5 @@
 import AccountImage from '@/components/unknown/accountImage';
+import RippleBtn from '@/components/unknown/rippleBtn';
 import Link from 'next/link';
 import styles from './styles.module.scss';
 
@@ -42,9 +43,11 @@ const ProfileBlock = () => {
         </div>
       </div>
 
-      <Link href="#" passHref>
-        <a className={styles.profileBtn}>My profile</a>
-      </Link>
+      <RippleBtn className={styles.profileBtnRipple}>
+        <Link href="#" passHref>
+          <a className={styles.profileBtn}>My profile</a>
+        </Link>
+      </RippleBtn>
     </div>
   );
 };

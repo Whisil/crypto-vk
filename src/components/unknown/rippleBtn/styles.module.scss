@@ -1,32 +1,38 @@
 @import '@/styles/colors.scss';
 
 .rippleBtn{
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    .bubble{
-        position: absolute;
-        border-radius: 50%;
-        pointer-events: none;
-        background: rgba($primaryLightDark, 0.8);
-    }
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  .bubble{
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      background: rgba($primaryLightDark, 0.8);
+  }
 
-    .bubbleAnim{
-        animation: anim 0.4s linear forwards;
-    }
+  .bubbleAnim{
+      animation: anim 0.4s linear forwards;
+  }
 
-    @keyframes anim {
-        0% {
-          opacity: 0.7;
-          width: 0;
-          height: 0;
-          transform: translate(0, 0);
-        }
-        100% {
-          opacity: 0;
-          width: 400px;
-          height: 400px;
-          transform: translate(-200px, -200px);
-        }
-    }
+  @keyframes anim {
+      0% {
+        opacity: 0.7;
+        width: 0;
+        height: 0;
+        transform: translate(0, 0);
+      }
+      100% {
+        opacity: 0;
+        width: 400px;
+        height: 400px;
+        transform: translate(-200px, -200px);
+      }
+  }
+}
+
+.rippleAccent{
+  .bubble{
+    background: rgba($primaryLight, 0.6);
+  }
 }

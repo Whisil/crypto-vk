@@ -2,6 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import FollowSuggestion from '../followSuggestion';
 import styles from './styles.module.scss';
+import RippleBtn from '@/components/unknown/rippleBtn';
 
 const WhoToFollow = () => {
   const [showMore, setShowMore] = useState(false);
@@ -40,12 +41,14 @@ const WhoToFollow = () => {
           <FollowSuggestion />
         </li>
       </ul>
-      <span
-        className={styles.showMoreBtn}
-        onClick={() => setShowMore((showMore) => !showMore)}
-      >
-        {showMore ? 'Show less' : 'Show more'}
-      </span>
+      <RippleBtn className={styles.showMoreRipple}>
+        <span
+          className={styles.showMoreBtn}
+          onClick={() => setShowMore((showMore) => !showMore)}
+        >
+          {showMore ? 'Show less' : 'Show more'}
+        </span>
+      </RippleBtn>
     </div>
   );
 };

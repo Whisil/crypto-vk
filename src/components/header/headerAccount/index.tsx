@@ -10,6 +10,7 @@ import LogoutIcon from 'public/images/icons/log-out.svg';
 import styles from './styles.module.scss';
 import classNames from 'classnames';
 import Switch from '@/components/unknown/switch';
+import RippleBtn from '@/components/unknown/rippleBtn';
 
 const HeaderAccount = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -26,7 +27,7 @@ const HeaderAccount = () => {
       }
     }
     window.addEventListener('click', handleOutsideClick);
-    
+
     return () => window.removeEventListener('click', handleOutsideClick);
   }, [showMenu]);
 
@@ -47,10 +48,12 @@ const HeaderAccount = () => {
 
       {showMenu && (
         <div className={styles.headerAccountMenu} ref={menuRef}>
-          <div className={styles.AccountMenuItem}>
-            <AccountImage />
-            <span>David Haidamaka</span>
-          </div>
+          <RippleBtn>
+            <div className={styles.AccountMenuItem}>
+              <AccountImage />
+              <span>David Haidamaka</span>
+            </div>
+          </RippleBtn>
 
           <span className={styles.divider} />
 
@@ -64,21 +67,30 @@ const HeaderAccount = () => {
 
           <span className={styles.divider} />
 
-          <div className={styles.AccountMenuItem}>
-            <HelpIcon />
-            <span>About & Help</span>
-          </div>
-          <div className={styles.AccountMenuItem}>
-            <SettingsIcon />
-            <span>Settings</span>
-          </div>
+          <RippleBtn>
+            <div className={styles.AccountMenuItem}>
+              <HelpIcon />
+              <span>About & Help</span>
+            </div>
+          </RippleBtn>
+          <RippleBtn>
+            <div className={styles.AccountMenuItem}>
+              <SettingsIcon />
+              <span>Settings</span>
+            </div>
+          </RippleBtn>
 
           <span className={styles.divider} />
 
-          <div className={classNames(styles.AccountMenuItem, styles.logout)} onClick={handleLogout}>
-            <LogoutIcon />
-            <span>Log out</span>
-          </div>
+          <RippleBtn>
+            <div
+              className={classNames(styles.AccountMenuItem, styles.logout)}
+              onClick={handleLogout}
+            >
+              <LogoutIcon />
+              <span>Log out</span>
+            </div>
+          </RippleBtn>
         </div>
       )}
     </div>

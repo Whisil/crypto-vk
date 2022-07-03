@@ -29,7 +29,9 @@
             display: block;
         }
     }
-
+    .showMoreRipple{
+        border-radius: 0;
+    }
     .showMoreBtn{
         display: block;
         padding: 20px 40px;
@@ -42,6 +44,8 @@
         cursor: pointer;
         transition: background-color .2s ease;
         border-top: 1px solid rgba($primaryLightDark, 0.5);
+        position: relative;
+        z-index: 2;
 
         &:hover{
             background-color: rgba($primaryLightDark, 0.25);
