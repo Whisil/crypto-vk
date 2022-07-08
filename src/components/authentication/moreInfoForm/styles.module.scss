@@ -1,0 +1,46 @@
+@import '@/styles/colors.scss';
+
+.heading{
+    font-size: 40px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.inputLabel{
+    display: block;
+    color: rgba($primaryLight, 0.5);
+    line-height: 1.2;
+    margin-bottom: 5px;
+}
+
+.input{
+    padding: 10px;
+    width: 100%;
+    color: $primaryLight;
+    font-size: 16px;
+    line-height: 1;
+    border: 1px solid $primaryLightDark;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    transition: border-color .2s ease;
+
+    &:focus-visible{
+        border-color: $primaryAccent;
+    }
+}
+
+.submitBtn{
+    margin-top: 20px;
+    .accentBtn{
+        padding: 10px;
+        text-align: center;
+    }
+}
+.submitBtnDisabled{
+    filter: brightness(50%);
+    pointer-events: none;
+    
+    span{
+        user-select: none;
+    }
+}

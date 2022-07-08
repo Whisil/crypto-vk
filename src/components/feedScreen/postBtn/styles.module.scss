@@ -45,8 +45,6 @@
 }
 
 .btnTransparent{
-    @extend .btn;
-
     flex: unset;
     max-width: unset;
     background-color: transparent;
