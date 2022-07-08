@@ -19,6 +19,7 @@ const MoreInfoForm = ({ userId }: Props) => {
     validationSchema: Yup.object({
       username: Yup.string()
         .max(15, 'Must be 15 characters or less')
+        .min(4, 'Must be at least 4 characters long')
         .matches(
           /^[a-zA-Z0-9_]{1,15}$/,
           'You can only use letters, numbers underscores',
@@ -26,6 +27,7 @@ const MoreInfoForm = ({ userId }: Props) => {
         .required('Required'),
       displayName: Yup.string()
         .max(35, 'Must be 35 characters or less')
+        .min(4, 'Must be at least 4 characters long')
         .required('Required'),
     }),
     onSubmit: (values) => {
@@ -37,40 +39,53 @@ const MoreInfoForm = ({ userId }: Props) => {
     <>
       <h1 className={styles.heading}>Just a bit more</h1>
       <label htmlFor="displayName" className={styles.inputLabel}>
-        Display name
+        <span className={styles.labelText}>Display name</span>
+        <input
+          id="displayName"
+          name="displayName"
+          type="text"
+          className={classNames(
+            styles.input,
+            formik.touched.displayName &&
+              formik.errors.displayName &&
+              styles.errorBorder,
+          )}
+          placeholder="The one, who knocks"
+          autoComplete="off"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.displayName}
+        />
+        {formik.touched.displayName && formik.errors.displayName ? (
+          <span className={styles.errorLabel}>{formik.errors.displayName}</span>
+        ) : null}
       </label>
-      <input
-        id="displayName"
-        name="displayName"
-        type="text"
-        className={styles.input}
-        placeholder="The one, who knocks"
-        autoComplete="off"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.displayName}
-      />
 
       <label htmlFor="username" className={styles.inputLabel}>
-        Username
+        <span className={styles.labelText}>Username</span>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          className={classNames(
+            styles.input,
+            formik.touched.username &&
+              formik.errors.username &&
+              styles.errorBorder,
+          )}
+          placeholder="theOne_whoKnocks13"
+          autoComplete="off"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.username}
+        />
+        {formik.touched.username && formik.errors.username ? (
+          <span className={styles.errorLabel}>{formik.errors.username}</span>
+        ) : null}
       </label>
-      <input
-        id="username"
-        name="username"
-        type="text"
-        className={styles.input}
-        placeholder="theOne_whoKnocks13"
-        autoComplete="off"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.username}
-      />
 
       <div
-        className={classNames(
-          styles.submitBtn,
-          !formik.isValid && styles.submitBtnDisabled,
-        )}
+        className={!formik.isValid ? styles.submitBtnDisabled : ''}
         onClick={() => formik.handleSubmit}
       >
         <RippleBtn variant="accent">
