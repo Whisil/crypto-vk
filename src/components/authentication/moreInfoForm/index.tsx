@@ -20,14 +20,22 @@ const MoreInfoForm = ({ userId }: Props) => {
       username: Yup.string()
         .max(15, 'Must be 15 characters or less')
         .min(4, 'Must be at least 4 characters long')
+        .strict()
+        .trim("Don't start or end with a white-space")
         .matches(
-          /^[a-zA-Z0-9_]{1,15}$/,
-          'You can only use letters, numbers underscores',
+          /^[a-zA-Z0-9_]+$/,
+          'You can only use English letters, numbers and underscores',
         )
         .required('Required'),
       displayName: Yup.string()
         .max(35, 'Must be 35 characters or less')
         .min(4, 'Must be at least 4 characters long')
+        .strict()
+        .trim("Don't start or end with a white-space")
+        .matches(
+          /^([\u0400-\u052Fa-zA-Z0-9_,.-]\s?)+$/,
+          'You can only use letters, numbers, dots, commas and underscores',
+        )
         .required('Required'),
     }),
     onSubmit: (values) => {
