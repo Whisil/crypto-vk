@@ -25,7 +25,7 @@ const PostInput = () => {
 
   return (
     <div className={styles.postInput}>
-      <Link href="#" passHref>
+      <Link href="#">
         <a className={styles.account}>
           <AccountImage />
         </a>

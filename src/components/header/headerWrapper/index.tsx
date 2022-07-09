@@ -22,7 +22,7 @@ const HeaderWrapper = () => {
     <header>
       <div className={classNames(styles.headerContainer, 'container')}>
         <div className={styles.logoSide}>
-          <Link href="/" passHref>
+          <Link href="/">
             <a>
               <span className={styles.logo}>
                 <Logo />
@@ -35,7 +35,7 @@ const HeaderWrapper = () => {
 
         <div className={styles.navSide}>
           {menu.map((item: any, i: number) => (
-            <Link href={item.path} passHref key={i}>
+            <Link href={item.path} key={i}>
               <a className={router.pathname === item.path ? styles.activeLink : styles.link}>
                 <NavBtn
                   variant={item.title}

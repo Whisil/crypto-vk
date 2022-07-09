@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 import AccountImage from '@/components/unknown/accountImage';
 import Triangle from 'public/images/icons/triangle.svg';
+import AvatarIcon from 'public/images/icons/avatar.svg';
 import DarkModeIcon from 'public/images/icons/darkmode-switch.svg';
 import HelpIcon from 'public/images/icons/help.svg';
 import SettingsIcon from 'public/images/icons/settings.svg';
 import LogoutIcon from 'public/images/icons/log-out.svg';
-
+import Link from 'next/link';
 import styles from './styles.module.scss';
 import classNames from 'classnames';
 import Switch from '@/components/unknown/switch';
@@ -15,7 +16,7 @@ import RippleBtn from '@/components/unknown/rippleBtn';
 const HeaderAccount = () => {
   const [showMenu, setShowMenu] = useState(false);
 
-  const { logout } = useMoralis();
+  const { logout, user } = useMoralis();
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +43,9 @@ const HeaderAccount = () => {
         onClick={() => setShowMenu(!showMenu)}
       >
         <AccountImage />
-        <span className={styles.name}>David</span>
+        <div className={styles.nameWrapper}>
+          <span className={styles.name}>{user?.attributes.displayName}</span>
+        </div>
         <Triangle />
       </div>
 
@@ -50,8 +53,14 @@ const HeaderAccount = () => {
         <div className={styles.headerAccountMenu} ref={menuRef}>
           <RippleBtn>
             <div className={styles.AccountMenuItem}>
-              <AccountImage />
-              <span>David Haidamaka</span>
+              <AvatarIcon />
+              <Link href="#" passHref>
+                <span>
+                  <a>
+                    Profile  
+                  </a>  
+                </span>
+              </Link>
             </div>
           </RippleBtn>
 

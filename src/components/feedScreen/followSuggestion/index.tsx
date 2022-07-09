@@ -5,7 +5,7 @@ import styles from './styles.module.scss';
 
 const FollowSuggestion = () => {
   return (
-    <Link href="#" passHref>
+    <Link href="#">
       <a className={styles.item}>
         <AccountInfo bio="That's my bio, it's not much but" />
         <div
