@@ -1,5 +1,6 @@
 import AccentBtn from '@/components/unknown/accentBtn';
 import RippleBtn from '@/components/unknown/rippleBtn';
+import { useMoralis } from 'react-moralis';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -11,6 +12,8 @@ interface Props {
 }
 
 const MoreInfoForm = ({ userId }: Props) => {
+  const { setUserData } = useMoralis();
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -39,7 +42,10 @@ const MoreInfoForm = ({ userId }: Props) => {
         .required('Required'),
     }),
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      setUserData({
+        username: values.username,
+        displayName: values.displayName,
+      });
     },
   });
 
@@ -94,7 +100,7 @@ const MoreInfoForm = ({ userId }: Props) => {
 
       <div
         className={!formik.isValid ? styles.submitBtnDisabled : ''}
-        onClick={() => formik.handleSubmit}
+        onClick={formik.handleSubmit as any}
       >
         <RippleBtn variant="accent">
           <AccentBtn text="Sign me up!" className={styles.accentBtn} />
