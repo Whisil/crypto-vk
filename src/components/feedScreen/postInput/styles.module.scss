@@ -133,7 +133,7 @@
         background-size: cover;
         background-position: center center;
         border-radius: 20px;
-        margin-top: 20px;
+        margin: 10px 0;
         .mediaFile{
             height: 100%;
             max-width: 100%;
@@ -164,8 +164,7 @@
     }
 
     .inputRow{
-        border-bottom: 1px solid $primaryLightDark;
-        margin: 10px 0px;
+        margin-top: 10px;
         position: relative;
 
         .input{
@@ -199,6 +198,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        border-top: 1px solid $primaryLightDark;
+        padding-top: 10px;
         
         .icons{
             display: flex;
@@ -223,6 +224,29 @@
                     height: 0.1px;
                     visibility: hidden;
                 }
+            }
+
+            .inputDisabled{
+                pointer-events: none;
+                opacity: 0.4;
+            }
+        }
+
+        .btnContainer{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .characterCount{
+                font-size: 12px;
+                font-weight: 500;
+                color: rgba($primaryLight, 0.5);
+            }
+            .characterCountAccent{
+                color: rgba($secondaryAccent, 0.5);
+            }
+            .characterCountDisabled{
+                display: none;
             }
         }
     }

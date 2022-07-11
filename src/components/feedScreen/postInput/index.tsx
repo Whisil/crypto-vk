@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import classNames from 'classnames';
 import AccountImage from '@/components/unknown/accountImage';
 import AccentBtn from '@/components/unknown/accentBtn';
 import Link from 'next/link';
@@ -35,25 +36,30 @@ const PostInput = () => {
       let reader = new FileReader();
 
       reader.readAsArrayBuffer(e.target.files[0]);
-      reader.onload = function() {
-        const blob = new Blob([reader.result as BlobPart], {type: e.target.files[0].type})
+      reader.onload = function () {
+        const blob = new Blob([reader.result as BlobPart], {
+          type: e.target.files[0].type,
+        });
 
         const mediaBlobURI = URL.createObjectURL(blob);
         setMediaURI(mediaBlobURI);
-      }
+      };
     }
   };
 
   const handleCloseBtn = () => {
     URL.revokeObjectURL(mediaURI);
     setMediaURI('');
-    if(fileInput.current){
+    if (fileInput.current) {
       fileInput.current.value = '';
     }
-  }
+  };
 
   return (
-    <div className={styles.postInput} onClick={() => textInput.current?.focus()}>
+    <div
+      className={styles.postInput}
+      onClick={() => textInput.current?.focus()}
+    >
       <Link href="#">
         <a className={styles.account}>
           <AccountImage />
@@ -77,7 +83,7 @@ const PostInput = () => {
             </div>
           </div>
         </div>
-        {mediaURI && (
+        {/* {mediaURI && (
           <div
             className={styles.mediaContainer}
             style={(mediaURI && mediaURI.length !== 0) && { backgroundImage: `url(${mediaURI})` }}
@@ -87,7 +93,7 @@ const PostInput = () => {
             </div>
             <img src={mediaURI} className={styles.mediaFile} />
           </div>
-        )}
+        )} */}
         <div className={styles.inputRow}>
           {inputText.length === 0 && (
             <span className={styles.placeholder}>What's on your mind?</span>
@@ -100,13 +106,32 @@ const PostInput = () => {
             ref={textInput}
           />
         </div>
-
+        {mediaURI && (
+          <div
+            className={styles.mediaContainer}
+            style={
+              mediaURI &&
+              mediaURI.length !== 0 && { backgroundImage: `url(${mediaURI})` }
+            }
+          >
+            <div className={styles.clearMediaBtn} onClick={handleCloseBtn}>
+              <CloseIcon />
+            </div>
+            <img src={mediaURI} className={styles.mediaFile} />
+          </div>
+        )}
         <div className={styles.bottomRow}>
           <div className={styles.icons}>
             <div className={styles.iconWrapper}>
               <EmojiIcon />
             </div>
-            <label htmlFor="mediaInput" className={styles.iconWrapper}>
+            <label
+              htmlFor="mediaInput"
+              className={classNames(
+                styles.iconWrapper,
+                mediaURI.length !== 0 && styles.inputDisabled,
+              )}
+            >
               <ImageIcon />
               <input
                 id="mediaInput"
@@ -115,14 +140,27 @@ const PostInput = () => {
                 className={styles.mediaInput}
                 onChange={handleInputChange}
                 ref={fileInput}
+                disabled={mediaURI.length !== 0 ? true : false}
               />
             </label>
           </div>
 
-          <AccentBtn
-            text="Post it!"
-            className={btnDissable && styles.btnDissabled}
-          />
+          <div className={styles.btnContainer}>
+            <span
+              className={classNames(
+                styles.characterCount,
+                inputText.length > 100 && styles.characterCountAccent,
+                inputText.length === 0 && styles.characterCountDisabled
+              )}
+            >
+              {inputText.length} / 100
+            </span>
+
+            <AccentBtn
+              text="Post it!"
+              className={btnDissable && styles.btnDissabled}
+            />
+          </div>
         </div>
       </div>
     </div>

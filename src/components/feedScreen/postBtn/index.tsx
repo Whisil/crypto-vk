@@ -26,7 +26,7 @@ const PostBtn = ({ variant, bgTransparent }: Props) => {
         ) : variant === 'comment' ? (
           <>
             <CommentIcon />
-            <span className={styles.label}>Like</span>
+            <span className={styles.label}>Comment</span>
           </>
         ) : variant === 'share' ? (
           <ShareIcon />
