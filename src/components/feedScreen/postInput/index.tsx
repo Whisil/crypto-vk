@@ -1,18 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AccountImage from '@/components/unknown/accountImage';
+import AccentBtn from '@/components/unknown/accentBtn';
 import Link from 'next/link';
-import classNames from 'classnames';
 import Triangle from 'public/images/icons/triangle.svg';
 import EmojiIcon from 'public/images/icons/emoji.svg';
 import ImageIcon from 'public/images/icons/image-media.svg';
+import CloseIcon from 'public/images/icons/close.svg';
 
 import styles from './styles.module.scss';
-import AccentBtn from '@/components/unknown/accentBtn';
 
 const PostInput = () => {
   const [inputText, setInputText] = useState('');
   const [btnDissable, setBtnDissable] = useState(false);
-  const [showPlaceholder, setShowPlaceholder] = useState(true);
+  const [mediaURI, setMediaURI] = useState<any>('');
+
+  const fileInput = useRef<HTMLInputElement>(null);
+  const textInput = useRef<HTMLInputElement>(null);
 
   const handleInput = (e: any) => {
     setInputText(e.target.textContent);
@@ -23,8 +26,34 @@ const PostInput = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(mediaURI);
+  }, [mediaURI]);
+
+  const handleInputChange = (e: any) => {
+    if (e.target.files && e.target.files[0]) {
+      let reader = new FileReader();
+
+      reader.readAsArrayBuffer(e.target.files[0]);
+      reader.onload = function() {
+        const blob = new Blob([reader.result as BlobPart], {type: e.target.files[0].type})
+
+        const mediaBlobURI = URL.createObjectURL(blob);
+        setMediaURI(mediaBlobURI);
+      }
+    }
+  };
+
+  const handleCloseBtn = () => {
+    URL.revokeObjectURL(mediaURI);
+    setMediaURI('');
+    if(fileInput.current){
+      fileInput.current.value = '';
+    }
+  }
+
   return (
-    <div className={styles.postInput}>
+    <div className={styles.postInput} onClick={() => textInput.current?.focus()}>
       <Link href="#">
         <a className={styles.account}>
           <AccountImage />
@@ -48,9 +77,19 @@ const PostInput = () => {
             </div>
           </div>
         </div>
-
+        {mediaURI && (
+          <div
+            className={styles.mediaContainer}
+            style={(mediaURI && mediaURI.length !== 0) && { backgroundImage: `url(${mediaURI})` }}
+          >
+            <div className={styles.clearMediaBtn} onClick={handleCloseBtn}>
+              <CloseIcon />
+            </div>
+            <img src={mediaURI} className={styles.mediaFile} />
+          </div>
+        )}
         <div className={styles.inputRow}>
-          {showPlaceholder && inputText.length === 0 && (
+          {inputText.length === 0 && (
             <span className={styles.placeholder}>What's on your mind?</span>
           )}
 
@@ -58,8 +97,7 @@ const PostInput = () => {
             className={styles.input}
             contentEditable="true"
             onInput={(e) => handleInput(e)}
-            onFocus={() => setShowPlaceholder(false)}
-            onBlur={() => setShowPlaceholder(true)}
+            ref={textInput}
           />
         </div>
 
@@ -68,9 +106,17 @@ const PostInput = () => {
             <div className={styles.iconWrapper}>
               <EmojiIcon />
             </div>
-            <div className={styles.iconWrapper}>
+            <label htmlFor="mediaInput" className={styles.iconWrapper}>
               <ImageIcon />
-            </div>
+              <input
+                id="mediaInput"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,video/mp4"
+                className={styles.mediaInput}
+                onChange={handleInputChange}
+                ref={fileInput}
+              />
+            </label>
           </div>
 
           <AccentBtn
