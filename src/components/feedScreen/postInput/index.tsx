@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
+import { useMoralis, useNewMoralisObject } from 'react-moralis';
 import classNames from 'classnames';
 import AccountImage from '@/components/unknown/accountImage';
 import AccentBtn from '@/components/unknown/accentBtn';
@@ -18,6 +19,42 @@ const PostInput = () => {
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
 
+  //Database
+  const { Moralis, user } = useMoralis();
+
+  const handlePost = async () => {
+    const Post = Moralis.Object.extend('Posts');
+
+    let fileInputValue = null;
+    let file = null;
+    if (fileInput.current && fileInput.current.files) {
+      fileInputValue = fileInput.current.files[0];
+      file = new Moralis.File(`postMedia by ${user?.id}`, fileInputValue);
+    }
+
+    const newPost = new Post();
+
+    newPost
+      .save({
+        text: inputText.length !== 0 && inputText,
+        createdBy: user,
+        media: file,
+      })
+      .then(
+        () => {
+          handleCloseBtn();
+          if (textInput.current) {
+            textInput.current.textContent = '';
+          }
+          setInputText('');
+        },
+        (error: any) => {
+          alert("Couldn't post, sorry:(");
+        },
+      );
+  };
+
+  //Input handlers
   const handleInput = (e: any) => {
     setInputText(e.target.textContent);
     if (e.target.textContent.length > 100) {
@@ -26,10 +63,6 @@ const PostInput = () => {
       setBtnDissable(false);
     }
   };
-
-  useEffect(() => {
-    console.log(mediaURI);
-  }, [mediaURI]);
 
   const handleInputChange = (e: any) => {
     if (e.target.files && e.target.files[0]) {
@@ -83,17 +116,7 @@ const PostInput = () => {
             </div>
           </div>
         </div>
-        {/* {mediaURI && (
-          <div
-            className={styles.mediaContainer}
-            style={(mediaURI && mediaURI.length !== 0) && { backgroundImage: `url(${mediaURI})` }}
-          >
-            <div className={styles.clearMediaBtn} onClick={handleCloseBtn}>
-              <CloseIcon />
-            </div>
-            <img src={mediaURI} className={styles.mediaFile} />
-          </div>
-        )} */}
+
         <div className={styles.inputRow}>
           {inputText.length === 0 && (
             <span className={styles.placeholder}>What's on your mind?</span>
@@ -150,7 +173,7 @@ const PostInput = () => {
               className={classNames(
                 styles.characterCount,
                 inputText.length > 100 && styles.characterCountAccent,
-                inputText.length === 0 && styles.characterCountDisabled
+                inputText.length === 0 && styles.characterCountDisabled,
               )}
             >
               {inputText.length} / 100
@@ -158,7 +181,10 @@ const PostInput = () => {
 
             <AccentBtn
               text="Post it!"
-              className={btnDissable && styles.btnDissabled}
+              className={
+                (inputText.length === 0 || btnDissable) && styles.btnDissabled
+              }
+              onClick={handlePost}
             />
           </div>
         </div>
