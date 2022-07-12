@@ -256,6 +256,7 @@
 .btnDissabled{
     cursor: not-allowed;
     filter: brightness(75%);
+    pointer-events: none;
 
     &:hover{
         filter: brightness(75%);

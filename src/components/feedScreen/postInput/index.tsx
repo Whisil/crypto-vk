@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useMoralis, useNewMoralisObject } from 'react-moralis';
 import classNames from 'classnames';
 import AccountImage from '@/components/unknown/accountImage';
@@ -25,8 +25,9 @@ const PostInput = () => {
   const handlePost = async () => {
     const Post = Moralis.Object.extend('Posts');
 
-    let fileInputValue = null;
-    let file = null;
+    let fileInputValue;
+    let file:any = null;
+
     if (fileInput.current && fileInput.current.files) {
       fileInputValue = fileInput.current.files[0];
       file = new Moralis.File(`postMedia by ${user?.id}`, fileInputValue);
@@ -35,34 +36,35 @@ const PostInput = () => {
     const newPost = new Post();
 
     newPost
-      .save({
-        text: inputText.length !== 0 && inputText,
-        createdBy: user,
-        media: file,
-      })
-      .then(
-        () => {
-          handleCloseBtn();
-          if (textInput.current) {
-            textInput.current.textContent = '';
-          }
-          setInputText('');
-        },
-        (error: any) => {
-          alert("Couldn't post, sorry:(");
-        },
-      );
+    .save({
+      text: inputText.length !== 0 ? inputText : undefined,
+      media: file._source ? file : undefined,
+    })
+    .then(() => {
+      user?.relation('posts').add(newPost);
+      user?.save();
+      newPost.relation('createdBy').add(Moralis.User.current());
+      newPost.save();
+
+      handleCloseBtn();
+      if (textInput.current) {
+        textInput.current.textContent = '';
+      }
+      setInputText('');
+    });
+    
   };
 
+  
   //Input handlers
-  const handleInput = (e: any) => {
-    setInputText(e.target.textContent);
-    if (e.target.textContent.length > 100) {
+
+  useEffect(() => {
+    if (inputText.length > 500 || (inputText.length === 0 && mediaURI === '')) {
       setBtnDissable(true);
     } else {
       setBtnDissable(false);
     }
-  };
+  }, [inputText, mediaURI]);
 
   const handleInputChange = (e: any) => {
     if (e.target.files && e.target.files[0]) {
@@ -125,7 +127,7 @@ const PostInput = () => {
           <div
             className={styles.input}
             contentEditable="true"
-            onInput={(e) => handleInput(e)}
+            onInput={(e) => setInputText(e.currentTarget.textContent as string)}
             ref={textInput}
           />
         </div>
@@ -172,18 +174,16 @@ const PostInput = () => {
             <span
               className={classNames(
                 styles.characterCount,
-                inputText.length > 100 && styles.characterCountAccent,
+                inputText.length > 500 && styles.characterCountAccent,
                 inputText.length === 0 && styles.characterCountDisabled,
               )}
             >
-              {inputText.length} / 100
+              {inputText.length} / 500
             </span>
 
             <AccentBtn
               text="Post it!"
-              className={
-                (inputText.length === 0 || btnDissable) && styles.btnDissabled
-              }
+              className={btnDissable && styles.btnDissabled}
               onClick={handlePost}
             />
           </div>
