@@ -3,33 +3,35 @@ import { useEffect, useRef, useState } from 'react';
 
 import styles from './styles.module.scss';
 
-interface SwitchProps{
-  variant: 'theme-switch',
+interface SwitchProps {
+  variant: 'theme-switch';
 }
 
-const Switch = ({ variant }:SwitchProps) => {
+const Switch = ({ variant }: SwitchProps) => {
   const [switchActive, setSwitchActive] = useState(false);
 
   const switchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if(variant === 'theme-switch'){
-      setSwitchActive(JSON.parse(localStorage.getItem('themeVariant') || '{}'));
+    if (variant === `theme-switch`) {
+      setSwitchActive(JSON.parse(localStorage.getItem(`themeVariant`) || `{}`));
     }
-  }, [switchActive])
+  }, [switchActive, variant]);
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: any) => {
     if (switchRef && switchRef.current) {
       setSwitchActive(switchRef.current.checked);
 
-      if(variant === 'theme-switch'){
-        localStorage.setItem('themeVariant', JSON.stringify(e.target.checked));
+      if (variant === `theme-switch`) {
+        localStorage.setItem(`themeVariant`, JSON.stringify(e.target.checked));
       }
     }
   };
 
   return (
-    <label className={classNames(styles.switch, switchActive && styles.switchActive)}>
+    <label
+      className={classNames(styles.switch, switchActive && styles.switchActive)}
+    >
       <input
         type="checkbox"
         className={styles.switchInput}
@@ -42,7 +44,6 @@ const Switch = ({ variant }:SwitchProps) => {
         <span className={styles.onText}>ON</span>
         <span className={styles.offText}>OFF</span>
       </div>
-      
     </label>
   );
 };

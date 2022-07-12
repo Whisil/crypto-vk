@@ -5,24 +5,23 @@ import Link from 'next/link';
 import styles from './styles.module.scss';
 
 const ProfileBlock = () => {
-
   const { user } = useMoralis();
 
   return (
     <div className={styles.container}>
       <div
         className={styles.banner}
-        style={{ backgroundImage: "url('/images/banner.jpg')" }}
+        style={{ backgroundImage: `url('/images/banner.jpg')` }}
       />
 
       <div className={styles.info}>
-        <Link href="#">
+        <Link href="/">
           <a className={styles.infoAvatar}>
             <AccountImage large />
           </a>
         </Link>
 
-        <Link href="#">
+        <Link href="/">
           <a className={styles.infoName}>
             <h3>{user?.attributes.displayName}</h3>
           </a>
@@ -48,7 +47,7 @@ const ProfileBlock = () => {
       </div>
 
       <RippleBtn className={styles.profileBtnRipple}>
-        <Link href="#">
+        <Link href="/">
           <a className={styles.profileBtn}>My profile</a>
         </Link>
       </RippleBtn>

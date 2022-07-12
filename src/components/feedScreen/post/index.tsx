@@ -27,9 +27,9 @@ const Post = () => {
         setShowMenu(false);
       }
     }
-    window.addEventListener('click', handleOutsideClick);
+    window.addEventListener(`click`, handleOutsideClick);
 
-    return () => window.removeEventListener('click', handleOutsideClick);
+    return () => window.removeEventListener(`click`, handleOutsideClick);
   }, [showMenu]);
 
   return (
@@ -102,6 +102,7 @@ const Post = () => {
           src={image}
           layout="fill"
           objectFit="contain"
+          alt="post media"
         />
       </div>
 

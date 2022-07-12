@@ -21,7 +21,7 @@ const iconTypes = {
 };
 
 const NavBtn = ({ variant, active }: NavBtnProps) => {
-  let Icon = iconTypes[variant];
+  const Icon = iconTypes[variant];
   return (
     <div className={classNames(styles.btn, active && styles.btnActive)}>
       <Icon />

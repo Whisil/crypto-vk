@@ -14,8 +14,10 @@ const Login = () => {
       <div className={styles.login}>
         {!isAuthenticated && mountedRef.current ? (
           <WalletForm />
-        ) : isAuthenticated && user?.attributes.displayName === undefined && mountedRef.current ? (
-          <MoreInfoForm userId={user?.id || ''} />
+        ) : isAuthenticated &&
+          user?.attributes.displayName === undefined &&
+          mountedRef.current ? (
+          <MoreInfoForm userId={user?.id || ``} />
         ) : null}
       </div>
     </div>

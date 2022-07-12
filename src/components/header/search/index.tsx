@@ -6,7 +6,11 @@ const Search = () => {
   const [border, setBorder] = useState(false);
 
   return (
-    <label htmlFor="search" className={styles.label} style={border ? {border: '2px solid #1CA1EF'} : {}}>
+    <label
+      htmlFor="search"
+      className={styles.label}
+      style={border ? { border: `2px solid #1CA1EF` } : {}}
+    >
       <svg
         width="20"
         height="20"

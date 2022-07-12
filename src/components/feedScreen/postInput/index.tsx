@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useMoralis, useNewMoralisObject } from 'react-moralis';
+import { useMoralis } from 'react-moralis';
 import classNames from 'classnames';
 import AccountImage from '@/components/unknown/accountImage';
 import AccentBtn from '@/components/unknown/accentBtn';
@@ -12,21 +12,29 @@ import CloseIcon from 'public/images/icons/close.svg';
 import styles from './styles.module.scss';
 
 const PostInput = () => {
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
-  const [mediaURI, setMediaURI] = useState<any>('');
+  const [mediaURI, setMediaURI] = useState<any>(``);
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
+
+  const handleCloseBtn = () => {
+    URL.revokeObjectURL(mediaURI);
+    setMediaURI(``);
+    if (fileInput.current) {
+      fileInput.current.value = ``;
+    }
+  };
 
   //Database
   const { Moralis, user } = useMoralis();
 
   const handlePost = async () => {
-    const Post = Moralis.Object.extend('Posts');
+    const Post = Moralis.Object.extend(`Posts`);
 
     let fileInputValue;
-    let file:any = null;
+    let file: any = null;
 
     if (fileInput.current && fileInput.current.files) {
       fileInputValue = fileInput.current.files[0];
@@ -36,30 +44,28 @@ const PostInput = () => {
     const newPost = new Post();
 
     newPost
-    .save({
-      text: inputText.length !== 0 ? inputText : undefined,
-      media: file._source ? file : undefined,
-    })
-    .then(() => {
-      user?.relation('posts').add(newPost);
-      user?.save();
-      newPost.relation('createdBy').add(Moralis.User.current());
-      newPost.save();
+      .save({
+        text: inputText.length !== 0 ? inputText : undefined,
+        media: file._source ? file : undefined,
+      })
+      .then(() => {
+        user?.relation(`posts`).add(newPost);
+        user?.save();
+        newPost.relation(`createdBy`).add(Moralis.User.current());
+        newPost.save();
 
-      handleCloseBtn();
-      if (textInput.current) {
-        textInput.current.textContent = '';
-      }
-      setInputText('');
-    });
-    
+        handleCloseBtn();
+        if (textInput.current) {
+          textInput.current.textContent = ``;
+        }
+        setInputText(``);
+      });
   };
 
-  
   //Input handlers
 
   useEffect(() => {
-    if (inputText.length > 500 || (inputText.length === 0 && mediaURI === '')) {
+    if (inputText.length > 500 || (inputText.length === 0 && mediaURI === ``)) {
       setBtnDissable(true);
     } else {
       setBtnDissable(false);
@@ -68,7 +74,7 @@ const PostInput = () => {
 
   const handleInputChange = (e: any) => {
     if (e.target.files && e.target.files[0]) {
-      let reader = new FileReader();
+      const reader = new FileReader();
 
       reader.readAsArrayBuffer(e.target.files[0]);
       reader.onload = function () {
@@ -82,20 +88,12 @@ const PostInput = () => {
     }
   };
 
-  const handleCloseBtn = () => {
-    URL.revokeObjectURL(mediaURI);
-    setMediaURI('');
-    if (fileInput.current) {
-      fileInput.current.value = '';
-    }
-  };
-
   return (
     <div
       className={styles.postInput}
       onClick={() => textInput.current?.focus()}
     >
-      <Link href="#">
+      <Link href="/">
         <a className={styles.account}>
           <AccountImage />
         </a>
@@ -111,7 +109,7 @@ const PostInput = () => {
           <div className={styles.info}>
             <span className={styles.infoBtn}>i</span>
             <div className={styles.infoBox}>
-              If you choose a collection, the media in your post becomes an{' '}
+              If you choose a collection, the media in your post becomes an{` `}
               <a href="https://www.theverge.com/22310188/nft-explainer-what-is-blockchain-crypto-art-faq">
                 NFT
               </a>
@@ -121,7 +119,9 @@ const PostInput = () => {
 
         <div className={styles.inputRow}>
           {inputText.length === 0 && (
-            <span className={styles.placeholder}>What's on your mind?</span>
+            <span className={styles.placeholder}>
+              What&apos;s on your mind?
+            </span>
           )}
 
           <div
@@ -142,7 +142,7 @@ const PostInput = () => {
             <div className={styles.clearMediaBtn} onClick={handleCloseBtn}>
               <CloseIcon />
             </div>
-            <img src={mediaURI} className={styles.mediaFile} />
+            <img src={mediaURI} className={styles.mediaFile} alt="thumbnail" />
           </div>
         )}
         <div className={styles.bottomRow}>

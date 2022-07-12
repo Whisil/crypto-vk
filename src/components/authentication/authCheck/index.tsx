@@ -12,22 +12,20 @@ const AuthCheck = ({ children }: any) => {
   const { isAuthenticated, isAuthenticating, user } = useMoralis();
 
   useEffect(() => {
-
-    if(mountedRef.current){
+    if (mountedRef.current) {
       if (isAuthenticated) return;
       else if (!isAuthenticated) {
-        router.push({ pathname: '/' });
+        router.push({ pathname: `/` });
       }
     }
-
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
 
   if (!isAuthenticated || user?.attributes.displayName === undefined) {
     return (
       <>
         <div
           className={styles.loaderWrapper}
-          style={isAuthenticating ? { opacity: '1', pointerEvents: 'all' } : {}}
+          style={isAuthenticating ? { opacity: `1`, pointerEvents: `all` } : {}}
         >
           <div className={styles.bounce}>
             <div></div>

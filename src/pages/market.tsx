@@ -1,11 +1,7 @@
-import MainLayout from "@/containers/MainLayout";
+import MainLayout from '@/containers/MainLayout';
 
 const Market = () => {
-    return(
-        <MainLayout>
-        Market page
-        </MainLayout>
-    )
-}
+  return <MainLayout>Market page</MainLayout>;
+};
 
 export default Market;

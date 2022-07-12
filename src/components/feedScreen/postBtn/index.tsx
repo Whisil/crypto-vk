@@ -18,19 +18,19 @@ const PostBtn = ({ variant, bgTransparent }: Props) => {
       className={classNames(styles.btn, bgTransparent && styles.btnTransparent)}
     >
       <div className={styles.btnInner}>
-        {variant === 'like' ? (
+        {variant === `like` ? (
           <>
             <LikeIcon />
             <span className={styles.label}>Like</span>
           </>
-        ) : variant === 'comment' ? (
+        ) : variant === `comment` ? (
           <>
             <CommentIcon />
             <span className={styles.label}>Comment</span>
           </>
-        ) : variant === 'share' ? (
+        ) : variant === `share` ? (
           <ShareIcon />
-        ) : variant === 'buy' ? (
+        ) : variant === `buy` ? (
           <BuyIcon />
         ) : null}
       </div>

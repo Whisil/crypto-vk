@@ -15,7 +15,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         ></meta>
         <style>
           @import
-          url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+          url(&apos;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap&apos;);
         </style>
       </Head>
       <MoralisProvider

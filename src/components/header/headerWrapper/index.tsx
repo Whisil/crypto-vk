@@ -9,10 +9,10 @@ import Link from 'next/link';
 import HeaderAccount from '../headerAccount';
 
 const menu = [
-  { title: 'Home', path: '/' },
-  { title: 'Explore', path: '/explore' },
-  { title: 'Messages', path: '/messages' },
-  { title: 'Market', path: '/market' },
+  { title: `Home`, path: `/` },
+  { title: `Explore`, path: `/explore` },
+  { title: `Messages`, path: `/messages` },
+  { title: `Market`, path: `/market` },
 ];
 
 const HeaderWrapper = () => {
@@ -20,7 +20,7 @@ const HeaderWrapper = () => {
 
   return (
     <header>
-      <div className={classNames(styles.headerContainer, 'container')}>
+      <div className={classNames(styles.headerContainer, `container`)}>
         <div className={styles.logoSide}>
           <Link href="/">
             <a>
@@ -36,7 +36,13 @@ const HeaderWrapper = () => {
         <div className={styles.navSide}>
           {menu.map((item: any, i: number) => (
             <Link href={item.path} key={i}>
-              <a className={router.pathname === item.path ? styles.activeLink : styles.link}>
+              <a
+                className={
+                  router.pathname === item.path
+                    ? styles.activeLink
+                    : styles.link
+                }
+              >
                 <NavBtn
                   variant={item.title}
                   active={router.pathname === item.path ? true : false}

@@ -46,7 +46,7 @@ const WhoToFollow = () => {
           className={styles.showMoreBtn}
           onClick={() => setShowMore((showMore) => !showMore)}
         >
-          {showMore ? 'Show less' : 'Show more'}
+          {showMore ? `Show less` : `Show more`}
         </span>
       </RippleBtn>
     </div>

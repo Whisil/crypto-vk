@@ -16,30 +16,30 @@ const MoreInfoForm = ({ userId }: Props) => {
 
   const formik = useFormik({
     initialValues: {
-      username: '',
-      displayName: '',
+      username: ``,
+      displayName: ``,
     },
     validationSchema: Yup.object({
       username: Yup.string()
-        .max(15, 'Must be 15 characters or less')
-        .min(4, 'Must be at least 4 characters long')
+        .max(15, `Must be 15 characters or less`)
+        .min(4, `Must be at least 4 characters long`)
         .strict()
-        .trim("Don't start or end with a white-space")
+        .trim(`Don't start or end with a white-space`)
         .matches(
           /^[a-zA-Z0-9_]+$/,
-          'You can only use English letters, numbers and underscores',
+          `You can only use English letters, numbers and underscores`,
         )
-        .required('Required'),
+        .required(`Required`),
       displayName: Yup.string()
-        .max(35, 'Must be 35 characters or less')
-        .min(4, 'Must be at least 4 characters long')
+        .max(35, `Must be 35 characters or less`)
+        .min(4, `Must be at least 4 characters long`)
         .strict()
-        .trim("Don't start or end with a white-space")
+        .trim(`Don't start or end with a white-space`)
         .matches(
           /^([\u0400-\u052Fa-zA-Z0-9_,.-]\s?)+$/,
-          'You can only use letters, numbers, dots, commas and underscores',
+          `You can only use letters, numbers, dots, commas and underscores`,
         )
-        .required('Required'),
+        .required(`Required`),
     }),
     onSubmit: (values) => {
       setUserData({
@@ -99,7 +99,7 @@ const MoreInfoForm = ({ userId }: Props) => {
       </label>
 
       <div
-        className={!formik.isValid ? styles.submitBtnDisabled : ''}
+        className={!formik.isValid ? styles.submitBtnDisabled : ``}
         onClick={formik.handleSubmit as any}
       >
         <RippleBtn variant="accent">

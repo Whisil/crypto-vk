@@ -9,26 +9,28 @@ const WalletForm = () => {
 
   const loginWalletConnect = async () => {
     await authenticate({
-      provider: 'walletconnect',
+      provider: `walletconnect`,
       chainId: 80001,
-      signingMessage: 'Welcome to a true web',
+      signingMessage: `Welcome to a true web`,
     });
   };
   const loginMetamask = async () => {
-    await authenticate({ signingMessage: 'Welcome to a true web' });
+    await authenticate({ signingMessage: `Welcome to a true web` });
   };
 
   return (
     <>
       <h1 className={styles.heading}>Connect wallet</h1>
       <p className={styles.subHeading}>
-        Choose the{' '}
+        Choose the{` `}
         <a
           href="https://www.coinbase.com/ru/learn/tips-and-tutorials/how-to-set-up-a-crypto-wallet"
           target="_blank"
+          rel="noreferrer"
         >
           wallet
-        </a>{' '}
+        </a>
+        {` `}
         you want to connect with
       </p>
       <RippleBtn className={styles.spacing}>
@@ -56,7 +58,7 @@ const WalletForm = () => {
       </RippleBtn>
 
       <p className={styles.infoText}>
-        Soon we'll be able to support more :{`)`}
+        Soon we&apos;ll be able to support more :{`)`}
       </p>
     </>
   );

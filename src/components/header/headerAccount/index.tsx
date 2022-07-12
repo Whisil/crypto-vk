@@ -27,9 +27,9 @@ const HeaderAccount = () => {
         setShowMenu(false);
       }
     }
-    window.addEventListener('click', handleOutsideClick);
+    window.addEventListener(`click`, handleOutsideClick);
 
-    return () => window.removeEventListener('click', handleOutsideClick);
+    return () => window.removeEventListener(`click`, handleOutsideClick);
   }, [showMenu]);
 
   async function handleLogout() {
@@ -54,11 +54,9 @@ const HeaderAccount = () => {
           <RippleBtn>
             <div className={styles.AccountMenuItem}>
               <AvatarIcon />
-              <Link href="#" passHref>
+              <Link href="/" passHref>
                 <span>
-                  <a>
-                    Profile  
-                  </a>  
+                  <a>Profile</a>
                 </span>
               </Link>
             </div>

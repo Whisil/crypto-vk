@@ -6,7 +6,7 @@ import styles from './styles.module.scss';
 interface Props {
   children: any;
   className?: string;
-  variant?: "accent";
+  variant?: 'accent';
 }
 
 const RippleBtn = ({ children, className, variant }: Props) => {
@@ -25,20 +25,24 @@ const RippleBtn = ({ children, className, variant }: Props) => {
 
   useEffect(() => {
     if (btnRef.current) {
-        const bubble = document.createElement('div');
-        bubble.classList.add(styles.bubble, `${bubbleAnim && styles.bubbleAnim}`);
-        bubble.style.top = top + 'px';
-        bubble.style.left = left + 'px';
-        btnRef.current.appendChild(bubble);
-        setTimeout(() => {
-          btnRef?.current?.removeChild(bubble);
-        }, 401);
+      const bubble = document.createElement(`div`);
+      bubble.classList.add(styles.bubble, `${bubbleAnim && styles.bubbleAnim}`);
+      bubble.style.top = top + `px`;
+      bubble.style.left = left + `px`;
+      btnRef.current.appendChild(bubble);
+      setTimeout(() => {
+        btnRef?.current?.removeChild(bubble);
+      }, 401);
     }
   }, [clicked]);
 
   return (
     <div
-      className={classNames(styles.rippleBtn, className, variant?.length != 0 && styles.rippleAccent)}
+      className={classNames(
+        styles.rippleBtn,
+        className,
+        variant?.length != 0 && styles.rippleAccent,
+      )}
       onClick={handleRipple}
       ref={btnRef}
       onMouseOver={() => setBubbleAnim(true)}

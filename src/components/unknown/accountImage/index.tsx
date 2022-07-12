@@ -10,13 +10,14 @@ interface Props {
   className?: string;
 }
 
-const AccountImage = ({ small, large, image = '', className }: Props) => {
+const AccountImage = ({ small, large, image = ``, className }: Props) => {
   return (
     <span className={classNames(styles.imageBox, className)}>
       <Image
-        src={image !== '' ? image : `/images/account-placeholder.png`}
+        src={image !== `` ? image : `/images/account-placeholder.png`}
         width={small ? 34 : large ? 80 : 40}
         height={small ? 34 : large ? 80 : 40}
+        alt="profile avatar"
       />
     </span>
   );
