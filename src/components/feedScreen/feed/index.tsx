@@ -6,27 +6,26 @@ import styles from './styles.module.scss';
 import { useState, useEffect } from 'react';
 
 const Feed = () => {
-  const [feedPosts, setFeedPosts] = useState<any>([]);
+  const [feedPosts, setFeedPosts] = useState<any[]>();
+  const [loader, setLoader] = useState(true);
 
-  const { fetch } = useMoralisQuery(`Posts`);
-  const postsQuery = () => {
-    fetch({
-      onSuccess: (posts) => {
-        setFeedPosts(posts);
-      },
-      onError: (error) => {
-        alert(error);
-      },
-    });
+  const { fetch } = useMoralisQuery(`Posts`, (query) =>
+    query.descending('createdAt'),
+  );
+
+  const userQuery = async () => {
+    const result = await fetch();
+    setFeedPosts(result);
   };
+
   useEffect(() => {
-    postsQuery();
+    userQuery();
   }, []);
 
   return (
     <div className={styles.feed}>
       <PostInput />
-      {feedPosts.map((item: any, i: number) => (
+      {/* {feedPosts?.map((item: any, i: number) => (
         <Post
           key={i}
           postId={item.attributes.createdBy.parent.id}
@@ -34,7 +33,7 @@ const Feed = () => {
           text={item.attributes.text}
           media={item.attributes.media && item.attributes.media._url}
         />
-      ))}
+      ))} */}
     </div>
   );
 };

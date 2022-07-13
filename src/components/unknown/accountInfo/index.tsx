@@ -2,6 +2,7 @@ import AccountImage from '../accountImage';
 import classNames from 'classnames';
 
 import styles from './styles.module.scss';
+import Link from 'next/link';
 
 interface Props {
   bio?: string;
@@ -23,7 +24,11 @@ const AccountInfo = ({ bio, timestamp, displayName }: Props) => {
     if (diff > periods.week) {
       return Math.floor(diff / periods.week) + ` weeks ago`;
     } else if (diff > periods.day) {
-      return Math.floor(diff / periods.day) + ` days ago`;
+      if (Math.floor(diff / periods.day) === 1) {
+        return Math.floor(diff / periods.day) + ` day ago`;
+      } else {
+        return Math.floor(diff / periods.day) + ` days ago`;
+      }
     } else if (diff > periods.hour) {
       return Math.floor(diff / periods.hour) + ` hours ago`;
     } else if (diff > periods.minute) {
@@ -34,11 +39,19 @@ const AccountInfo = ({ bio, timestamp, displayName }: Props) => {
 
   return (
     <div className={styles.accountInfo}>
-      <AccountImage className={styles.avatar} />
+      <Link href="/">
+        <a>
+          <AccountImage className={styles.avatar} />
+        </a>
+      </Link>
       <div
         className={classNames(styles.info, bio?.length != 0 && styles.textCut)}
       >
-        <h4 className={styles.name}>{displayName}</h4>
+        <Link href="/">
+          <a>
+            <h4 className={styles.name}>{displayName}</h4>
+          </a>
+        </Link>
         <span className={styles.infoSecondary}>
           {bio?.length != 0 && bio}
           {timestamp?.length != 0 && formatTime(timestamp)}
