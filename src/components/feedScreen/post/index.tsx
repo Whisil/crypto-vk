@@ -25,7 +25,7 @@ interface Props {
 const Post = ({ postId, timestamp, text, media }: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
-  const [userObj, setUserObj] = useState<any>([]);
+  const [userInfo, setUserInfo] = useState<any[]>();
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -41,30 +41,28 @@ const Post = ({ postId, timestamp, text, media }: Props) => {
     return () => window.removeEventListener(`click`, handleOutsideClick);
   }, [showMenu]);
 
+  //User fetching
 
-
-  const { fetch } = useMoralisQuery('_User', (query) =>
-    query.include('posts', postId),
+  const { fetch } = useMoralisQuery(`_User`, (query) =>
+    query.include(`posts`, postId),
   );
 
   const userQuery = async () => {
-    setUserObj(await fetch());
+    const result = await fetch();
+    setUserInfo(result);
   };
 
   useEffect(() => {
     userQuery();
-    console.log(postId);
-  }, [postId]);
-
-  useEffect(() => {
-    console.log(userObj);
-  }, [userObj]);
+    console.log(1)
+  }, []);
 
   return (
     <div className={styles.post}>
       <div className={styles.header}>
-        <AccountInfo timestamp={timestamp} 
-        displayName={userObj[0]?.attributes.displayName} 
+        <AccountInfo
+          timestamp={timestamp}
+          displayName={userInfo && userInfo[0]?.attributes.displayName}
         />
         <div className={styles.postMenu}>
           <span

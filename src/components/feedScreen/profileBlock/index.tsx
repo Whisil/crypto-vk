@@ -27,8 +27,19 @@ const ProfileBlock = () => {
           </a>
         </Link>
 
-        <span className={styles.infoWallet} onClick={() => navigator.clipboard.writeText(user?.attributes.ethAddress)}>
-          {`${user?.attributes.ethAddress.slice(0,5)}...${user?.attributes.ethAddress.slice(user?.attributes.ethAddress.length - 10, -5)}`}
+        <span
+          className={styles.infoWallet}
+          onClick={() =>
+            navigator.clipboard.writeText(user?.attributes.ethAddress)
+          }
+        >
+          {`${user?.attributes.ethAddress.slice(
+            0,
+            5,
+          )}...${user?.attributes.ethAddress.slice(
+            user?.attributes.ethAddress.length - 10,
+            -5,
+          )}`}
         </span>
       </div>
 

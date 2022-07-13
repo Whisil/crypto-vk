@@ -7,11 +7,7 @@ import * as Yup from 'yup';
 
 import styles from './styles.module.scss';
 
-interface Props {
-  userId: string;
-}
-
-const MoreInfoForm = ({ userId }: Props) => {
+const MoreInfoForm = () => {
   const { setUserData } = useMoralis();
 
   const formik = useFormik({
