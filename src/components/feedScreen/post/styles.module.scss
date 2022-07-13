@@ -57,7 +57,7 @@
 
             .menuList {
                 position: absolute;
-                z-index: 2;
+                z-index: 6;
                 min-width: 240px;
                 right: 0px;
                 top: 40px;
@@ -137,6 +137,7 @@
         border-radius: 20px;
         margin-bottom: 15px;
         overflow: hidden;
+        position: relative;
         > span{
             position: unset !important;
         }

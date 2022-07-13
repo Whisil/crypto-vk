@@ -6,5 +6,8 @@ module.exports = {
       use: ['@svgr/webpack'],
     })
     return config;
-  }, 
+  },
+  images: {
+    domains: ['zbldg0cxayez.usemoralis.com'],
+  },
 };

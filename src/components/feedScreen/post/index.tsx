@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
+import { useMoralisQuery } from 'react-moralis';
 import Image from 'next/image';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
@@ -14,9 +15,17 @@ import image from './test.jpg';
 import styles from './styles.module.scss';
 import RippleBtn from '@/components/unknown/rippleBtn';
 
-const Post = () => {
+interface Props {
+  postId: string;
+  timestamp: any;
+  text?: string;
+  media?: string;
+}
+
+const Post = ({ postId, timestamp, text, media }: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
+  const [userObj, setUserObj] = useState<any>([]);
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -32,10 +41,31 @@ const Post = () => {
     return () => window.removeEventListener(`click`, handleOutsideClick);
   }, [showMenu]);
 
+
+
+  const { fetch } = useMoralisQuery('_User', (query) =>
+    query.include('posts', postId),
+  );
+
+  const userQuery = async () => {
+    setUserObj(await fetch());
+  };
+
+  useEffect(() => {
+    userQuery();
+    console.log(postId);
+  }, [postId]);
+
+  useEffect(() => {
+    console.log(userObj);
+  }, [userObj]);
+
   return (
     <div className={styles.post}>
       <div className={styles.header}>
-        <AccountInfo timestamp="10 minutes ago" />
+        <AccountInfo timestamp={timestamp} 
+        displayName={userObj[0]?.attributes.displayName} 
+        />
         <div className={styles.postMenu}>
           <span
             className={classNames(styles.dots, showMenu && styles.activeDots)}
@@ -91,20 +121,19 @@ const Post = () => {
         </div>
       </div>
 
-      <p className={styles.description}>
-        Let’s do something cool, developing a new social media with NFTs as a
-        core part sounds amazing doesn’t it?
-      </p>
+      {text && <p className={styles.description}>{text}</p>}
 
-      <div className={styles.media}>
-        <Image
-          className={styles.mediaContent}
-          src={image}
-          layout="fill"
-          objectFit="contain"
-          alt="post media"
-        />
-      </div>
+      {media && (
+        <div className={styles.media}>
+          <Image
+            className={styles.mediaContent}
+            src={media}
+            layout="fill"
+            objectFit="contain"
+            alt="post media"
+          />
+        </div>
+      )}
 
       <div className={styles.info}>
         <div className={styles.likes}>

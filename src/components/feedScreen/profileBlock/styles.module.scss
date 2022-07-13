@@ -36,11 +36,20 @@
             color: $primaryLight;
         }
 
-        &Bio{
+        &Wallet{
             font-size: 14px;
             line-height: 1.15;
             font-weight: normal;
-            color: $primaryLightDark;
+            cursor: pointer;
+            color: rgba($primaryLight, 0.25);
+            transition: color .1s ease;
+            display: inline-block;
+            margin: 0 auto;
+            width: fit-content;
+
+            &:hover{
+                color: rgba($primaryLight, 0.5);
+            }
         }
     }
 
@@ -68,7 +77,11 @@
             }
             span{
                 display: inline-block;
-                @extend .infoBio;
+                cursor: auto;
+                font-size: 14px;
+                line-height: 1.15;
+                font-weight: normal;
+                color: $primaryLightDark;
             }
 
         }
