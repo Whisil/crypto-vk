@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useMoralis } from 'react-moralis';
 import Login from '@/pages/login';
 import { useEffect, useRef } from 'react';
+import Loader from '@/components/unknown/loader';
 
 import styles from './styles.module.scss';
 
@@ -27,11 +28,7 @@ const AuthCheck = ({ children }: any) => {
           className={styles.loaderWrapper}
           style={isAuthenticating ? { opacity: `1`, pointerEvents: `all` } : {}}
         >
-          <div className={styles.bounce}>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
+          <Loader />
         </div>
         <Login />
       </>

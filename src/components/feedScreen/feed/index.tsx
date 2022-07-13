@@ -4,6 +4,7 @@ import { useMoralisQuery } from 'react-moralis';
 
 import styles from './styles.module.scss';
 import { useState, useEffect } from 'react';
+import Loader from '@/components/unknown/loader';
 
 const Feed = () => {
   const [feedPosts, setFeedPosts] = useState<any[]>();
@@ -16,6 +17,7 @@ const Feed = () => {
   const userQuery = async () => {
     const result = await fetch();
     setFeedPosts(result);
+    setLoader(false);
   };
 
   useEffect(() => {
@@ -25,7 +27,12 @@ const Feed = () => {
   return (
     <div className={styles.feed}>
       <PostInput />
-      {/* {feedPosts?.map((item: any, i: number) => (
+      {loader && (
+        <div className={styles.loaderWrapper}>
+          <Loader variant="small" />
+        </div>
+      )}
+      {feedPosts?.map((item: any, i: number) => (
         <Post
           key={i}
           postId={item.attributes.createdBy.parent.id}
@@ -33,7 +40,7 @@ const Feed = () => {
           text={item.attributes.text}
           media={item.attributes.media && item.attributes.media._url}
         />
-      ))} */}
+      ))}
     </div>
   );
 };

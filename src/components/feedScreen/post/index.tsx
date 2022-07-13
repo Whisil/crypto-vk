@@ -10,7 +10,6 @@ import NotificationsIcon from 'public/images/icons/notifications-icon.svg';
 import UnfollowIcon from 'public/images/icons/unfollow.svg';
 import ReportIcon from 'public/images/icons/report.svg';
 import Like from 'public/images/icons/like.svg';
-import image from './test.jpg';
 
 import styles from './styles.module.scss';
 import RippleBtn from '@/components/unknown/rippleBtn';
@@ -63,6 +62,7 @@ const Post = ({ postId, timestamp, text, media }: Props) => {
         <AccountInfo
           timestamp={timestamp}
           displayName={userInfo && userInfo[0]?.attributes.displayName}
+          separateLink
         />
         <div className={styles.postMenu}>
           <span

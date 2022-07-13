@@ -8,9 +8,10 @@ interface Props {
   bio?: string;
   timestamp?: string;
   displayName?: string;
+  separateLink?: boolean;
 }
 
-const AccountInfo = ({ bio, timestamp, displayName }: Props) => {
+const AccountInfo = ({ bio, timestamp, displayName, separateLink }: Props) => {
   const periods = {
     week: 7 * 24 * 60 * 60 * 1000,
     day: 24 * 60 * 60 * 1000,
@@ -39,19 +40,27 @@ const AccountInfo = ({ bio, timestamp, displayName }: Props) => {
 
   return (
     <div className={styles.accountInfo}>
-      <Link href="/">
-        <a>
-          <AccountImage className={styles.avatar} />
-        </a>
-      </Link>
+      {separateLink ? (
+        <Link href="/">
+          <a>
+            <AccountImage className={styles.avatar} />
+          </a>
+        </Link>
+      ) : (
+        <AccountImage className={styles.avatar} />
+      )}
       <div
         className={classNames(styles.info, bio?.length != 0 && styles.textCut)}
       >
-        <Link href="/">
-          <a>
-            <h4 className={styles.name}>{displayName}</h4>
-          </a>
-        </Link>
+        {separateLink ? (
+          <Link href="/">
+            <a>
+              <h4 className={styles.name}>{displayName}</h4>
+            </a>
+          </Link>
+        ) : (
+          <h4 className={styles.name}>{displayName}</h4>
+        )}
         <span className={styles.infoSecondary}>
           {bio?.length != 0 && bio}
           {timestamp?.length != 0 && formatTime(timestamp)}
