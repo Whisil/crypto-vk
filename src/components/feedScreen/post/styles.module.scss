@@ -186,5 +186,9 @@
         align-items: center;
         justify-content: space-between;
         gap: 10px;
+
+        .btnWrapper{
+            flex: 1 1;
+        }
     }
 }

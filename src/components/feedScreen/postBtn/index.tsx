@@ -10,6 +10,7 @@ import RippleBtn from '@/components/unknown/rippleBtn';
 interface Props {
   variant: 'comment' | 'like' | 'share' | 'buy';
   bgTransparent?: boolean;
+  onClick?: () => void;
 }
 
 const PostBtn = ({ variant, bgTransparent }: Props) => {

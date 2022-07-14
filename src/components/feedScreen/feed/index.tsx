@@ -11,7 +11,7 @@ const Feed = () => {
   const [loader, setLoader] = useState(true);
 
   const { fetch } = useMoralisQuery(`Posts`, (query) =>
-    query.descending('createdAt'),
+    query.descending(`createdAt`),
   );
 
   const userQuery = async () => {

@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { useMoralisQuery } from 'react-moralis';
+import {
+  useMoralis,
+  useMoralisQuery,
+  useNewMoralisObject,
+} from 'react-moralis';
 import Image from 'next/image';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
@@ -53,8 +57,29 @@ const Post = ({ postId, timestamp, text, media }: Props) => {
 
   useEffect(() => {
     userQuery();
-    console.log(1)
   }, []);
+
+  // Likes
+  const { Moralis, user } = useMoralis();
+
+  const handleLike = async () => {
+    const Like = Moralis.Object.extend(`Likes`);
+
+    const newLike = new Like();
+    newLike.save().then(() => {
+      const postQuery = new Moralis.Query(`Posts`);
+
+      postQuery.get(postId).then((post) => {
+        post.relation(`likes`).add(newLike);
+        newLike.relation(`likedBy`).add(user);
+        newLike.relation(`likedPost`).add(post);
+        user?.relation(`likes`).add(newLike);
+        user?.save();
+        newLike.save();
+        post.save();
+      });
+    });
+  };
 
   return (
     <div className={styles.post}>
@@ -143,7 +168,9 @@ const Post = ({ postId, timestamp, text, media }: Props) => {
       </div>
 
       <div className={styles.interactions}>
-        <PostBtn variant="like" />
+        <div onClick={handleLike} className={styles.btnWrapper}>
+          <PostBtn variant="like" />
+        </div>
         <PostBtn variant="comment" />
         <PostBtn variant="share" bgTransparent />
       </div>
