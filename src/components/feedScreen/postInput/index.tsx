@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useMoralis } from 'react-moralis';
 import classNames from 'classnames';
 import AccountImage from '@/components/unknown/accountImage';
@@ -11,7 +11,7 @@ import CloseIcon from 'public/images/icons/close.svg';
 
 import styles from './styles.module.scss';
 
-const PostInput = () => {
+const PostInput = ({ postedPostInfo }: any) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
   const [mediaURI, setMediaURI] = useState<any>(``);
@@ -19,7 +19,7 @@ const PostInput = () => {
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
 
-  const handleCloseBtn = () => {
+  const handleCloseBtn = async () => {
     URL.revokeObjectURL(mediaURI);
     setMediaURI(``);
     if (fileInput.current) {
@@ -52,6 +52,7 @@ const PostInput = () => {
         user?.relation(`posts`).add(newPost);
         user?.save();
         newPost.relation(`createdBy`).add(Moralis.User.current());
+        postedPostInfo(newPost.id);
         newPost.save();
 
         handleCloseBtn();

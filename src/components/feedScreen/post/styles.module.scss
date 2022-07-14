@@ -125,11 +125,13 @@
     }
 
     .description{
+        display: inline-block;
         font-size: 16px;
         font-weight: normal;
         line-height: 1.4;
         color: $primaryLight;
         margin-bottom: 15px;
+        white-space: pre-wrap;
     }
 
     .media{
@@ -190,5 +192,7 @@
         .btnWrapper{
             flex: 1 1;
         }
+
+
     }
 }

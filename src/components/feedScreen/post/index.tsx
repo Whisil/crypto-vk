@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import {
-  useMoralis,
-  useMoralisQuery,
-  useNewMoralisObject,
-} from 'react-moralis';
+import { useMoralis, useMoralisQuery } from 'react-moralis';
 import Image from 'next/image';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
@@ -23,12 +19,14 @@ interface Props {
   timestamp: any;
   text?: string;
   media?: string;
+  likeCount: any;
 }
 
-const Post = ({ postId, timestamp, text, media }: Props) => {
+const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
   const [userInfo, setUserInfo] = useState<any[]>();
+  const [likeId, setLikeId] = useState<string>(``);
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +57,10 @@ const Post = ({ postId, timestamp, text, media }: Props) => {
     userQuery();
   }, []);
 
+  useEffect(() => {
+    console.log(likeId);
+  }, [likeId]);
+
   // Likes
   const { Moralis, user } = useMoralis();
 
@@ -71,6 +73,8 @@ const Post = ({ postId, timestamp, text, media }: Props) => {
 
       postQuery.get(postId).then((post) => {
         post.relation(`likes`).add(newLike);
+        post.increment(`likeCount`);
+        setLikeId(newLike.id);
         newLike.relation(`likedBy`).add(user);
         newLike.relation(`likedPost`).add(post);
         user?.relation(`likes`).add(newLike);
@@ -78,6 +82,17 @@ const Post = ({ postId, timestamp, text, media }: Props) => {
         newLike.save();
         post.save();
       });
+    });
+  };
+
+  const handleLikeRemove = async () => {
+    const likeQuery = new Moralis.Query(`Likes`);
+    (await likeQuery.get(likeId)).destroy().then(() => setLikeId(``));
+
+    const postQuery = new Moralis.Query(`Posts`);
+    postQuery.get(postId).then((post) => {
+      post.decrement(`likeCount`);
+      post.save();
     });
   };
 
@@ -144,7 +159,7 @@ const Post = ({ postId, timestamp, text, media }: Props) => {
         </div>
       </div>
 
-      {text && <p className={styles.description}>{text}</p>}
+      {text && <span className={styles.description}>{text}</span>}
 
       {media && (
         <div className={styles.media}>
@@ -161,15 +176,20 @@ const Post = ({ postId, timestamp, text, media }: Props) => {
       <div className={styles.info}>
         <div className={styles.likes}>
           <Like />
-          <span className={styles.likesCount}>134 Likes</span>
+          <span className={styles.likesCount}>
+            {likeId !== `` ? likeCount + 1 : likeCount} Likes
+          </span>
         </div>
 
         <div className={styles.comments}>45 comments</div>
       </div>
 
       <div className={styles.interactions}>
-        <div onClick={handleLike} className={styles.btnWrapper}>
-          <PostBtn variant="like" />
+        <div
+          onClick={likeId === `` ? handleLike : handleLikeRemove}
+          className={styles.btnWrapper}
+        >
+          <PostBtn variant="like" liked={likeId !== `` && true} />
         </div>
         <PostBtn variant="comment" />
         <PostBtn variant="share" bgTransparent />

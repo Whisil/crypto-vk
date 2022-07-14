@@ -1,18 +1,35 @@
+import { useState, useEffect } from 'react';
+import { useMoralisQuery, useMoralis } from 'react-moralis';
 import Post from '../post';
 import PostInput from '../postInput';
-import { useMoralisQuery } from 'react-moralis';
+import Loader from '@/components/unknown/loader';
 
 import styles from './styles.module.scss';
-import { useState, useEffect } from 'react';
-import Loader from '@/components/unknown/loader';
 
 const Feed = () => {
   const [feedPosts, setFeedPosts] = useState<any[]>();
   const [loader, setLoader] = useState(true);
+  const [justPostedId, setJustPostedId] = useState(``);
+  const [justPostedPost, setJustPostedPost] = useState<any>([]);
+
+  const { Moralis } = useMoralis();
+
+  useEffect(() => {
+    if (justPostedId !== ``) {
+      const postedPostQuery = new Moralis.Query(`Posts`);
+      postedPostQuery
+        .get(justPostedId)
+        .then((post) => setJustPostedPost([post, ...justPostedPost]));
+    }
+  }, [justPostedId]);
 
   const { fetch } = useMoralisQuery(`Posts`, (query) =>
     query.descending(`createdAt`),
   );
+
+  const postedPostInfo = (id: string) => {
+    setJustPostedId(id);
+  };
 
   const userQuery = async () => {
     const result = await fetch();
@@ -26,21 +43,36 @@ const Feed = () => {
 
   return (
     <div className={styles.feed}>
-      <PostInput />
+      <PostInput postedPostInfo={postedPostInfo} />
       {loader && (
         <div className={styles.loaderWrapper}>
           <Loader variant="small" />
         </div>
       )}
-      {feedPosts?.map((item: any, i: number) => (
-        <Post
-          key={i}
-          postId={item.attributes.createdBy.parent.id}
-          timestamp={item.attributes.createdAt}
-          text={item.attributes.text}
-          media={item.attributes.media && item.attributes.media._url}
-        />
-      ))}
+      <div id="feed">
+        {justPostedPost &&
+          justPostedPost.length >= 1 &&
+          justPostedPost.map((item: any, i: number) => (
+            <Post
+              key={i}
+              postId={item.id}
+              timestamp={item.attributes.createdAt}
+              text={item.attributes.text}
+              media={item.attributes.media && item.attributes.media._url}
+              likeCount={item.attributes.likeCount && item.attributes.likeCount}
+            />
+          ))}
+        {feedPosts?.map((item: any, i: number) => (
+          <Post
+            key={i}
+            postId={item.id}
+            timestamp={item.attributes.createdAt}
+            text={item.attributes.text}
+            media={item.attributes.media && item.attributes.media._url}
+            likeCount={item.attributes.likeCount && item.attributes.likeCount}
+          />
+        ))}
+      </div>
     </div>
   );
 };

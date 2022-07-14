@@ -10,13 +10,17 @@ import RippleBtn from '@/components/unknown/rippleBtn';
 interface Props {
   variant: 'comment' | 'like' | 'share' | 'buy';
   bgTransparent?: boolean;
-  onClick?: () => void;
+  liked?: boolean;
 }
 
-const PostBtn = ({ variant, bgTransparent }: Props) => {
+const PostBtn = ({ variant, bgTransparent, liked = false }: Props) => {
   return (
     <RippleBtn
-      className={classNames(styles.btn, bgTransparent && styles.btnTransparent)}
+      className={classNames(
+        styles.btn,
+        liked && styles.liked,
+        bgTransparent && styles.btnTransparent,
+      )}
     >
       <div className={styles.btnInner}>
         {variant === `like` ? (

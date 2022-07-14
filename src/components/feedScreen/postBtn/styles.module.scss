@@ -27,6 +27,7 @@
         z-index: 3;
         pointer-events: none;
         user-select: none;
+        transition: color .2s ease;
     }
 
     svg{
@@ -35,6 +36,7 @@
         pointer-events: none;
         path{
             fill: $primaryLight;
+            transition: fill .2s ease;
         }
     }
 
@@ -65,4 +67,18 @@
     }
 
 
+}
+
+.liked{
+    .label{
+        transition: color .2s ease;
+        color: $secondaryAccent;
+    }
+
+    svg{
+        path{
+            fill: $secondaryAccent;
+            transition: fill .2s ease;
+        }
+    }
 }
