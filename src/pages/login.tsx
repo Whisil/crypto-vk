@@ -17,7 +17,9 @@ const Login = () => {
         ) : isAuthenticated &&
           user?.attributes.displayName === undefined &&
           mountedRef.current ? (
-          <MoreInfoForm userId={user?.id || ``} />
+          <MoreInfoForm 
+          // userId={user?.id || ``} 
+          />
         ) : null}
       </div>
     </div>

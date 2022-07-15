@@ -25,10 +25,12 @@ interface Props {
 const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
-  const [userInfo, setUserInfo] = useState<any[]>();
+  const [userInfo, setUserInfo] = useState<any>();
   const [likeId, setLikeId] = useState<string>(``);
 
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const { Moralis, user } = useMoralis();
 
   useEffect(() => {
     if (!showMenu) return;
@@ -42,28 +44,21 @@ const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
     return () => window.removeEventListener(`click`, handleOutsideClick);
   }, [showMenu]);
 
+  
   //User fetching
 
-  const { fetch } = useMoralisQuery(`_User`, (query) =>
-    query.include(`posts`, postId),
-  );
-
-  const userQuery = async () => {
-    const result = await fetch();
-    setUserInfo(result);
-  };
-
   useEffect(() => {
-    userQuery();
+    const userQuery = new Moralis.Query('Posts');
+    userQuery.find().then(function(results){
+      results[0].relation('createdBy').query().each(function(relatedUser) {
+        setUserInfo(relatedUser)
+      })
+    })
   }, []);
 
-  useEffect(() => {
-    console.log(likeId);
-  }, [likeId]);
 
   // Likes
-  const { Moralis, user } = useMoralis();
-
+  
   const handleLike = async () => {
     const Like = Moralis.Object.extend(`Likes`);
 
@@ -101,7 +96,7 @@ const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
       <div className={styles.header}>
         <AccountInfo
           timestamp={timestamp}
-          displayName={userInfo && userInfo[0]?.attributes.displayName}
+          displayName={userInfo && userInfo.attributes.displayName}
           separateLink
         />
         <div className={styles.postMenu}>

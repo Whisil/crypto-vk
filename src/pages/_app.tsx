@@ -19,12 +19,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         </style>
       </Head>
       <MoralisProvider
-        appId="Dl1SKRqzUwzKy9uv2wjWwRAHnIxlZvPRPjz1SWt4"
-        serverUrl="https://zbldg0cxayez.usemoralis.com:2053/server"
+        appId="3LhvQSOy3gt2PTZ0ua8AQuEDwtisUhTvOGS6sMUg"
+        serverUrl="https://ew7afpe1clbr.usemoralis.com:2053/server"
       >
-        <AuthCheck>
+        {/* <AuthCheck>
           <Component {...pageProps} />
-        </AuthCheck>
+        </AuthCheck> */}
+        <Component {...pageProps} />
       </MoralisProvider>
     </>
   );

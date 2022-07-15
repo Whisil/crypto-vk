@@ -36,6 +36,7 @@ const AuthCheck = ({ children }: any) => {
   } else {
     return children;
   }
+
 };
 
 export default AuthCheck;

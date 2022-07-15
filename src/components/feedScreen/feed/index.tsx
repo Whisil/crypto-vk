@@ -31,14 +31,14 @@ const Feed = () => {
     setJustPostedId(id);
   };
 
-  const userQuery = async () => {
+  const postsQuery = async () => {
     const result = await fetch();
     setFeedPosts(result);
     setLoader(false);
   };
 
   useEffect(() => {
-    userQuery();
+    postsQuery();
   }, []);
 
   return (
