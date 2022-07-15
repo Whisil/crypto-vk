@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { useMoralis, useMoralisQuery } from 'react-moralis';
+import { useMoralis } from 'react-moralis';
 import Image from 'next/image';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
@@ -44,21 +44,22 @@ const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
     return () => window.removeEventListener(`click`, handleOutsideClick);
   }, [showMenu]);
 
-  
   //User fetching
 
   useEffect(() => {
-    const userQuery = new Moralis.Query('Posts');
-    userQuery.find().then(function(results){
-      results[0].relation('createdBy').query().each(function(relatedUser) {
-        setUserInfo(relatedUser)
-      })
-    })
+    const userQuery = new Moralis.Query(`Posts`);
+    userQuery.find().then(function (results) {
+      results[0]
+        .relation(`createdBy`)
+        .query()
+        .each(function (relatedUser) {
+          setUserInfo(relatedUser);
+        });
+    });
   }, []);
 
-
   // Likes
-  
+
   const handleLike = async () => {
     const Like = Moralis.Object.extend(`Likes`);
 
