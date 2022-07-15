@@ -22,10 +22,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         appId="3LhvQSOy3gt2PTZ0ua8AQuEDwtisUhTvOGS6sMUg"
         serverUrl="https://ew7afpe1clbr.usemoralis.com:2053/server"
       >
-        {/* <AuthCheck>
+        <AuthCheck>
           <Component {...pageProps} />
-        </AuthCheck> */}
-        <Component {...pageProps} />
+        </AuthCheck>
+        {/* <Component {...pageProps} /> */}
       </MoralisProvider>
     </>
   );
