@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import AccountImage from '../accountImage';
 import classNames from 'classnames';
 
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const AccountInfo = ({ bio, timestamp, displayName, separateLink }: Props) => {
+  const [time, setTime] = useState(``);
+
   const periods = {
     week: 7 * 24 * 60 * 60 * 1000,
     day: 24 * 60 * 60 * 1000,
@@ -23,20 +26,29 @@ const AccountInfo = ({ bio, timestamp, displayName, separateLink }: Props) => {
     const diff = Date.now() - createdAt;
 
     if (diff > periods.week) {
-      return Math.floor(diff / periods.week) + ` weeks ago`;
+      setTime(Math.floor(diff / periods.week) + ` weeks ago`);
     } else if (diff > periods.day) {
       if (Math.floor(diff / periods.day) === 1) {
-        return Math.floor(diff / periods.day) + ` day ago`;
+        setTime(Math.floor(diff / periods.day) + ` day ago`);
       } else {
-        return Math.floor(diff / periods.day) + ` days ago`;
+        setTime(Math.floor(diff / periods.day) + ` days ago`);
       }
     } else if (diff > periods.hour) {
-      return Math.floor(diff / periods.hour) + ` hours ago`;
+      setTime(Math.floor(diff / periods.hour) + ` hours ago`);
     } else if (diff > periods.minute) {
-      return Math.floor(diff / periods.minute) + ` minutes ago`;
+      setTime(Math.floor(diff / periods.minute) + ` minutes ago`);
+    } else {
+      setTime(`Just now`);
     }
-    return `Just now`;
   }
+
+  useEffect(() => {
+    const timeResetInterval = setInterval(() => formatTime(timestamp), 60000);
+
+    return () => {
+      clearInterval(timeResetInterval);
+    };
+  }, [time]);
 
   return (
     <div className={styles.accountInfo}>
@@ -63,7 +75,7 @@ const AccountInfo = ({ bio, timestamp, displayName, separateLink }: Props) => {
         )}
         <span className={styles.infoSecondary}>
           {bio?.length != 0 && bio}
-          {timestamp?.length != 0 && formatTime(timestamp)}
+          {timestamp?.length != 0 && time}
         </span>
       </div>
     </div>
