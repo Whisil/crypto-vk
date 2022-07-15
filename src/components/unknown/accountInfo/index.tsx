@@ -43,6 +43,10 @@ const AccountInfo = ({ bio, timestamp, displayName, separateLink }: Props) => {
   }
 
   useEffect(() => {
+    if (time === ``) {
+      formatTime(timestamp);
+    }
+
     const timeResetInterval = setInterval(() => formatTime(timestamp), 60000);
 
     return () => {

@@ -11,7 +11,7 @@ const ProfileBlock = () => {
     <div className={styles.container}>
       <div
         className={styles.banner}
-        // style={{ backgroundImage: `url('/images/banner.jpg')` }}
+        style={{ backgroundImage: `url('/images/banner.jpg')` }}
       />
 
       <div className={styles.info}>

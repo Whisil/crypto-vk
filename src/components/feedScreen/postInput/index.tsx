@@ -45,7 +45,7 @@ const PostInput = ({ postedPostInfo }: any) => {
 
     newPost
       .save({
-        text: inputText.length !== 0 ? inputText : undefined,
+        text: inputText.length !== 0 ? inputText.trim() : undefined,
         media: file._source ? file : undefined,
       })
       .then(() => {
@@ -66,7 +66,11 @@ const PostInput = ({ postedPostInfo }: any) => {
   //Input handlers
 
   useEffect(() => {
-    if (inputText.length > 500 || (inputText.length === 0 && mediaURI === ``)) {
+    if (
+      inputText.length > 500 ||
+      (inputText.length === 0 && mediaURI === ``) ||
+      /^\s*$/.test(inputText)
+    ) {
       setBtnDissable(true);
     } else {
       setBtnDissable(false);
@@ -88,6 +92,14 @@ const PostInput = ({ postedPostInfo }: any) => {
       };
     }
   };
+
+  // const handleInputText = (e:any) => {
+  //   // if(e.target.textContent[0])
+  //   setInputText(e.target.textContent);
+  //   if(e.target.textContent[0] === ` ` || e.target.textContent[e.target.textContent.length] === ` `){
+  //     setBtnDissable(false);
+  //   }
+  // }
 
   return (
     <div
