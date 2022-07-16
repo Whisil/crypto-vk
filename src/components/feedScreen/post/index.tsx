@@ -9,6 +9,7 @@ import SaveIcon from 'public/images/icons/save.svg';
 import NotificationsIcon from 'public/images/icons/notifications-icon.svg';
 import UnfollowIcon from 'public/images/icons/unfollow.svg';
 import ReportIcon from 'public/images/icons/report.svg';
+import BinIcon from 'public/images/icons/bin.svg';
 import Like from 'public/images/icons/like.svg';
 
 import styles from './styles.module.scss';
@@ -19,10 +20,18 @@ interface Props {
   timestamp: any;
   text?: string;
   media?: string;
-  likeCount: any;
+  likeCount: number;
+  handlePostDelete?: any;
 }
 
-const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
+const Post = ({
+  postId,
+  timestamp,
+  text,
+  media,
+  likeCount,
+  handlePostDelete,
+}: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
   const [userInfo, setUserInfo] = useState<any>();
@@ -31,6 +40,8 @@ const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const { Moralis, user } = useMoralis();
+
+  const postQuery = new Moralis.Query(`Posts`);
 
   useEffect(() => {
     if (!showMenu) return;
@@ -47,14 +58,13 @@ const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
   //User fetching
 
   useEffect(() => {
-    const userQuery = new Moralis.Query(`Posts`);
-    userQuery.find().then(function (results) {
-      results[0]
+    const query = new Moralis.Query(`Posts`);
+    query.get(postId).then(function (result: any) {
+      result
         .relation(`createdBy`)
         .query()
-        .each(function (relatedUser) {
-          setUserInfo(relatedUser);
-        });
+        .find()
+        .then((res: any) => setUserInfo(res[0]));
     });
   }, []);
 
@@ -65,8 +75,6 @@ const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
 
     const newLike = new Like();
     newLike.save().then(() => {
-      const postQuery = new Moralis.Query(`Posts`);
-
       postQuery.get(postId).then((post) => {
         post.relation(`likes`).add(newLike);
         post.increment(`likeCount`);
@@ -119,37 +127,53 @@ const Post = ({ postId, timestamp, text, media, likeCount }: Props) => {
                 if (menuMounted) setShowMenu(false);
               }}
             >
-              <RippleBtn>
-                <div className={styles.menuItem}>
-                  <SaveIcon />
-                  <span>Save</span>
-                </div>
-              </RippleBtn>
+              {userInfo.id === user?.id ? (
+                <RippleBtn>
+                  <div
+                    className={classNames(styles.menuItem, styles.accentBtn)}
+                    onClick={() => handlePostDelete(postId)}
+                  >
+                    <BinIcon />
+                    <span>Delete</span>
+                  </div>
+                </RippleBtn>
+              ) : (
+                <>
+                  <RippleBtn>
+                    <div className={styles.menuItem}>
+                      <SaveIcon />
+                      <span>Save</span>
+                    </div>
+                  </RippleBtn>
 
-              <RippleBtn>
-                <div className={styles.menuItem}>
-                  <NotificationsIcon />
-                  <span>Turn on notifications</span>
-                </div>
-              </RippleBtn>
+                  <RippleBtn>
+                    <div className={styles.menuItem}>
+                      <NotificationsIcon />
+                      <span>Turn on notifications</span>
+                    </div>
+                  </RippleBtn>
 
-              <span className={styles.divider} />
+                  <span className={styles.divider} />
 
-              <RippleBtn>
-                <div className={styles.menuItem}>
-                  <UnfollowIcon />
-                  <span>Unfollow</span>
-                </div>
-              </RippleBtn>
+                  <RippleBtn>
+                    <div className={styles.menuItem}>
+                      <UnfollowIcon />
+                      <span>Unfollow</span>
+                    </div>
+                  </RippleBtn>
 
-              <span className={styles.divider} />
+                  <span className={styles.divider} />
 
-              <RippleBtn>
-                <div className={classNames(styles.menuItem, styles.report)}>
-                  <ReportIcon />
-                  <span>Report</span>
-                </div>
-              </RippleBtn>
+                  <RippleBtn>
+                    <div
+                      className={classNames(styles.menuItem, styles.accentBtn)}
+                    >
+                      <ReportIcon />
+                      <span>Report</span>
+                    </div>
+                  </RippleBtn>
+                </>
+              )}
             </div>
           )}
         </div>

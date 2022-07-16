@@ -93,14 +93,6 @@ const PostInput = ({ postedPostInfo }: any) => {
     }
   };
 
-  // const handleInputText = (e:any) => {
-  //   // if(e.target.textContent[0])
-  //   setInputText(e.target.textContent);
-  //   if(e.target.textContent[0] === ` ` || e.target.textContent[e.target.textContent.length] === ` `){
-  //     setBtnDissable(false);
-  //   }
-  // }
-
   return (
     <div
       className={styles.postInput}
