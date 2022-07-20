@@ -2,7 +2,7 @@ import Home from 'public/images/icons/home-icon.svg';
 import Explore from 'public/images/icons/explore-icon.svg';
 import Messages from 'public/images/icons/messages-icon.svg';
 import Market from 'public/images/icons/market-icon.svg';
-import Notifications from 'public/images/icons/notifications-icon.svg';
+import Notifications from 'public/images/icons/notifications.svg';
 import classNames from 'classnames';
 
 import styles from './styles.module.scss';

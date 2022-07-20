@@ -5,15 +5,10 @@ import Image from 'next/image';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
 import DotsIcon from 'public/images/icons/dots.svg';
-import SaveIcon from 'public/images/icons/save.svg';
-import NotificationsIcon from 'public/images/icons/notifications-icon.svg';
-import UnfollowIcon from 'public/images/icons/unfollow.svg';
-import ReportIcon from 'public/images/icons/report.svg';
-import BinIcon from 'public/images/icons/bin.svg';
 import Like from 'public/images/icons/like.svg';
+import MenuBtn from '@/components/unknown/menuBtn';
 
 import styles from './styles.module.scss';
-import RippleBtn from '@/components/unknown/rippleBtn';
 
 interface Props {
   postId: string;
@@ -128,50 +123,24 @@ const Post = ({
               }}
             >
               {userInfo.id === user?.id ? (
-                <RippleBtn>
-                  <div
-                    className={classNames(styles.menuItem, styles.accentBtn)}
-                    onClick={() => handlePostDelete(postId)}
-                  >
-                    <BinIcon />
-                    <span>Delete</span>
-                  </div>
-                </RippleBtn>
+                <MenuBtn
+                  icon="bin"
+                  text="Delete"
+                  accent
+                  onClick={() => handlePostDelete(postId)}
+                />
               ) : (
                 <>
-                  <RippleBtn>
-                    <div className={styles.menuItem}>
-                      <SaveIcon />
-                      <span>Save</span>
-                    </div>
-                  </RippleBtn>
-
-                  <RippleBtn>
-                    <div className={styles.menuItem}>
-                      <NotificationsIcon />
-                      <span>Turn on notifications</span>
-                    </div>
-                  </RippleBtn>
+                  <MenuBtn icon="save" text="Save" />
+                  <MenuBtn icon="notifications" text="Turn on notifications" />
 
                   <span className={styles.divider} />
 
-                  <RippleBtn>
-                    <div className={styles.menuItem}>
-                      <UnfollowIcon />
-                      <span>Unfollow</span>
-                    </div>
-                  </RippleBtn>
+                  <MenuBtn icon="unfollow" text="Unfollow" />
 
                   <span className={styles.divider} />
 
-                  <RippleBtn>
-                    <div
-                      className={classNames(styles.menuItem, styles.accentBtn)}
-                    >
-                      <ReportIcon />
-                      <span>Report</span>
-                    </div>
-                  </RippleBtn>
+                  <MenuBtn icon="report" text="Report" accent />
                 </>
               )}
             </div>
@@ -203,6 +172,8 @@ const Post = ({
 
         <div className={styles.comments}>45 comments</div>
       </div>
+
+      <div className={styles.comments}></div>
 
       <div className={styles.interactions}>
         <div

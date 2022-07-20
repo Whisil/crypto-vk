@@ -2,16 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 import AccountImage from '@/components/unknown/accountImage';
 import Triangle from 'public/images/icons/triangle.svg';
-import AvatarIcon from 'public/images/icons/avatar.svg';
 import DarkModeIcon from 'public/images/icons/darkmode-switch.svg';
-import HelpIcon from 'public/images/icons/help.svg';
-import SettingsIcon from 'public/images/icons/settings.svg';
-import LogoutIcon from 'public/images/icons/log-out.svg';
-import Link from 'next/link';
-import styles from './styles.module.scss';
 import classNames from 'classnames';
 import Switch from '@/components/unknown/switch';
-import RippleBtn from '@/components/unknown/rippleBtn';
+import MenuBtn from '@/components/unknown/menuBtn';
+
+import styles from './styles.module.scss';
 
 const HeaderAccount = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -51,16 +47,7 @@ const HeaderAccount = () => {
 
       {showMenu && (
         <div className={styles.headerAccountMenu} ref={menuRef}>
-          <RippleBtn>
-            <div className={styles.AccountMenuItem}>
-              <AvatarIcon />
-              <Link href="/" passHref>
-                <span>
-                  <a>Profile</a>
-                </span>
-              </Link>
-            </div>
-          </RippleBtn>
+          <MenuBtn icon="avatar" text="Profile" link="/" />
 
           <span className={styles.divider} />
 
@@ -74,30 +61,17 @@ const HeaderAccount = () => {
 
           <span className={styles.divider} />
 
-          <RippleBtn>
-            <div className={styles.AccountMenuItem}>
-              <HelpIcon />
-              <span>About & Help</span>
-            </div>
-          </RippleBtn>
-          <RippleBtn>
-            <div className={styles.AccountMenuItem}>
-              <SettingsIcon />
-              <span>Settings</span>
-            </div>
-          </RippleBtn>
+          <MenuBtn icon="help" text="About & help" />
+          <MenuBtn icon="settings" text="Settings" />
 
           <span className={styles.divider} />
 
-          <RippleBtn>
-            <div
-              className={classNames(styles.AccountMenuItem, styles.logout)}
-              onClick={handleLogout}
-            >
-              <LogoutIcon />
-              <span>Log out</span>
-            </div>
-          </RippleBtn>
+          <MenuBtn
+            icon="log-out"
+            text="Log out"
+            onClick={handleLogout}
+            accent
+          />
         </div>
       )}
     </div>

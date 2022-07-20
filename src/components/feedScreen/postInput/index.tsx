@@ -69,7 +69,7 @@ const PostInput = ({ postedPostInfo }: any) => {
     if (
       inputText.length > 500 ||
       (inputText.length === 0 && mediaURI === ``) ||
-      /^\s*$/.test(inputText)
+      (inputText.length !== 0 && /^\s*$/.test(inputText))
     ) {
       setBtnDissable(true);
     } else {

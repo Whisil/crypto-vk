@@ -67,41 +67,6 @@
                 box-shadow: 0px 0px 5px 0px $primaryLight;
                 animation: appear .2s ease;
             
-                .menuItem {
-                  display: flex;
-                  align-items: center;
-                  gap: 10px;
-                  padding: 10px;
-                  border-radius: 10px;
-                  background: transparent;
-                  transition: background 0.2s ease;
-                  cursor: pointer;
-                  position: relative;
-                  z-index: 2;
-                  
-            
-                  span {
-                    font-size: 16px;
-                    line-height: 1;
-                    font-weight: 500;
-                    color: $primaryLight;
-                    pointer-events: none;
-                  }
-                  svg{
-                    pointer-events: none;
-                  }
-
-                  &:hover {
-                    background: rgba($primaryLight, 0.15);
-                  }
-            
-                }
-            
-                .accentBtn {
-                  span {
-                    color: $secondaryAccent;
-                  }
-                }
             
                 .divider {
                   display: block;

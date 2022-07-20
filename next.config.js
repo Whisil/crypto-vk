@@ -8,6 +8,6 @@ module.exports = {
     return config;
   },
   images: {
-    domains: ['zbldg0cxayez.usemoralis.com'],
+    domains: ['ew7afpe1clbr.usemoralis.com'],
   },
 };
