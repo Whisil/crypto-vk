@@ -1,14 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
-import classNames from 'classnames';
+import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 import Image from 'next/image';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
-import DotsIcon from 'public/images/icons/dots.svg';
+import Comment from '../comment';
 import Like from 'public/images/icons/like.svg';
-import MenuBtn from '@/components/unknown/menuBtn';
 
 import styles from './styles.module.scss';
+import PostMenu from '../postMenu';
 
 interface Props {
   postId: string;
@@ -27,28 +26,12 @@ const Post = ({
   likeCount,
   handlePostDelete,
 }: Props) => {
-  const [showMenu, setShowMenu] = useState(false);
-  const [menuMounted, setMenuMounted] = useState(false);
   const [userInfo, setUserInfo] = useState<any>();
   const [likeId, setLikeId] = useState<string>(``);
-
-  const menuRef = useRef<HTMLDivElement>(null);
 
   const { Moralis, user } = useMoralis();
 
   const postQuery = new Moralis.Query(`Posts`);
-
-  useEffect(() => {
-    if (!showMenu) return;
-    function handleOutsideClick(e: any) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    }
-    window.addEventListener(`click`, handleOutsideClick);
-
-    return () => window.removeEventListener(`click`, handleOutsideClick);
-  }, [showMenu]);
 
   //User fetching
 
@@ -101,51 +84,14 @@ const Post = ({
         <AccountInfo
           timestamp={timestamp}
           displayName={userInfo && userInfo.attributes.displayName}
-          separateLink
+          href="/"
         />
-        <div className={styles.postMenu}>
-          <span
-            className={classNames(styles.dots, showMenu && styles.activeDots)}
-            onClick={() => {
-              setShowMenu(!showMenu);
-              setMenuMounted(!setMenuMounted);
-            }}
-          >
-            <DotsIcon />
-          </span>
 
-          {showMenu && (
-            <div
-              className={styles.menuList}
-              ref={menuRef}
-              onAnimationEnd={() => {
-                if (menuMounted) setShowMenu(false);
-              }}
-            >
-              {userInfo.id === user?.id ? (
-                <MenuBtn
-                  icon="bin"
-                  text="Delete"
-                  accent
-                  onClick={() => handlePostDelete(postId)}
-                />
-              ) : (
-                <>
-                  <MenuBtn icon="save" text="Save" />
-                  <MenuBtn icon="notifications" text="Turn on notifications" />
-
-                  <span className={styles.divider} />
-
-                  <MenuBtn icon="unfollow" text="Unfollow" />
-
-                  <span className={styles.divider} />
-
-                  <MenuBtn icon="report" text="Report" accent />
-                </>
-              )}
-            </div>
-          )}
-        </div>
+        <PostMenu
+          handlePostDelete={handlePostDelete}
+          postId={postId}
+          userId={userInfo?.id}
+        />
       </div>
 
       {text && <span className={styles.description}>{text}</span>}
@@ -173,8 +119,6 @@ const Post = ({
         <div className={styles.comments}>45 comments</div>
       </div>
 
-      <div className={styles.comments}></div>
-
       <div className={styles.interactions}>
         <div
           onClick={likeId === `` ? handleLike : handleLikeRemove}
@@ -184,6 +128,10 @@ const Post = ({
         </div>
         <PostBtn variant="comment" />
         <PostBtn variant="share" bgTransparent />
+      </div>
+
+      <div className={styles.commentsWrapper}>
+        <Comment />
       </div>
     </div>
   );

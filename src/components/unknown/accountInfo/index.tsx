@@ -9,10 +9,17 @@ interface Props {
   bio?: string;
   timestamp?: string;
   displayName?: string;
-  separateLink?: boolean;
+  href?: string;
+  small?: boolean;
 }
 
-const AccountInfo = ({ bio, timestamp, displayName, separateLink }: Props) => {
+const AccountInfo = ({
+  bio,
+  timestamp = undefined,
+  displayName,
+  href = ``,
+  small,
+}: Props) => {
   const [time, setTime] = useState(``);
 
   const periods = {
@@ -55,21 +62,21 @@ const AccountInfo = ({ bio, timestamp, displayName, separateLink }: Props) => {
   }, [time]);
 
   return (
-    <div className={styles.accountInfo}>
-      {separateLink ? (
-        <Link href="/">
+    <div className={classNames(styles.accountInfo, small && styles.small)}>
+      {href.length !== 0 ? (
+        <Link href={href}>
           <a>
-            <AccountImage className={styles.avatar} />
+            <AccountImage className={styles.avatar} small={small} />
           </a>
         </Link>
       ) : (
-        <AccountImage className={styles.avatar} />
+        <AccountImage className={styles.avatar} small={small} />
       )}
       <div
         className={classNames(styles.info, bio?.length != 0 && styles.textCut)}
       >
-        {separateLink ? (
-          <Link href="/">
+        {href.length !== 0 ? (
+          <Link href={href}>
             <a>
               <h4 className={styles.name}>{displayName}</h4>
             </a>
@@ -79,7 +86,7 @@ const AccountInfo = ({ bio, timestamp, displayName, separateLink }: Props) => {
         )}
         <span className={styles.infoSecondary}>
           {bio?.length != 0 && bio}
-          {timestamp?.length != 0 && time}
+          {timestamp && timestamp?.length != 0 && time}
         </span>
       </div>
     </div>

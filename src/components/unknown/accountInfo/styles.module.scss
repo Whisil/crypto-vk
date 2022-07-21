@@ -6,6 +6,7 @@
     max-height: 40px;
 }
 
+
 .avatar{
     margin-right: 10px;
 }
@@ -32,4 +33,21 @@
     font-size: 14px;
     line-height: 1;
     font-weight: normal;
+}
+
+.small{
+    max-height: 34px;
+    a{
+        height: 100%;
+    }
+    .name{
+        font-size: 14px;
+    }
+    .infoSecondary{
+        font-size: 12px;
+    }
+
+    .avatar{
+        max-height: 34px;
+    }
 }
