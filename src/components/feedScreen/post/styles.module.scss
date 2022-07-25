@@ -2,10 +2,11 @@
 
 .post{
     padding: 15px;
+    max-width: 640px;
+    margin: 15px auto 0 auto;
     width: 100%;
     height: fit-content;
     border-radius: 20px;
-    margin-top: 15px;
     background-color: $primaryDark;
 
     .header{
@@ -87,12 +88,5 @@
 
     .commentsWrapper{
         margin-top: 15px;
-        .comment:not(:last-child){
-            margin-bottom: 10px;
-        }
-        .commentUpper{
-            display: flex;
-            justify-content: space-between;
-        }
     }
 }

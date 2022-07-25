@@ -14,20 +14,14 @@ interface Props {
   timestamp: any;
   text?: string;
   media?: string;
-  likeCount: number;
   handlePostDelete?: any;
 }
 
-const Post = ({
-  postId,
-  timestamp,
-  text,
-  media,
-  likeCount,
-  handlePostDelete,
-}: Props) => {
+const Post = ({ postId, timestamp, text, media, handlePostDelete }: Props) => {
   const [userInfo, setUserInfo] = useState<any>();
-  const [likeId, setLikeId] = useState<string>(``);
+  const [likeId, setLikeId] = useState<string | undefined>(undefined);
+  const [liked, setLiked] = useState<boolean>(false);
+  const [likeCounter, setLikeCounter] = useState<number>(0);
 
   const { Moralis, user } = useMoralis();
 
@@ -36,15 +30,31 @@ const Post = ({
   //User fetching
 
   useEffect(() => {
-    const query = new Moralis.Query(`Posts`);
-    query.get(postId).then(function (result: any) {
+    postQuery.get(postId).then(function (result: any) {
       result
         .relation(`createdBy`)
         .query()
         .find()
         .then((res: any) => setUserInfo(res[0]));
+      result
+        .relation(`likes`)
+        .query()
+        .equalTo(`likedBy`, user)
+        .find()
+        .then((res: any) => {
+          setLikeId(res[0]?.id);
+          if (res[0]) {
+            setLiked(true);
+          }
+        });
     });
   }, []);
+
+  useEffect(() => {
+    postQuery
+      .get(postId)
+      .then((res: any) => setLikeCounter(res.attributes.likeCount));
+  }, [likeId]);
 
   // Likes
 
@@ -57,19 +67,25 @@ const Post = ({
         post.relation(`likes`).add(newLike);
         post.increment(`likeCount`);
         setLikeId(newLike.id);
-        newLike.relation(`likedBy`).add(user);
+        newLike.set(`likedBy`, user);
         newLike.relation(`likedPost`).add(post);
         user?.relation(`likes`).add(newLike);
         user?.save();
         newLike.save();
         post.save();
+        setLiked(true);
       });
     });
   };
 
   const handleLikeRemove = async () => {
     const likeQuery = new Moralis.Query(`Likes`);
-    (await likeQuery.get(likeId)).destroy().then(() => setLikeId(``));
+    if (likeId) {
+      (await likeQuery.get(likeId)).destroy().then(() => {
+        setLiked(false);
+        setLikeId(undefined);
+      });
+    }
 
     const postQuery = new Moralis.Query(`Posts`);
     postQuery.get(postId).then((post) => {
@@ -111,9 +127,7 @@ const Post = ({
       <div className={styles.info}>
         <div className={styles.likes}>
           <Like />
-          <span className={styles.likesCount}>
-            {likeId !== `` ? likeCount + 1 : likeCount} Likes
-          </span>
+          <span className={styles.likesCount}>{likeCounter} Likes</span>
         </div>
 
         <div className={styles.comments}>45 comments</div>
@@ -121,17 +135,18 @@ const Post = ({
 
       <div className={styles.interactions}>
         <div
-          onClick={likeId === `` ? handleLike : handleLikeRemove}
+          onClick={likeId === `` || !likeId ? handleLike : handleLikeRemove}
           className={styles.btnWrapper}
         >
-          <PostBtn variant="like" liked={likeId !== `` && true} />
+          <PostBtn variant="like" liked={liked} />
         </div>
         <PostBtn variant="comment" />
         <PostBtn variant="share" bgTransparent />
       </div>
 
       <div className={styles.commentsWrapper}>
-        <Comment />
+        <Comment timestamp={timestamp} />
+        <Comment timestamp={timestamp} />
       </div>
     </div>
   );

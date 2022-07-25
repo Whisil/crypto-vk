@@ -19,7 +19,13 @@ const Comment = ({ timestamp, createdBy }: Props) => {
           displayName="David Haidamaka"
           timestamp={timestamp}
         />
-        <PostMenu />
+        <PostMenu variant="comment" />
+      </div>
+
+      <div className={styles.commentInner}>
+        <span>
+          aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        </span>
       </div>
     </div>
   );

@@ -10,9 +10,10 @@ interface Props {
   userId?: any;
   handlePostDelete?(postId: string | undefined): void;
   postId?: string;
+  variant?: 'comment';
 }
 
-const PostMenu = ({ userId, handlePostDelete, postId }: Props) => {
+const PostMenu = ({ userId, handlePostDelete, postId, variant }: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
 
@@ -33,7 +34,12 @@ const PostMenu = ({ userId, handlePostDelete, postId }: Props) => {
   }, [showMenu]);
 
   return (
-    <div className={styles.postMenu}>
+    <div
+      className={classNames(
+        styles.postMenu,
+        variant === `comment` && styles.commentMenu,
+      )}
+    >
       <span
         className={classNames(styles.dots, showMenu && styles.activeDots)}
         onClick={() => {
@@ -59,6 +65,8 @@ const PostMenu = ({ userId, handlePostDelete, postId }: Props) => {
               accent
               onClick={() => handlePostDelete && handlePostDelete(postId)}
             />
+          ) : variant === `comment` ? (
+            <MenuBtn icon="report" text="Report" accent />
           ) : (
             <>
               <MenuBtn icon="save" text="Save" />

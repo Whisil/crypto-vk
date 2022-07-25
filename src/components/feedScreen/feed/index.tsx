@@ -86,7 +86,6 @@ const Feed = () => {
               timestamp={item.attributes.createdAt}
               text={item.attributes.text}
               media={item.attributes.media && item.attributes.media._url}
-              likeCount={item.attributes.likeCount && item.attributes.likeCount}
               handlePostDelete={handlePostDelete}
             />
           ))}
@@ -97,7 +96,6 @@ const Feed = () => {
             timestamp={item.attributes.createdAt}
             text={item.attributes.text}
             media={item.attributes.media && item.attributes.media._url}
-            likeCount={item.attributes.likeCount && item.attributes.likeCount}
           />
         ))}
       </div>

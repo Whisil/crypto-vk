@@ -1,10 +1,22 @@
 @import '@/styles/colors.scss';
 
 .comment{
-    
+    &:not(:last-child){
+        margin-bottom: 20px;
+    }
     .commentUpper{
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+
+    .commentInner{
+        margin-left: 44px;
+        margin-top: 5px;
+        span{
+            word-wrap: break-word;
+            font-size: 14px;
+            line-height: 1.2;
+        }
     }
 }
