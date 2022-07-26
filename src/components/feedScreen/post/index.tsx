@@ -15,10 +15,18 @@ interface Props {
   text?: string;
   media?: string;
   handlePostDelete?: any;
+  createdBy: any;
 }
 
-const Post = ({ postId, timestamp, text, media, handlePostDelete }: Props) => {
-  const [userInfo, setUserInfo] = useState<any>();
+const Post = ({
+  postId,
+  timestamp,
+  text,
+  media,
+  handlePostDelete,
+  createdBy,
+}: Props) => {
+  const [userInfo, setUserInfo] = useState<string>(``);
   const [likeId, setLikeId] = useState<string | undefined>(undefined);
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCounter, setLikeCounter] = useState<number>(0);
@@ -31,11 +39,9 @@ const Post = ({ postId, timestamp, text, media, handlePostDelete }: Props) => {
 
   useEffect(() => {
     postQuery.get(postId).then(function (result: any) {
-      result
-        .relation(`createdBy`)
-        .query()
-        .find()
-        .then((res: any) => setUserInfo(res[0]));
+      Moralis.Cloud.run(`userFetch`, { id: createdBy.id }).then((res) =>
+        setUserInfo(res[0].attributes.displayName),
+      );
       result
         .relation(`likes`)
         .query()
@@ -97,16 +103,12 @@ const Post = ({ postId, timestamp, text, media, handlePostDelete }: Props) => {
   return (
     <div className={styles.post}>
       <div className={styles.header}>
-        <AccountInfo
-          timestamp={timestamp}
-          displayName={userInfo && userInfo.attributes.displayName}
-          href="/"
-        />
+        <AccountInfo timestamp={timestamp} displayName={userInfo} href="/" />
 
         <PostMenu
           handlePostDelete={handlePostDelete}
           postId={postId}
-          userId={userInfo?.id}
+          userId={createdBy.id}
         />
       </div>
 

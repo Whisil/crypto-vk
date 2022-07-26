@@ -51,8 +51,9 @@ const PostInput = ({ postedPostInfo }: any) => {
       .then(() => {
         user?.relation(`posts`).add(newPost);
         user?.save();
-        newPost.relation(`createdBy`).add(Moralis.User.current());
+        newPost.set(`createdBy`, user);
         postedPostInfo(newPost.id);
+
         newPost.save();
 
         handleCloseBtn();
@@ -166,7 +167,7 @@ const PostInput = ({ postedPostInfo }: any) => {
               <input
                 id="mediaInput"
                 type="file"
-                accept="image/jpeg,image/png,image/webp,video/mp4"
+                accept="image/jpeg,image/png,image/webp,image/gif,video/mp4"
                 className={styles.mediaInput}
                 onChange={handleInputChange}
                 ref={fileInput}

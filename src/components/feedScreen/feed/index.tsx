@@ -60,10 +60,11 @@ const Feed = () => {
     postQuery
       .descending(`createdAt`)
       .find()
-      .then((posts) => setFeedPosts(posts))
+      .then((posts) => {
+        setFeedPosts(posts);
+      })
       .then(() => setLoader(false));
   };
-
   useEffect(() => {
     postsQuery();
   }, []);
@@ -87,6 +88,7 @@ const Feed = () => {
               text={item.attributes.text}
               media={item.attributes.media && item.attributes.media._url}
               handlePostDelete={handlePostDelete}
+              createdBy={item.attributes.createdBy}
             />
           ))}
         {feedPosts?.map((item: any, i: number) => (
@@ -96,6 +98,7 @@ const Feed = () => {
             timestamp={item.attributes.createdAt}
             text={item.attributes.text}
             media={item.attributes.media && item.attributes.media._url}
+            createdBy={item.attributes.createdBy}
           />
         ))}
       </div>
