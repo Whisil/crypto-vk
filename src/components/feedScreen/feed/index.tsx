@@ -16,6 +16,7 @@ const Feed = () => {
   const { Moralis } = useMoralis();
 
   const postQuery = new Moralis.Query(`Posts`);
+  const likeQuery = new Moralis.Query(`Likes`);
 
   useEffect(() => {
     if (justPostedId !== ``) {
@@ -31,6 +32,10 @@ const Feed = () => {
   useEffect(() => {
     if (postDeleteId !== ``) {
       postQuery.get(postDeleteId).then((post) => {
+        likeQuery
+          .equalTo(`likedPost`, post)
+          .find()
+          .then((res) => Moralis.Object.destroyAll(res));
         post.destroy();
 
         const index = justPostedPost.findIndex((post: any) => {

@@ -35,13 +35,13 @@ const Post = ({
 
   const postQuery = new Moralis.Query(`Posts`);
 
-  //User fetching
+  //User fetching and like check
 
   useEffect(() => {
+    Moralis.Cloud.run(`userFetch`, { id: createdBy.id }).then((res) =>
+      setUserInfo(res[0].attributes.displayName),
+    );
     postQuery.get(postId).then(function (result: any) {
-      Moralis.Cloud.run(`userFetch`, { id: createdBy.id }).then((res) =>
-        setUserInfo(res[0].attributes.displayName),
-      );
       result
         .relation(`likes`)
         .query()
@@ -74,7 +74,7 @@ const Post = ({
         post.increment(`likeCount`);
         setLikeId(newLike.id);
         newLike.set(`likedBy`, user);
-        newLike.relation(`likedPost`).add(post);
+        newLike.set(`likedPost`, post);
         user?.relation(`likes`).add(newLike);
         user?.save();
         newLike.save();
