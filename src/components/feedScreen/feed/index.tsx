@@ -36,6 +36,7 @@ const Feed = () => {
           .equalTo(`likedPost`, post)
           .find()
           .then((res) => Moralis.Object.destroyAll(res));
+
         post.destroy();
 
         const index = justPostedPost.findIndex((post: any) => {
@@ -43,7 +44,10 @@ const Feed = () => {
             return true;
           }
         });
-        justPostedPost.splice(index, 1);
+
+        if (index >= 0) {
+          justPostedPost.splice(index, 1);
+        }
         setPostDeleteId(``);
       });
     }
@@ -59,7 +63,7 @@ const Feed = () => {
     setPostDeleteId(id);
   };
 
-  //Post Query
+  //Post fetch Query
 
   const postsQuery = () => {
     postQuery
@@ -103,6 +107,7 @@ const Feed = () => {
             timestamp={item.attributes.createdAt}
             text={item.attributes.text}
             media={item.attributes.media && item.attributes.media._url}
+            handlePostDelete={handlePostDelete}
             createdBy={item.attributes.createdBy}
           />
         ))}

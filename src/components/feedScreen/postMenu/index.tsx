@@ -63,7 +63,10 @@ const PostMenu = ({ userId, handlePostDelete, postId, variant }: Props) => {
               icon="bin"
               text="Delete"
               accent
-              onClick={() => handlePostDelete && handlePostDelete(postId)}
+              onClick={() => {
+                handlePostDelete && handlePostDelete(postId);
+                setShowMenu(false);
+              }}
             />
           ) : variant === `comment` ? (
             <MenuBtn icon="report" text="Report" accent />
