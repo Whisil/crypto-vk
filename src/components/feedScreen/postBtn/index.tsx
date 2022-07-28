@@ -11,9 +11,10 @@ interface Props {
   variant: 'comment' | 'like' | 'share' | 'buy';
   bgTransparent?: boolean;
   liked?: boolean;
+  onClick?: any;
 }
 
-const PostBtn = ({ variant, bgTransparent, liked = false }: Props) => {
+const PostBtn = ({ variant, bgTransparent, liked = false, onClick }: Props) => {
   return (
     <RippleBtn
       className={classNames(
@@ -22,7 +23,7 @@ const PostBtn = ({ variant, bgTransparent, liked = false }: Props) => {
         bgTransparent && styles.btnTransparent,
       )}
     >
-      <div className={styles.btnInner}>
+      <div className={styles.btnInner} onClick={onClick}>
         {variant === `like` ? (
           <>
             <LikeIcon />

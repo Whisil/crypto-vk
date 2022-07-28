@@ -16,6 +16,7 @@ interface Props {
   commentInput?: boolean;
   commentedPostId?: string;
   postedCommentInfo?(id: string): void;
+  commentInputFocus?: boolean;
 }
 
 const PostInput = ({
@@ -23,10 +24,12 @@ const PostInput = ({
   commentInput,
   commentedPostId,
   postedCommentInfo,
+  commentInputFocus,
 }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
   const [mediaURI, setMediaURI] = useState<any>(``);
+  const [commentedPost, setCommentedPost] = useState<any>();
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
@@ -76,9 +79,14 @@ const PostInput = ({
       });
   };
 
-  const handleComment = () => {
+  const handleComment = async () => {
     const Comment = Moralis.Object.extend(`Comment`);
-    const commentedPost = Moralis.Object.extend(`Posts`).get(commentedPostId);
+    const commentedPostQuery = new Moralis.Query(`Posts`);
+    if (commentedPostId) {
+      await commentedPostQuery
+        .get(commentedPostId)
+        .then((res: any) => setCommentedPost(res));
+    }
 
     let fileInputValue;
     let file: any = null;
@@ -113,6 +121,12 @@ const PostInput = ({
   };
 
   //Input handlers
+
+  useEffect(() => {
+    if (textInput && textInput.current) {
+      textInput.current.focus();
+    }
+  }, [commentInputFocus, textInput]);
 
   useEffect(() => {
     if (

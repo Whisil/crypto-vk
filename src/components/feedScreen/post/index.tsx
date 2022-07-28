@@ -31,6 +31,8 @@ const Post = ({
   const [likeId, setLikeId] = useState<string | undefined>(undefined);
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCounter, setLikeCounter] = useState<number>(0);
+  const [showComments, setShowComments] = useState<boolean>(true);
+  const [commentInputFocus, setCommentInputFocus] = useState<boolean>(false);
 
   const { Moralis, user } = useMoralis();
 
@@ -101,6 +103,25 @@ const Post = ({
     });
   };
 
+  //Comments
+
+  const commentsFetch = () => {
+    postQuery.get(postId).then((res: any) =>
+      res
+        .relation(`comments`)
+        .query()
+        .find({
+          success: function (comments: any) {
+            console.log(comments);
+          },
+        }),
+    );
+  };
+
+  useEffect(() => {
+    commentsFetch();
+  }, []);
+
   return (
     <div className={styles.post}>
       <div className={styles.header}>
@@ -123,7 +144,9 @@ const Post = ({
           <span className={styles.likesCount}>{likeCounter} Likes</span>
         </div>
 
-        <div className={styles.comments}>45 comments</div>
+        <div className={styles.comments} onClick={() => setShowComments(true)}>
+          45 comments
+        </div>
       </div>
 
       <div className={styles.interactions}>
@@ -133,15 +156,27 @@ const Post = ({
         >
           <PostBtn variant="like" liked={liked} />
         </div>
-        <PostBtn variant="comment" />
+        <PostBtn
+          variant="comment"
+          onClick={() => {
+            setShowComments(true);
+            setCommentInputFocus((commentInputFocus) => !commentInputFocus);
+          }}
+        />
         <PostBtn variant="share" bgTransparent />
       </div>
 
-      <ul className={styles.commentsWrapper}>
-        <PostInput commentInput />
-        <CommentContainer timestamp={timestamp} />
-        <CommentContainer timestamp={timestamp} />
-      </ul>
+      {showComments && (
+        <ul className={styles.commentsWrapper}>
+          <PostInput
+            commentInput
+            commentInputFocus={commentInputFocus}
+            commentedPostId={postId}
+          />
+          <CommentContainer timestamp={timestamp} />
+          <CommentContainer timestamp={timestamp} />
+        </ul>
+      )}
     </div>
   );
 };

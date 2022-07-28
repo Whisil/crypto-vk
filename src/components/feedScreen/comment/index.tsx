@@ -5,12 +5,14 @@ import Like from 'public/images/icons/like.svg';
 import classNames from 'classnames';
 
 import styles from './styles.module.scss';
+import MediaContainer from '../mediaContainer';
 
 interface Props {
   timestamp?: string;
   showReplies?: boolean;
   isReply?: boolean;
   handleShowReplies?(): void;
+  media?: string;
 }
 
 const Comment = ({
@@ -18,6 +20,7 @@ const Comment = ({
   showReplies,
   handleShowReplies,
   isReply,
+  media,
 }: Props) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   return (
@@ -39,6 +42,7 @@ const Comment = ({
 
       <div className={styles.marginContainer}>
         <div className={styles.commentInner}>
+          {media && <MediaContainer src={media} />}
           <span>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
