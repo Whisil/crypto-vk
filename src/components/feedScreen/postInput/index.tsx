@@ -11,7 +11,19 @@ import CloseIcon from 'public/images/icons/close.svg';
 
 import styles from './styles.module.scss';
 
-const PostInput = ({ postedPostInfo }: any) => {
+interface Props {
+  postedPostInfo?(id: string): void;
+  commentInput?: boolean;
+  commentedPostId?: string;
+  postedCommentInfo?(id: string): void;
+}
+
+const PostInput = ({
+  postedPostInfo,
+  commentInput,
+  commentedPostId,
+  postedCommentInfo,
+}: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
   const [mediaURI, setMediaURI] = useState<any>(``);
@@ -52,9 +64,45 @@ const PostInput = ({ postedPostInfo }: any) => {
         user?.relation(`posts`).add(newPost);
         user?.save();
         newPost.set(`createdBy`, user);
-        postedPostInfo(newPost.id);
+        postedPostInfo && postedPostInfo(newPost.id);
 
         newPost.save();
+
+        handleCloseBtn();
+        if (textInput.current) {
+          textInput.current.textContent = ``;
+        }
+        setInputText(``);
+      });
+  };
+
+  const handleComment = () => {
+    const Comment = Moralis.Object.extend(`Comment`);
+    const commentedPost = Moralis.Object.extend(`Posts`).get(commentedPostId);
+
+    let fileInputValue;
+    let file: any = null;
+
+    if (fileInput.current && fileInput.current.files) {
+      fileInputValue = fileInput.current.files[0];
+      file = new Moralis.File(`comment media by ${user?.id}`, fileInputValue);
+    }
+
+    const newComment = new Comment();
+
+    newComment
+      .save({
+        text: inputText.length !== 0 ? inputText.trim() : undefined,
+        media: file._source ? file : undefined,
+      })
+      .then(() => {
+        user?.relation(`comments`).add(newComment);
+        user?.save();
+        newComment.set(`createdBy`, user);
+        newComment.set(`onPost`, commentedPost);
+        postedCommentInfo && postedCommentInfo(newComment.id);
+
+        newComment.save();
 
         handleCloseBtn();
         if (textInput.current) {
@@ -96,32 +144,38 @@ const PostInput = ({ postedPostInfo }: any) => {
 
   return (
     <div
-      className={styles.postInput}
+      className={classNames(
+        styles.postInput,
+        commentInput && styles.commentPostInput,
+      )}
       onClick={() => textInput.current?.focus()}
     >
       <Link href="/">
         <a className={styles.account}>
-          <AccountImage />
+          <AccountImage small={commentInput} />
         </a>
       </Link>
       <div className={styles.wrapper}>
-        <div className={styles.collectionRow}>
-          <div className={styles.collection}>
-            <div className={styles.collectionBtn}>
-              <span>Collection</span>
-              <Triangle />
+        {!commentInput && (
+          <div className={styles.collectionRow}>
+            <div className={styles.collection}>
+              <div className={styles.collectionBtn}>
+                <span>Collection</span>
+                <Triangle />
+              </div>
+            </div>
+            <div className={styles.info}>
+              <span className={styles.infoBtn}>i</span>
+              <div className={styles.infoBox}>
+                If you choose a collection, the media in your post becomes an
+                {` `}
+                <a href="https://www.theverge.com/22310188/nft-explainer-what-is-blockchain-crypto-art-faq">
+                  NFT
+                </a>
+              </div>
             </div>
           </div>
-          <div className={styles.info}>
-            <span className={styles.infoBtn}>i</span>
-            <div className={styles.infoBox}>
-              If you choose a collection, the media in your post becomes an{` `}
-              <a href="https://www.theverge.com/22310188/nft-explainer-what-is-blockchain-crypto-art-faq">
-                NFT
-              </a>
-            </div>
-          </div>
-        </div>
+        )}
 
         <div className={styles.inputRow}>
           {inputText.length === 0 && (
@@ -157,7 +211,7 @@ const PostInput = ({ postedPostInfo }: any) => {
               <EmojiIcon />
             </div>
             <label
-              htmlFor="mediaInput"
+              htmlFor={commentInput ? `commentMediaInput` : `postMediaInput`}
               className={classNames(
                 styles.iconWrapper,
                 mediaURI.length !== 0 && styles.inputDisabled,
@@ -165,9 +219,9 @@ const PostInput = ({ postedPostInfo }: any) => {
             >
               <ImageIcon />
               <input
-                id="mediaInput"
+                id={commentInput ? `commentMediaInput` : `postMediaInput`}
                 type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif,video/mp4"
+                accept="image/jpeg,image/png,image/webp,image/gif"
                 className={styles.mediaInput}
                 onChange={handleInputChange}
                 ref={fileInput}
@@ -188,9 +242,9 @@ const PostInput = ({ postedPostInfo }: any) => {
             </span>
 
             <AccentBtn
-              text="Post it!"
+              text={commentInput ? `Comment` : `Post it!`}
               className={btnDissable && styles.btnDissabled}
-              onClick={handlePost}
+              onClick={commentInput ? handleComment : handlePost}
             />
           </div>
         </div>

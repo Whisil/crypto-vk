@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
-import Image from 'next/image';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
-import Comment from '../comment';
+import CommentContainer from '../commentContainer';
 import Like from 'public/images/icons/like.svg';
 
 import styles from './styles.module.scss';
 import PostMenu from '../postMenu';
+import PostInput from '../postInput';
+import MediaContainer from '../mediaContainer';
 
 interface Props {
   postId: string;
@@ -114,17 +115,7 @@ const Post = ({
 
       {text && <span className={styles.description}>{text}</span>}
 
-      {media && (
-        <div className={styles.media}>
-          <Image
-            className={styles.mediaContent}
-            src={media}
-            layout="fill"
-            objectFit="contain"
-            alt="post media"
-          />
-        </div>
-      )}
+      {media && <MediaContainer src={media} />}
 
       <div className={styles.info}>
         <div className={styles.likes}>
@@ -146,10 +137,11 @@ const Post = ({
         <PostBtn variant="share" bgTransparent />
       </div>
 
-      <div className={styles.commentsWrapper}>
-        <Comment timestamp={timestamp} />
-        <Comment timestamp={timestamp} />
-      </div>
+      <ul className={styles.commentsWrapper}>
+        <PostInput commentInput />
+        <CommentContainer timestamp={timestamp} />
+        <CommentContainer timestamp={timestamp} />
+      </ul>
     </div>
   );
 };

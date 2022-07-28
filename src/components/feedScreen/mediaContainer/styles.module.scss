@@ -1,0 +1,18 @@
+.media{
+    background-color: #000;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    position: relative;
+    > span{
+        position: unset !important;
+    }
+    &Content{
+        position: relative !important;
+        height: unset !important;
+        max-height: 640px !important;
+        min-width: unset !important;
+        width: fit-content !important;
+        max-width: 100% !important;
+    }
+}

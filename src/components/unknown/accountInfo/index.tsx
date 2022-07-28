@@ -11,6 +11,7 @@ interface Props {
   displayName?: string;
   href?: string;
   small?: boolean;
+  xs?: boolean;
 }
 
 const AccountInfo = ({
@@ -19,6 +20,7 @@ const AccountInfo = ({
   displayName,
   href = ``,
   small,
+  xs,
 }: Props) => {
   const [time, setTime] = useState(``);
 
@@ -62,15 +64,21 @@ const AccountInfo = ({
   }, [time]);
 
   return (
-    <div className={classNames(styles.accountInfo, small && styles.small)}>
+    <div
+      className={classNames(
+        styles.accountInfo,
+        small && styles.small,
+        xs && styles.xs,
+      )}
+    >
       {href.length !== 0 ? (
         <Link href={href}>
           <a>
-            <AccountImage className={styles.avatar} small={small} />
+            <AccountImage className={styles.avatar} small={small} xs={xs} />
           </a>
         </Link>
       ) : (
-        <AccountImage className={styles.avatar} small={small} />
+        <AccountImage className={styles.avatar} small={small} xs={xs} />
       )}
       <div
         className={classNames(styles.info, bio?.length != 0 && styles.textCut)}

@@ -26,14 +26,22 @@
         margin-top: -40px;
 
         &Avatar{
+            width: fit-content;
+            margin: 0 auto;
             margin-bottom: 10px;
         }
         
         &Name{
+            margin: 0 auto;
             margin-bottom: 10px;
             font-size: 20px;
             line-height: 1.15;
             color: $primaryLight;
+            width: fit-content;
+
+            h3{
+                display: inline-block;
+            }
         }
 
         &Wallet{
