@@ -110,10 +110,9 @@ const Post = ({
       res
         .relation(`comments`)
         .query()
-        .find({
-          success: function (comments: any) {
-            console.log(comments);
-          },
+        .find()
+        .then((comments: any) => {
+          console.log(comments);
         }),
     );
   };

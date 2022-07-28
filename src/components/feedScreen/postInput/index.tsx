@@ -29,7 +29,6 @@ const PostInput = ({
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
   const [mediaURI, setMediaURI] = useState<any>(``);
-  const [commentedPost, setCommentedPost] = useState<any>();
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
@@ -81,12 +80,10 @@ const PostInput = ({
 
   const handleComment = async () => {
     const Comment = Moralis.Object.extend(`Comment`);
+
     const commentedPostQuery = new Moralis.Query(`Posts`);
-    if (commentedPostId) {
-      await commentedPostQuery
-        .get(commentedPostId)
-        .then((res: any) => setCommentedPost(res));
-    }
+    commentedPostQuery.equalTo(`objectId`, commentedPostId);
+    const commentedPostResult = await commentedPostQuery.first();
 
     let fileInputValue;
     let file: any = null;
@@ -107,10 +104,13 @@ const PostInput = ({
         user?.relation(`comments`).add(newComment);
         user?.save();
         newComment.set(`createdBy`, user);
-        newComment.set(`onPost`, commentedPost);
+        newComment.set(`onPost`, commentedPostResult);
         postedCommentInfo && postedCommentInfo(newComment.id);
+        commentedPostResult?.relation(`comments`).add(newComment);
+        commentedPostResult?.increment(`commentsCount`);
 
         newComment.save();
+        commentedPostResult?.save();
 
         handleCloseBtn();
         if (textInput.current) {
