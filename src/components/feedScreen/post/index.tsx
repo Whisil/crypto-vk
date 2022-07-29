@@ -222,17 +222,6 @@ const Post = ({
             commentedPostId={postId}
             newCommentInfo={newCommentInfo}
           />
-          {/* {newComment &&
-            newComment.length >= 1 &&
-            newComment.map((item) => (
-              <CommentContainer
-                timestamp={timestamp}
-                key={item.id}
-                commentId={item.id}
-                media={item.attributes.media && item.attributes.media._url}
-                text={item.attributes.text}
-              />
-            ))} */}
           {comments.map((item) => (
             <CommentContainer
               timestamp={timestamp}
