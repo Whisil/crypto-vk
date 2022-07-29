@@ -1,10 +1,8 @@
 @import '@/styles/colors.scss';
 
 .comment{
+    margin-top: 20px;
 
-    &:not(:last-child){
-        margin-bottom: 20px;
-    }
     &Upper{
         display: flex;
         align-items: center;

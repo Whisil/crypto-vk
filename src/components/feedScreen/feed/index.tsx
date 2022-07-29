@@ -80,9 +80,9 @@ const Feed = () => {
         </div>
       )}
       <div id="feed">
-        {feedPosts?.map((item: any, i: number) => (
+        {feedPosts?.map((item: any) => (
           <Post
-            key={i}
+            key={item.id}
             postId={item.id}
             timestamp={item.attributes.createdAt}
             text={item.attributes.text}

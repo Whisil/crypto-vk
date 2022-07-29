@@ -224,7 +224,7 @@ const Post = ({
           />
           {comments.map((item) => (
             <CommentContainer
-              timestamp={timestamp}
+              timestamp={item.attributes.createdAt}
               key={item.id}
               commentId={item.id}
               media={item.attributes?.media && item.attributes.media._url}
