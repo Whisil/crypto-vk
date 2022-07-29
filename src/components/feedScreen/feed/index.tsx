@@ -98,6 +98,8 @@ const Feed = () => {
               media={item.attributes.media && item.attributes.media._url}
               handlePostDelete={handlePostDelete}
               createdBy={item.attributes.createdBy}
+              commentCount={item.attributes.commentCount}
+              likeCount={item.attributes.likeCount}
             />
           ))}
         {feedPosts?.map((item: any, i: number) => (
@@ -109,6 +111,8 @@ const Feed = () => {
             media={item.attributes.media && item.attributes.media._url}
             handlePostDelete={handlePostDelete}
             createdBy={item.attributes.createdBy}
+            commentCount={item.attributes.commentCount}
+            likeCount={item.attributes.likeCount}
           />
         ))}
       </div>

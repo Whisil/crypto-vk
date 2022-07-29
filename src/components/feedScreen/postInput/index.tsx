@@ -15,7 +15,7 @@ interface Props {
   postedPostInfo?(id: string): void;
   commentInput?: boolean;
   commentedPostId?: string;
-  postedCommentInfo?(id: string): void;
+  newCommentInfo?(id: string): void;
   commentInputFocus?: boolean;
 }
 
@@ -23,7 +23,7 @@ const PostInput = ({
   postedPostInfo,
   commentInput,
   commentedPostId,
-  postedCommentInfo,
+  newCommentInfo,
   commentInputFocus,
 }: Props) => {
   const [inputText, setInputText] = useState(``);
@@ -105,9 +105,9 @@ const PostInput = ({
         user?.save();
         newComment.set(`createdBy`, user);
         newComment.set(`onPost`, commentedPostResult);
-        postedCommentInfo && postedCommentInfo(newComment.id);
+        newCommentInfo && newCommentInfo(newComment.id);
         commentedPostResult?.relation(`comments`).add(newComment);
-        commentedPostResult?.increment(`commentsCount`);
+        commentedPostResult?.increment(`commentCount`);
 
         newComment.save();
         commentedPostResult?.save();

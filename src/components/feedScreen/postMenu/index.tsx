@@ -9,11 +9,20 @@ import styles from './styles.module.scss';
 interface Props {
   userId?: any;
   handlePostDelete?(postId: string | undefined): void;
+  handleCommentDelete?(id: string | undefined): void;
+  commentId?: string;
   postId?: string;
   variant?: 'comment';
 }
 
-const PostMenu = ({ userId, handlePostDelete, postId, variant }: Props) => {
+const PostMenu = ({
+  userId,
+  handlePostDelete,
+  handleCommentDelete,
+  commentId,
+  postId,
+  variant,
+}: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
 
@@ -65,6 +74,7 @@ const PostMenu = ({ userId, handlePostDelete, postId, variant }: Props) => {
               accent
               onClick={() => {
                 handlePostDelete && handlePostDelete(postId);
+                handleCommentDelete && handleCommentDelete(commentId);
                 setShowMenu(false);
               }}
             />

@@ -1,14 +1,18 @@
+import classNames from 'classnames';
 import Image from 'next/image';
 
 import styles from './styles.module.scss';
 
 interface Props {
   src: string;
+  commentMedia?: boolean;
 }
 
-const MediaContainer = ({ src }: Props) => {
+const MediaContainer = ({ src, commentMedia }: Props) => {
   return (
-    <div className={styles.media}>
+    <div
+      className={classNames(styles.media, commentMedia && styles.mediaComment)}
+    >
       <Image
         className={styles.mediaContent}
         src={src}

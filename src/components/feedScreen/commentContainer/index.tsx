@@ -5,9 +5,23 @@ import styles from './styles.module.scss';
 
 interface Props {
   timestamp?: string;
+  commentId: string;
+  media: string;
+  text: string;
+  handleCommentDelete?(id: string): void;
+  createdById: string;
+  likeCount: number;
 }
 
-const CommentContainer = ({ timestamp }: Props) => {
+const CommentContainer = ({
+  timestamp,
+  commentId,
+  media,
+  text,
+  handleCommentDelete,
+  createdById,
+  likeCount,
+}: Props) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
 
   const handleShowReplies = () => {
@@ -20,15 +34,25 @@ const CommentContainer = ({ timestamp }: Props) => {
         timestamp={timestamp}
         showReplies={showReplies}
         handleShowReplies={handleShowReplies}
+        media={media}
+        text={text}
+        id={commentId}
+        handleCommentDelete={handleCommentDelete}
+        createdById={createdById}
+        likeCount={likeCount}
       />
-      {showReplies && (
+      {/* {showReplies && (
         <ul className={styles.replyContainer}>
-          <Comment timestamp={timestamp} isReply />
-          <Comment timestamp={timestamp} isReply />
-          <Comment timestamp={timestamp} isReply />
-          <Comment timestamp={timestamp} isReply />
+          <Comment
+            timestamp={timestamp}
+            showReplies={showReplies}
+            handleShowReplies={handleShowReplies}
+            media={media}
+            text={text}
+            id={commentId}
+          />
         </ul>
-      )}
+      )} */}
     </>
   );
 };

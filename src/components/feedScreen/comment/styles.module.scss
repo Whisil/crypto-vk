@@ -63,8 +63,14 @@
                 }
             }
 
+            .liked{
+                path{
+                    fill: $secondaryAccent !important;
+                }
+            }
+
             &:hover{
-                svg{
+                .likeIcon{
                     path{
                         fill: rgba($primaryLight, 0.75);
                     }

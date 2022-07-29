@@ -17,6 +17,8 @@ interface Props {
   media?: string;
   handlePostDelete?: any;
   createdBy: any;
+  commentCount: number;
+  likeCount: number;
 }
 
 const Post = ({
@@ -26,17 +28,39 @@ const Post = ({
   media,
   handlePostDelete,
   createdBy,
+  commentCount,
+  likeCount,
 }: Props) => {
   const [userInfo, setUserInfo] = useState<string>(``);
   const [likeId, setLikeId] = useState<string | undefined>(undefined);
   const [liked, setLiked] = useState<boolean>(false);
-  const [likeCounter, setLikeCounter] = useState<number>(0);
+  const [likeCounter, setLikeCounter] = useState<number>(likeCount);
+  const [commentCounter, setCommentCounter] = useState<number>(commentCount);
   const [showComments, setShowComments] = useState<boolean>(true);
   const [commentInputFocus, setCommentInputFocus] = useState<boolean>(false);
+  const [comments, setComments] = useState<any[]>([]);
+  const [newCommentId, setNewCommentId] = useState(``);
+  const [commentDeleteId, setCommentDeleteId] = useState(``);
 
   const { Moralis, user } = useMoralis();
 
   const postQuery = new Moralis.Query(`Posts`);
+  const commentQuery = new Moralis.Query(`Comment`);
+
+  //New comment
+
+  const newCommentInfo = (id: string) => {
+    setNewCommentId(id);
+  };
+
+  useEffect(() => {
+    if (newCommentId !== ``) {
+      commentQuery.get(newCommentId).then((comment) => {
+        setComments((comments) => [comment, ...comments]);
+        setCommentCounter((commentCounter) => commentCounter + 1);
+      });
+    }
+  }, [newCommentId]);
 
   //User fetching and like check
 
@@ -57,13 +81,10 @@ const Post = ({
           }
         });
     });
-  }, []);
 
-  useEffect(() => {
-    postQuery
-      .get(postId)
-      .then((res: any) => setLikeCounter(res.attributes.likeCount));
-  }, [likeId]);
+    //comments fetch
+    commentsFetch();
+  }, []);
 
   // Likes
 
@@ -83,6 +104,7 @@ const Post = ({
         newLike.save();
         post.save();
         setLiked(true);
+        setLikeCounter((likeCounter) => likeCounter + 1);
       });
     });
   };
@@ -94,9 +116,9 @@ const Post = ({
         setLiked(false);
         setLikeId(undefined);
       });
+      setLikeCounter((likeCounter) => likeCounter - 1);
     }
 
-    const postQuery = new Moralis.Query(`Posts`);
     postQuery.get(postId).then((post) => {
       post.decrement(`likeCount`);
       post.save();
@@ -112,14 +134,41 @@ const Post = ({
         .query()
         .find()
         .then((comments: any) => {
-          console.log(comments);
+          setComments(comments);
         }),
     );
   };
 
+  //Comment Delete
+
+  const handleCommentDelete = (id: string) => {
+    setCommentDeleteId(id);
+  };
+
   useEffect(() => {
-    commentsFetch();
-  }, []);
+    if (commentDeleteId !== ``) {
+      setCommentCounter((commentCounter) => commentCounter - 1);
+      postQuery.get(postId).then((post) => {
+        post.decrement(`commentCount`);
+        post.save();
+      });
+      commentQuery.get(commentDeleteId).then((comment) => {
+        const likeQuery = new Moralis.Query(`Likes`);
+        likeQuery
+          .equalTo(`likedComment`, comment)
+          .find()
+          .then((res) => Moralis.Object.destroyAll(res));
+
+        comment.destroy();
+
+        setComments((comments) =>
+          comments.filter((comment) => comment.id !== commentDeleteId),
+        );
+
+        setCommentDeleteId(``);
+      });
+    }
+  }, [commentDeleteId]);
 
   return (
     <div className={styles.post}>
@@ -144,7 +193,7 @@ const Post = ({
         </div>
 
         <div className={styles.comments} onClick={() => setShowComments(true)}>
-          45 comments
+          {commentCounter} comments
         </div>
       </div>
 
@@ -171,9 +220,31 @@ const Post = ({
             commentInput
             commentInputFocus={commentInputFocus}
             commentedPostId={postId}
+            newCommentInfo={newCommentInfo}
           />
-          <CommentContainer timestamp={timestamp} />
-          <CommentContainer timestamp={timestamp} />
+          {/* {newComment &&
+            newComment.length >= 1 &&
+            newComment.map((item) => (
+              <CommentContainer
+                timestamp={timestamp}
+                key={item.id}
+                commentId={item.id}
+                media={item.attributes.media && item.attributes.media._url}
+                text={item.attributes.text}
+              />
+            ))} */}
+          {comments.map((item) => (
+            <CommentContainer
+              timestamp={timestamp}
+              key={item.id}
+              commentId={item.id}
+              media={item.attributes?.media && item.attributes.media._url}
+              text={item.attributes?.text}
+              handleCommentDelete={handleCommentDelete}
+              createdById={item.attributes.createdBy.id}
+              likeCount={item.attributes.likeCount}
+            />
+          ))}
         </ul>
       )}
     </div>
