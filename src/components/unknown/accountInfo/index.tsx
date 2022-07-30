@@ -31,8 +31,8 @@ const AccountInfo = ({
     minute: 60 * 1000,
   };
 
-  function formatTime(createdAt: any) {
-    const diff = Date.now() - createdAt;
+  function formatTime(createdAt: string | undefined) {
+    const diff = Date.now() - Number(createdAt);
 
     if (diff > periods.week) {
       setTime(Math.floor(diff / periods.week) + ` weeks ago`);

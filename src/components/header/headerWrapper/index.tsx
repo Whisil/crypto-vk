@@ -15,6 +15,8 @@ const menu = [
   { title: `Market`, path: `/market` },
 ];
 
+type variantType = 'Home' | 'Explore' | 'Messages' | 'Market' | 'Notifications';
+
 const HeaderWrapper = () => {
   const router = useRouter();
 
@@ -34,8 +36,8 @@ const HeaderWrapper = () => {
         </div>
 
         <div className={styles.navSide}>
-          {menu.map((item: any, i: number) => (
-            <Link href={item.path} key={i}>
+          {menu.map((item) => (
+            <Link href={item.path} key={item.title}>
               <a
                 className={
                   router.pathname === item.path
@@ -44,7 +46,7 @@ const HeaderWrapper = () => {
                 }
               >
                 <NavBtn
-                  variant={item.title}
+                  variant={item.title as variantType}
                   active={router.pathname === item.path ? true : false}
                 />
               </a>

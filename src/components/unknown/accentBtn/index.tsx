@@ -6,7 +6,7 @@ import styles from './styles.module.scss';
 interface Props {
   text: string;
   className?: string | boolean;
-  onClick?: any;
+  onClick?(): void;
 }
 
 const AccentBtn = ({ text, onClick, className }: Props) => {

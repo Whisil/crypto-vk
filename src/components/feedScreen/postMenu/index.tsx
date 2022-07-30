@@ -7,7 +7,7 @@ import DotsIcon from 'public/images/icons/dots.svg';
 import styles from './styles.module.scss';
 
 interface Props {
-  userId?: any;
+  userId?: string;
   handlePostDelete?(postId: string | undefined): void;
   handleCommentDelete?(id: string | undefined): void;
   commentId?: string;
@@ -32,8 +32,8 @@ const PostMenu = ({
 
   useEffect(() => {
     if (!showMenu) return;
-    function handleOutsideClick(e: any) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+    function handleOutsideClick(e: Event) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Document)) {
         setShowMenu(false);
       }
     }

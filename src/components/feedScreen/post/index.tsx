@@ -12,11 +12,11 @@ import MediaContainer from '../mediaContainer';
 
 interface Props {
   postId: string;
-  timestamp: any;
+  timestamp: string;
   text?: string;
   media?: string;
-  handlePostDelete?: any;
-  createdBy: any;
+  handlePostDelete?(id: string): void;
+  createdBy: { id: string };
   commentCount: number;
   likeCount: number;
 }
@@ -68,13 +68,13 @@ const Post = ({
     Moralis.Cloud.run(`userFetch`, { id: createdBy.id }).then((res) =>
       setUserInfo(res[0].attributes.displayName),
     );
-    postQuery.get(postId).then(function (result: any) {
+    postQuery.get(postId).then(function (result) {
       result
         .relation(`likes`)
         .query()
         .equalTo(`likedBy`, user)
         .find()
-        .then((res: any) => {
+        .then((res) => {
           setLikeId(res[0]?.id);
           if (res[0]) {
             setLiked(true);
@@ -128,12 +128,12 @@ const Post = ({
   //Comments
 
   const commentsFetch = () => {
-    postQuery.get(postId).then((res: any) =>
+    postQuery.get(postId).then((res) =>
       res
         .relation(`comments`)
         .query()
         .find()
-        .then((comments: any) => {
+        .then((comments) => {
           setComments(comments);
         }),
     );

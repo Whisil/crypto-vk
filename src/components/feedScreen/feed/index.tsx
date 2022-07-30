@@ -80,7 +80,7 @@ const Feed = () => {
         </div>
       )}
       <div id="feed">
-        {feedPosts?.map((item: any) => (
+        {feedPosts?.map((item) => (
           <Post
             key={item.id}
             postId={item.id}

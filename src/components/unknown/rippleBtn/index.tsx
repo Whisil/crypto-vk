@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import styles from './styles.module.scss';
 
 interface Props {
-  children: any;
+  children: React.ReactNode;
   className?: string;
   variant?: 'accent';
 }
@@ -17,9 +17,10 @@ const RippleBtn = ({ children, className, variant }: Props) => {
 
   const btnRef = useRef<HTMLDivElement>(null);
 
-  const handleRipple = (e: any) => {
-    setTop(e.clientY - e.target.getBoundingClientRect().top);
-    setLeft(e.clientX - e.target.getBoundingClientRect().left);
+  const handleRipple = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const target = e.target as HTMLDivElement;
+    setTop(e.clientY - target.getBoundingClientRect().top);
+    setLeft(e.clientX - target.getBoundingClientRect().left);
     setClicked((val) => !val);
   };
 

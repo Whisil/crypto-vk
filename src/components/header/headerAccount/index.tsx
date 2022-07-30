@@ -18,8 +18,8 @@ const HeaderAccount = () => {
 
   useEffect(() => {
     if (!showMenu) return;
-    function handleOutsideClick(e: any) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+    function handleOutsideClick(e: Event) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Document)) {
         setShowMenu(false);
       }
     }

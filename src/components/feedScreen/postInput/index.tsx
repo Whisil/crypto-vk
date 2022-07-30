@@ -28,7 +28,7 @@ const PostInput = ({
 }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
-  const [mediaURI, setMediaURI] = useState<any>(``);
+  const [mediaURI, setMediaURI] = useState<string>(``);
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
@@ -48,7 +48,7 @@ const PostInput = ({
     const Post = Moralis.Object.extend(`Posts`);
 
     let fileInputValue;
-    let file: any = null;
+    let file: { [key: string]: any } = {};
 
     if (fileInput.current && fileInput.current.files) {
       fileInputValue = fileInput.current.files[0];
@@ -60,7 +60,7 @@ const PostInput = ({
     newPost
       .save({
         text: inputText.length !== 0 ? inputText.trim() : undefined,
-        media: file._source ? file : undefined,
+        media: file && file._source ? file : undefined,
       })
       .then(() => {
         user?.relation(`posts`).add(newPost);
@@ -86,7 +86,7 @@ const PostInput = ({
     const commentedPostResult = await commentedPostQuery.first();
 
     let fileInputValue;
-    let file: any = null;
+    let file: { [key: string]: any } = {};
 
     if (fileInput.current && fileInput.current.files) {
       fileInputValue = fileInput.current.files[0];
@@ -140,15 +140,21 @@ const PostInput = ({
     }
   }, [inputText, mediaURI]);
 
-  const handleInputChange = (e: any) => {
-    if (e.target.files && e.target.files[0]) {
+  const handleInputChange = (
+    e: Event | React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const target = e.target as HTMLInputElement;
+    if (target.files && target.files[0]) {
       const reader = new FileReader();
 
-      reader.readAsArrayBuffer(e.target.files[0]);
+      reader.readAsArrayBuffer(target.files[0]);
       reader.onload = function () {
-        const blob = new Blob([reader.result as BlobPart], {
-          type: e.target.files[0].type,
-        });
+        let blob = null;
+        if (target.files && target.files[0]) {
+          blob = new Blob([reader.result as BlobPart], {
+            type: target.files[0].type,
+          });
+        }
 
         const mediaBlobURI = URL.createObjectURL(blob);
         setMediaURI(mediaBlobURI);
@@ -209,8 +215,9 @@ const PostInput = ({
           <div
             className={styles.mediaContainer}
             style={
-              mediaURI &&
-              mediaURI.length !== 0 && { backgroundImage: `url(${mediaURI})` }
+              mediaURI && mediaURI.length !== 0
+                ? { backgroundImage: `url(${mediaURI})` }
+                : {}
             }
           >
             <div className={styles.clearMediaBtn} onClick={handleCloseBtn}>

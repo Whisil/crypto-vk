@@ -18,7 +18,7 @@ const Switch = ({ variant }: SwitchProps) => {
     }
   }, []);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (switchRef && switchRef.current) {
       setSwitchActive(switchRef.current.checked);
 

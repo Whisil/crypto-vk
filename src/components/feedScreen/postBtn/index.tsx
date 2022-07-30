@@ -11,7 +11,7 @@ interface Props {
   variant: 'comment' | 'like' | 'share' | 'buy';
   bgTransparent?: boolean;
   liked?: boolean;
-  onClick?: any;
+  onClick?(): void;
 }
 
 const PostBtn = ({ variant, bgTransparent, liked = false, onClick }: Props) => {

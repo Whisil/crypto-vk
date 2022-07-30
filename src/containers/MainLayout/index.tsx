@@ -1,6 +1,11 @@
 import Header from '@/components/header/headerWrapper';
+import React from 'react';
 
-const MainLayout = ({ children }: any) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const MainLayout = ({ children }: Props) => {
   return (
     <div className="backgroundColor">
       <Header />

@@ -34,7 +34,7 @@ const Comment = ({
   likeCount,
 }: Props) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<any>({});
+  const [userInfo, setUserInfo] = useState({ displayName: ``, id: `` });
   const [likeCounter, setLikeCounter] = useState<number>(likeCount);
   const [likeId, setLikeId] = useState<string | undefined>(undefined);
   const [liked, setLiked] = useState<boolean>(false);
@@ -52,13 +52,13 @@ const Comment = ({
         displayName: res[0].attributes.displayName,
       }),
     );
-    commentQuery.get(id).then(function (result: any) {
+    commentQuery.get(id).then(function (result) {
       result
         .relation(`likes`)
         .query()
         .equalTo(`likedBy`, user)
         .find()
-        .then((res: any) => {
+        .then((res) => {
           setLikeId(res[0]?.id);
           if (res[0]) {
             setLiked(true);

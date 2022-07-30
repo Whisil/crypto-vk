@@ -1,12 +1,16 @@
 import { useRouter } from 'next/router';
 import { useMoralis } from 'react-moralis';
 import Login from '@/pages/login';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Loader from '@/components/unknown/loader';
 
 import styles from './styles.module.scss';
 
-const AuthCheck = ({ children }: any) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const AuthCheck = ({ children }: Props) => {
   const router = useRouter();
   const mountedRef = useRef<HTMLDivElement>(null);
 

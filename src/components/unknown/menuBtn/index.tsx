@@ -8,7 +8,7 @@ interface Props {
   icon: string;
   text: string;
   accent?: boolean;
-  onClick?: any;
+  onClick?(): void;
   link?: string;
 }
 
