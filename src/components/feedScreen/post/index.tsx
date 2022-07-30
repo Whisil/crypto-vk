@@ -3,6 +3,7 @@ import { useMoralis } from 'react-moralis';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
 import CommentContainer from '../commentContainer';
+import Loader from '@/components/unknown/loader';
 import Like from 'public/images/icons/like.svg';
 
 import styles from './styles.module.scss';
@@ -36,7 +37,8 @@ const Post = ({
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCounter, setLikeCounter] = useState<number>(likeCount);
   const [commentCounter, setCommentCounter] = useState<number>(commentCount);
-  const [showComments, setShowComments] = useState<boolean>(true);
+  const [showComments, setShowComments] = useState<boolean>(false);
+  const [commentLoader, setCommentLoader] = useState<boolean>(false);
   const [commentInputFocus, setCommentInputFocus] = useState<boolean>(false);
   const [comments, setComments] = useState<any[]>([]);
   const [newCommentId, setNewCommentId] = useState(``);
@@ -81,9 +83,6 @@ const Post = ({
           }
         });
     });
-
-    //comments fetch
-    commentsFetch();
   }, []);
 
   // Likes
@@ -127,16 +126,24 @@ const Post = ({
 
   //Comments
 
-  const commentsFetch = () => {
-    postQuery.get(postId).then((res) =>
-      res
-        .relation(`comments`)
-        .query()
-        .find()
-        .then((comments) => {
-          setComments(comments);
-        }),
-    );
+  const commentsShowToggle = () => {
+    if (!showComments) {
+      setShowComments(true);
+      setCommentLoader(true);
+      postQuery.get(postId).then((res) =>
+        res
+          .relation(`comments`)
+          .query()
+          .find()
+          .then((comments) => {
+            setComments(comments);
+            setCommentLoader(false);
+          }),
+      );
+    } else {
+      setShowComments(false);
+      setComments([]);
+    }
   };
 
   //Comment Delete
@@ -192,7 +199,7 @@ const Post = ({
           <span className={styles.likesCount}>{likeCounter} Likes</span>
         </div>
 
-        <div className={styles.comments} onClick={() => setShowComments(true)}>
+        <div className={styles.comments} onClick={() => commentsShowToggle()}>
           {commentCounter} comments
         </div>
       </div>
@@ -207,14 +214,16 @@ const Post = ({
         <PostBtn
           variant="comment"
           onClick={() => {
-            setShowComments(true);
+            commentsShowToggle();
             setCommentInputFocus((commentInputFocus) => !commentInputFocus);
           }}
         />
         <PostBtn variant="share" bgTransparent />
       </div>
 
-      {showComments && (
+      {showComments && commentLoader ? (
+        <Loader variant="small" relative />
+      ) : showComments && !commentLoader ? (
         <ul className={styles.commentsWrapper}>
           <PostInput
             commentInput
@@ -235,7 +244,7 @@ const Post = ({
             />
           ))}
         </ul>
-      )}
+      ) : null}
     </div>
   );
 };

@@ -3,16 +3,23 @@ import styles from './styles.module.scss';
 
 interface Props {
   variant?: 'small';
+  relative?: boolean;
 }
 
-const Loader = ({ variant }: Props) => {
+const Loader = ({ variant, relative }: Props) => {
   return (
     <div
-      className={classNames(styles.bounce, variant === `small` && styles.small)}
+      className={classNames(
+        styles.bounce,
+        variant === `small` && styles.small,
+        relative && styles.relative,
+      )}
     >
-      <div></div>
-      <div></div>
-      <div></div>
+      <div className={styles.dotsContainer}>
+        <div className={styles.dot} />
+        <div className={styles.dot} />
+        <div className={styles.dot} />
+      </div>
     </div>
   );
 };
