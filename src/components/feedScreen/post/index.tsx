@@ -41,6 +41,7 @@ const Post = ({
   const [commentLoader, setCommentLoader] = useState<boolean>(false);
   const [commentInputFocus, setCommentInputFocus] = useState<boolean>(false);
   const [comments, setComments] = useState<any[]>([]);
+  const [commentFetchOffset, setCommentFetchOffset] = useState<number>(0);
   const [newCommentId, setNewCommentId] = useState(``);
   const [commentDeleteId, setCommentDeleteId] = useState(``);
 
@@ -126,25 +127,40 @@ const Post = ({
 
   //Comments
 
+  const commentFetch = () => {
+    postQuery.get(postId).then((res) =>
+      res
+        .relation(`comments`)
+        .query()
+        .limit(3)
+        .skip(commentFetchOffset)
+        .find()
+        .then((fetchedComments) => {
+          if (comments.length === 0) {
+            setComments(fetchedComments);
+          } else {
+            setComments([...comments, ...fetchedComments]);
+          }
+          setCommentLoader(false);
+        }),
+    );
+  };
+
   const commentsShowToggle = () => {
     if (!showComments) {
-      setShowComments(true);
       setCommentLoader(true);
-      postQuery.get(postId).then((res) =>
-        res
-          .relation(`comments`)
-          .query()
-          .find()
-          .then((comments) => {
-            setComments(comments);
-            setCommentLoader(false);
-          }),
-      );
+      commentFetch();
+      setShowComments(true);
     } else {
-      setShowComments(false);
       setComments([]);
     }
   };
+
+  useEffect(() => {
+    if (commentFetchOffset !== 0) {
+      commentFetch();
+    }
+  }, [commentFetchOffset]);
 
   //Comment Delete
 
@@ -224,26 +240,54 @@ const Post = ({
       {showComments && commentLoader ? (
         <Loader variant="small" relative />
       ) : showComments && !commentLoader ? (
-        <ul className={styles.commentsWrapper}>
-          <PostInput
-            commentInput
-            commentInputFocus={commentInputFocus}
-            commentedPostId={postId}
-            newCommentInfo={newCommentInfo}
-          />
-          {comments.map((item) => (
-            <CommentContainer
-              timestamp={item.attributes.createdAt}
-              key={item.id}
-              commentId={item.id}
-              media={item.attributes?.media && item.attributes.media._url}
-              text={item.attributes?.text}
-              handleCommentDelete={handleCommentDelete}
-              createdById={item.attributes.createdBy.id}
-              likeCount={item.attributes.likeCount}
+        <>
+          <ul className={styles.commentsWrapper}>
+            <PostInput
+              commentInput
+              commentInputFocus={commentInputFocus}
+              commentedPostId={postId}
+              newCommentInfo={newCommentInfo}
             />
-          ))}
-        </ul>
+            {comments.map((item) => (
+              <CommentContainer
+                timestamp={item.attributes.createdAt}
+                key={item.id}
+                commentId={item.id}
+                media={item.attributes?.media && item.attributes.media._url}
+                text={item.attributes?.text}
+                handleCommentDelete={handleCommentDelete}
+                createdById={item.attributes.createdBy.id}
+                likeCount={item.attributes.likeCount}
+              />
+            ))}
+          </ul>
+          <div className={styles.commentInteractions}>
+            {commentCounter - 3 - commentFetchOffset > 0 && (
+              <div
+                className={styles.commentInteractionsBtn}
+                onClick={() =>
+                  setCommentFetchOffset(
+                    (commentFetchOffset) => commentFetchOffset + 3,
+                  )
+                }
+              >
+                Show more {`(${commentCounter - 3 - commentFetchOffset})`}
+              </div>
+            )}
+            {showComments && (
+              <div
+                className={styles.commentInteractionsBtn}
+                onClick={() => {
+                  setComments([]);
+                  setShowComments(false);
+                  setCommentFetchOffset(0);
+                }}
+              >
+                Hide comments
+              </div>
+            )}
+          </div>
+        </>
       ) : null}
     </div>
   );
