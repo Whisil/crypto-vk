@@ -19,6 +19,7 @@ interface Props {
   handleCommentDelete?(id: string): void;
   createdById: string;
   likeCount: number;
+  replyCount: number;
 }
 
 const Comment = ({
@@ -32,9 +33,14 @@ const Comment = ({
   handleCommentDelete,
   createdById,
   likeCount,
+  replyCount,
 }: Props) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState({ displayName: ``, id: `` });
+  const [userInfo, setUserInfo] = useState<{
+    displayName: string;
+    id: string;
+    username: string;
+  }>({ displayName: ``, id: ``, username: `` });
   const [likeCounter, setLikeCounter] = useState<number>(likeCount);
   const [likeId, setLikeId] = useState<string | undefined>(undefined);
   const [liked, setLiked] = useState<boolean>(false);
@@ -50,6 +56,7 @@ const Comment = ({
       setUserInfo({
         id: res[0].id,
         displayName: res[0].attributes.displayName,
+        username: res[0].attributes.username,
       }),
     );
     commentQuery.get(id).then(function (result) {
@@ -155,7 +162,9 @@ const Comment = ({
               className={styles.commentBtn}
               onClick={() => handleShowReplies && handleShowReplies()}
             >
-              <span>{showReplies ? `Hide replies` : `Show replies (53)`}</span>
+              <span>
+                {showReplies ? `Hide replies` : `Show replies (${replyCount})`}
+              </span>
             </div>
           )}
         </div>

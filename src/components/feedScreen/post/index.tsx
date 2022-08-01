@@ -37,12 +37,13 @@ const Post = ({
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCounter, setLikeCounter] = useState<number>(likeCount);
   const [commentCounter, setCommentCounter] = useState<number>(commentCount);
+  const [constantCommentCounter] = useState<number>(commentCount);
   const [showComments, setShowComments] = useState<boolean>(false);
   const [commentLoader, setCommentLoader] = useState<boolean>(false);
   const [commentInputFocus, setCommentInputFocus] = useState<boolean>(false);
   const [comments, setComments] = useState<any[]>([]);
   const [commentFetchOffset, setCommentFetchOffset] = useState<number>(0);
-  const [newCommentId, setNewCommentId] = useState(``);
+  const [newCommentId, setNewCommentId] = useState<any[]>([]);
   const [commentDeleteId, setCommentDeleteId] = useState(``);
 
   const { Moralis, user } = useMoralis();
@@ -53,12 +54,12 @@ const Post = ({
   //New comment
 
   const newCommentInfo = (id: string) => {
-    setNewCommentId(id);
+    setNewCommentId((previousId) => [id, ...previousId]);
   };
 
   useEffect(() => {
-    if (newCommentId !== ``) {
-      commentQuery.get(newCommentId).then((comment) => {
+    if (newCommentId.length !== 0) {
+      commentQuery.get(newCommentId[0]).then((comment) => {
         setComments((comments) => [comment, ...comments]);
         setCommentCounter((commentCounter) => commentCounter + 1);
       });
@@ -128,22 +129,27 @@ const Post = ({
   //Comments
 
   const commentFetch = () => {
-    postQuery.get(postId).then((res) =>
+    postQuery.get(postId).then((res) => {
       res
         .relation(`comments`)
         .query()
+        .descending(`likeCount`)
         .limit(3)
+        .notContainedIn(`objectId`, newCommentId)
         .skip(commentFetchOffset)
         .find()
         .then((fetchedComments) => {
           if (comments.length === 0) {
-            setComments(fetchedComments);
+            const sortedComments = fetchedComments.sort(function (a, b) {
+              return a.attributes.text - b.attributes.text;
+            });
+            setComments(sortedComments);
           } else {
             setComments([...comments, ...fetchedComments]);
           }
           setCommentLoader(false);
-        }),
-    );
+        });
+    });
   };
 
   const commentsShowToggle = () => {
@@ -153,6 +159,7 @@ const Post = ({
       setShowComments(true);
     } else {
       setComments([]);
+      setShowComments(false);
     }
   };
 
@@ -192,6 +199,8 @@ const Post = ({
       });
     }
   }, [commentDeleteId]);
+
+  // Replies
 
   return (
     <div className={styles.post}>
@@ -258,11 +267,12 @@ const Post = ({
                 handleCommentDelete={handleCommentDelete}
                 createdById={item.attributes.createdBy.id}
                 likeCount={item.attributes.likeCount}
+                replyCount={item.attributes.replyCount}
               />
             ))}
           </ul>
           <div className={styles.commentInteractions}>
-            {commentCounter - 3 - commentFetchOffset > 0 && (
+            {constantCommentCounter - 3 - commentFetchOffset > 0 && (
               <div
                 className={styles.commentInteractionsBtn}
                 onClick={() =>
@@ -271,7 +281,8 @@ const Post = ({
                   )
                 }
               >
-                Show more {`(${commentCounter - 3 - commentFetchOffset})`}
+                Show more{` `}
+                {`(${constantCommentCounter - 3 - commentFetchOffset})`}
               </div>
             )}
             {showComments && (

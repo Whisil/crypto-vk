@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Comment from '../comment';
+import PostInput from '../postInput';
 
 import styles from './styles.module.scss';
 
@@ -11,6 +12,7 @@ interface Props {
   handleCommentDelete?(id: string): void;
   createdById: string;
   likeCount: number;
+  replyCount: number;
 }
 
 const CommentContainer = ({
@@ -21,6 +23,7 @@ const CommentContainer = ({
   handleCommentDelete,
   createdById,
   likeCount,
+  replyCount,
 }: Props) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
 
@@ -29,7 +32,7 @@ const CommentContainer = ({
   };
 
   return (
-    <>
+    <ul>
       <Comment
         timestamp={timestamp}
         showReplies={showReplies}
@@ -40,8 +43,11 @@ const CommentContainer = ({
         handleCommentDelete={handleCommentDelete}
         createdById={createdById}
         likeCount={likeCount}
+        replyCount={replyCount}
       />
-      {/* {showReplies && (
+
+      <li>
+        {/* {showReplies && (
         <ul className={styles.replyContainer}>
           <Comment
             timestamp={timestamp}
@@ -53,7 +59,11 @@ const CommentContainer = ({
           />
         </ul>
       )} */}
-    </>
+        <ul className={styles.replyContainer}>
+          <PostInput isReply replyOn={commentId} replyTo={createdById} />
+        </ul>
+      </li>
+    </ul>
   );
 };
 

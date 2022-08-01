@@ -17,6 +17,9 @@ interface Props {
   commentedPostId?: string;
   newCommentInfo?(id: string): void;
   commentInputFocus?: boolean;
+  isReply?: boolean;
+  replyTo?: string;
+  replyOn?: string;
 }
 
 const PostInput = ({
@@ -25,13 +28,35 @@ const PostInput = ({
   commentedPostId,
   newCommentInfo,
   commentInputFocus,
+  isReply,
+  replyOn,
+  replyTo,
 }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
   const [mediaURI, setMediaURI] = useState<string>(``);
+  const [replyToInfo, setReplyToInfo] = useState<{
+    id: string;
+    displayName: string;
+  }>({ id: ``, displayName: `` });
+  const [repliedToComment, setRepliedToComment] =
+    useState<{ increment: any; id: string }>();
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
+
+  const { Moralis, user } = useMoralis();
+
+  useEffect(() => {
+    if (isReply && replyTo && replyTo.length !== 0) {
+      Moralis.Cloud.run(`userFetch`, { id: replyTo }).then((res) =>
+        setReplyToInfo({
+          id: res[0].id,
+          displayName: res[0].attributes.displayName,
+        }),
+      );
+    }
+  }, [replyTo]);
 
   const handleCloseBtn = async () => {
     URL.revokeObjectURL(mediaURI);
@@ -42,7 +67,6 @@ const PostInput = ({
   };
 
   //Database
-  const { Moralis, user } = useMoralis();
 
   const handlePost = async () => {
     const Post = Moralis.Object.extend(`Posts`);
@@ -78,12 +102,20 @@ const PostInput = ({
       });
   };
 
-  const handleComment = async () => {
+  const handleComment = async (reply?: boolean) => {
     const Comment = Moralis.Object.extend(`Comment`);
 
     const commentedPostQuery = new Moralis.Query(`Posts`);
     commentedPostQuery.equalTo(`objectId`, commentedPostId);
     const commentedPostResult = await commentedPostQuery.first();
+
+    if (reply && replyOn) {
+      const repliedToComment = new Moralis.Query(`Comment`);
+      const result = await repliedToComment
+        .equalTo(`objectId`, replyOn)
+        .first();
+      setRepliedToComment(result);
+    }
 
     let fileInputValue;
     let file: { [key: string]: any } = {};
@@ -105,6 +137,10 @@ const PostInput = ({
         user?.save();
         newComment.set(`createdBy`, user);
         newComment.set(`onPost`, commentedPostResult);
+        if (reply && repliedToComment) {
+          newComment.set(`replyTo`, repliedToComment);
+          repliedToComment.increment(`replyCount`).save();
+        }
         newCommentInfo && newCommentInfo(newComment.id);
         commentedPostResult?.relation(`comments`).add(newComment);
         commentedPostResult?.increment(`commentCount`);
@@ -166,17 +202,17 @@ const PostInput = ({
     <div
       className={classNames(
         styles.postInput,
-        commentInput && styles.commentPostInput,
+        (commentInput || isReply) && styles.commentPostInput,
       )}
       onClick={() => textInput.current?.focus()}
     >
       <Link href="/">
         <a className={styles.account}>
-          <AccountImage small={commentInput} />
+          <AccountImage small={commentInput || isReply} />
         </a>
       </Link>
       <div className={styles.wrapper}>
-        {!commentInput && (
+        {!commentInput && !isReply && (
           <div className={styles.collectionRow}>
             <div className={styles.collection}>
               <div className={styles.collectionBtn}>
@@ -200,7 +236,13 @@ const PostInput = ({
         <div className={styles.inputRow}>
           {inputText.length === 0 && (
             <span className={styles.placeholder}>
-              What&apos;s on your mind?
+              {commentInput
+                ? `Have a comment?`
+                : isReply && replyToInfo.displayName
+                ? `Reply to ${replyToInfo.displayName}`
+                : isReply && !replyToInfo.displayName
+                ? `Reply`
+                : `What&apos;s on your mind?`}
             </span>
           )}
 
@@ -232,7 +274,9 @@ const PostInput = ({
               <EmojiIcon />
             </div>
             <label
-              htmlFor={commentInput ? `commentMediaInput` : `postMediaInput`}
+              htmlFor={
+                commentInput || isReply ? `commentMediaInput` : `postMediaInput`
+              }
               className={classNames(
                 styles.iconWrapper,
                 mediaURI.length !== 0 && styles.inputDisabled,
@@ -240,7 +284,11 @@ const PostInput = ({
             >
               <ImageIcon />
               <input
-                id={commentInput ? `commentMediaInput` : `postMediaInput`}
+                id={
+                  commentInput || isReply
+                    ? `commentMediaInput`
+                    : `postMediaInput`
+                }
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 className={styles.mediaInput}
@@ -263,9 +311,15 @@ const PostInput = ({
             </span>
 
             <AccentBtn
-              text={commentInput ? `Comment` : `Post it!`}
+              text={commentInput ? `Comment` : isReply ? `Reply` : `Post it!`}
               className={btnDissable && styles.btnDissabled}
-              onClick={commentInput ? handleComment : handlePost}
+              onClick={
+                commentInput
+                  ? handleComment
+                  : isReply
+                  ? () => handleComment(true)
+                  : handlePost
+              }
             />
           </div>
         </div>
