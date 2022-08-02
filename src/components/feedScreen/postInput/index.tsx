@@ -39,8 +39,6 @@ const PostInput = ({
     id: string;
     displayName: string;
   }>({ id: ``, displayName: `` });
-  const [repliedToComment, setRepliedToComment] =
-    useState<{ increment: any; id: string }>();
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
@@ -109,14 +107,6 @@ const PostInput = ({
     commentedPostQuery.equalTo(`objectId`, commentedPostId);
     const commentedPostResult = await commentedPostQuery.first();
 
-    if (reply && replyOn) {
-      const repliedToComment = new Moralis.Query(`Comment`);
-      const result = await repliedToComment
-        .equalTo(`objectId`, replyOn)
-        .first();
-      setRepliedToComment(result);
-    }
-
     let fileInputValue;
     let file: { [key: string]: any } = {};
 
@@ -132,14 +122,23 @@ const PostInput = ({
         text: inputText.length !== 0 ? inputText.trim() : undefined,
         media: file._source ? file : undefined,
       })
-      .then(() => {
+      .then(async () => {
         user?.relation(`comments`).add(newComment);
         user?.save();
         newComment.set(`createdBy`, user);
         newComment.set(`onPost`, commentedPostResult);
-        if (reply && repliedToComment) {
-          newComment.set(`replyTo`, repliedToComment);
-          repliedToComment.increment(`replyCount`).save();
+        if (reply) {
+          const repliedToComment = new Moralis.Query(`Comment`);
+          await repliedToComment
+            .equalTo(`objectId`, replyOn)
+            .first()
+            .then((res) => {
+              newComment.set(`replyTo`, res);
+              if (res) {
+                res.increment(`replyCount`);
+                res.save();
+              }
+            });
         }
         newCommentInfo && newCommentInfo(newComment.id);
         commentedPostResult?.relation(`comments`).add(newComment);
@@ -242,7 +241,7 @@ const PostInput = ({
                 ? `Reply to ${replyToInfo.displayName}`
                 : isReply && !replyToInfo.displayName
                 ? `Reply`
-                : `What&apos;s on your mind?`}
+                : `What's on your mind?`}
             </span>
           )}
 

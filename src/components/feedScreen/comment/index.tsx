@@ -13,10 +13,12 @@ interface Props {
   showReplies?: boolean;
   isReply?: boolean;
   handleShowReplies?(): void;
+  handleShowInput?(): void;
   media: string;
   text: string;
   id: string;
   handleCommentDelete?(id: string): void;
+  handleReplyDelete?(id: string): void;
   createdById: string;
   likeCount: number;
   replyCount: number;
@@ -26,11 +28,13 @@ const Comment = ({
   timestamp,
   showReplies,
   handleShowReplies,
+  handleShowInput,
   isReply,
   media,
   text,
   id,
   handleCommentDelete,
+  handleReplyDelete,
   createdById,
   likeCount,
   replyCount,
@@ -132,6 +136,7 @@ const Comment = ({
             commentId={id}
             variant="comment"
             handleCommentDelete={handleCommentDelete}
+            handleReplyDelete={handleReplyDelete}
             userId={createdById}
           />
         )}
@@ -154,10 +159,13 @@ const Comment = ({
             <span>{likeCounter} Likes</span>
           </div>
 
-          <div className={styles.commentBtn}>
+          <div
+            className={styles.commentBtn}
+            onClick={() => handleShowInput && handleShowInput()}
+          >
             <span>Reply</span>
           </div>
-          {!isReply && (
+          {!isReply && replyCount >= 1 && (
             <div
               className={styles.commentBtn}
               onClick={() => handleShowReplies && handleShowReplies()}

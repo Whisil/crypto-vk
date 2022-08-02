@@ -10,6 +10,7 @@ import styles from './styles.module.scss';
 import PostMenu from '../postMenu';
 import PostInput from '../postInput';
 import MediaContainer from '../mediaContainer';
+import CommentInteraction from '../commentInteraction';
 
 interface Props {
   postId: string;
@@ -36,14 +37,14 @@ const Post = ({
   const [likeId, setLikeId] = useState<string | undefined>(undefined);
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCounter, setLikeCounter] = useState<number>(likeCount);
-  const [commentCounter, setCommentCounter] = useState<number>(commentCount);
-  const [constantCommentCounter] = useState<number>(commentCount);
   const [showComments, setShowComments] = useState<boolean>(false);
   const [commentLoader, setCommentLoader] = useState<boolean>(false);
+  const [secondaryCommentLoader, setSecondaryCommentLoader] =
+    useState<boolean>(false);
   const [commentInputFocus, setCommentInputFocus] = useState<boolean>(false);
   const [comments, setComments] = useState<any[]>([]);
   const [commentFetchOffset, setCommentFetchOffset] = useState<number>(0);
-  const [newCommentId, setNewCommentId] = useState<any[]>([]);
+  const [newCommentId, setNewCommentId] = useState<string[]>([]);
   const [commentDeleteId, setCommentDeleteId] = useState(``);
 
   const { Moralis, user } = useMoralis();
@@ -61,7 +62,6 @@ const Post = ({
     if (newCommentId.length !== 0) {
       commentQuery.get(newCommentId[0]).then((comment) => {
         setComments((comments) => [comment, ...comments]);
-        setCommentCounter((commentCounter) => commentCounter + 1);
       });
     }
   }, [newCommentId]);
@@ -133,6 +133,7 @@ const Post = ({
       res
         .relation(`comments`)
         .query()
+        .equalTo(`replyTo`, undefined)
         .descending(`likeCount`)
         .limit(3)
         .notContainedIn(`objectId`, newCommentId)
@@ -140,14 +141,12 @@ const Post = ({
         .find()
         .then((fetchedComments) => {
           if (comments.length === 0) {
-            const sortedComments = fetchedComments.sort(function (a, b) {
-              return a.attributes.text - b.attributes.text;
-            });
-            setComments(sortedComments);
+            setComments(fetchedComments);
           } else {
             setComments([...comments, ...fetchedComments]);
           }
           setCommentLoader(false);
+          setSecondaryCommentLoader(false);
         });
     });
   };
@@ -177,7 +176,6 @@ const Post = ({
 
   useEffect(() => {
     if (commentDeleteId !== ``) {
-      setCommentCounter((commentCounter) => commentCounter - 1);
       postQuery.get(postId).then((post) => {
         post.decrement(`commentCount`);
         post.save();
@@ -199,8 +197,6 @@ const Post = ({
       });
     }
   }, [commentDeleteId]);
-
-  // Replies
 
   return (
     <div className={styles.post}>
@@ -225,7 +221,7 @@ const Post = ({
         </div>
 
         <div className={styles.comments} onClick={() => commentsShowToggle()}>
-          {commentCounter} comments
+          {commentCount} comments
         </div>
       </div>
 
@@ -250,7 +246,7 @@ const Post = ({
         <Loader variant="small" relative />
       ) : showComments && !commentLoader ? (
         <>
-          <ul className={styles.commentsWrapper}>
+          <div className={styles.commentsWrapper}>
             <PostInput
               commentInput
               commentInputFocus={commentInputFocus}
@@ -268,36 +264,25 @@ const Post = ({
                 createdById={item.attributes.createdBy.id}
                 likeCount={item.attributes.likeCount}
                 replyCount={item.attributes.replyCount}
+                postId={postId}
               />
             ))}
-          </ul>
-          <div className={styles.commentInteractions}>
-            {constantCommentCounter - 3 - commentFetchOffset > 0 && (
-              <div
-                className={styles.commentInteractionsBtn}
-                onClick={() =>
-                  setCommentFetchOffset(
-                    (commentFetchOffset) => commentFetchOffset + 3,
-                  )
-                }
-              >
-                Show more{` `}
-                {`(${constantCommentCounter - 3 - commentFetchOffset})`}
-              </div>
-            )}
-            {showComments && (
-              <div
-                className={styles.commentInteractionsBtn}
-                onClick={() => {
-                  setComments([]);
-                  setShowComments(false);
-                  setCommentFetchOffset(0);
-                }}
-              >
-                Hide comments
-              </div>
-            )}
+            {secondaryCommentLoader && <Loader variant="small" relative />}
           </div>
+          <CommentInteraction
+            showMoreCondition={commentCount - 3 - commentFetchOffset > 0}
+            firstOnClick={() => {
+              setCommentFetchOffset(
+                (commentFetchOffset) => commentFetchOffset + 3,
+              );
+              setSecondaryCommentLoader(true);
+            }}
+            secondOnClick={() => {
+              setComments([]);
+              setShowComments(false);
+              setCommentFetchOffset(0);
+            }}
+          />
         </>
       ) : null}
     </div>

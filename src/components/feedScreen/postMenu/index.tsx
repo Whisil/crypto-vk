@@ -10,6 +10,7 @@ interface Props {
   userId?: string;
   handlePostDelete?(postId: string | undefined): void;
   handleCommentDelete?(id: string | undefined): void;
+  handleReplyDelete?(id: string | undefined): void;
   commentId?: string;
   postId?: string;
   variant?: 'comment';
@@ -19,6 +20,7 @@ const PostMenu = ({
   userId,
   handlePostDelete,
   handleCommentDelete,
+  handleReplyDelete,
   commentId,
   postId,
   variant,
@@ -75,6 +77,7 @@ const PostMenu = ({
               onClick={() => {
                 handlePostDelete && handlePostDelete(postId);
                 handleCommentDelete && handleCommentDelete(commentId);
+                handleReplyDelete && handleReplyDelete(commentId);
                 setShowMenu(false);
               }}
             />
