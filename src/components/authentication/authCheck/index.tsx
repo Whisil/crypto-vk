@@ -38,7 +38,7 @@ const AuthCheck = ({ children }: Props) => {
       </>
     );
   } else {
-    return children;
+    return <>{children}</>;
   }
 };
 
