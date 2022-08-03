@@ -39,7 +39,6 @@ const CommentContainer = ({
   const [secondaryReplyLoader, setSecondaryReplyLoader] =
     useState<boolean>(false);
   const [replyDeleteId, setReplyDeleteId] = useState<string>(``);
-  // const [replyCounter, setReplyCounter] = useState<number>(replyCount - 3);
 
   const { Moralis } = useMoralis();
 

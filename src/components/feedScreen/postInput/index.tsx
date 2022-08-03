@@ -184,7 +184,7 @@ const PostInput = ({
 
       reader.readAsArrayBuffer(target.files[0]);
       reader.onload = function () {
-        let blob = null;
+        let blob;
         if (target.files && target.files[0]) {
           blob = new Blob([reader.result as BlobPart], {
             type: target.files[0].type,
