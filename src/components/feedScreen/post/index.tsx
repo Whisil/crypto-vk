@@ -47,6 +47,7 @@ const Post = ({
   const [newCommentId, setNewCommentId] = useState<string[]>([]);
   const [commentDeleteId, setCommentDeleteId] = useState(``);
   const [noReplyCounter, setNoReplyCounter] = useState<number>(0);
+  const [newRepliesSwitch, setNewRepliesSwitch] = useState<boolean>(false);
 
   const { Moralis, user } = useMoralis();
 
@@ -269,6 +270,7 @@ const Post = ({
                 likeCount={item.attributes.likeCount}
                 replyCount={item.attributes.replyCount}
                 postId={postId}
+                newRepliesSwitch={newRepliesSwitch}
               />
             ))}
             {secondaryCommentLoader && <Loader variant="small" relative />}
@@ -285,6 +287,7 @@ const Post = ({
               setComments([]);
               setShowComments(false);
               setCommentFetchOffset(0);
+              setNewRepliesSwitch(true);
             }}
             counter={
               commentFetchOffset === 0

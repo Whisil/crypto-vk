@@ -17,6 +17,7 @@ interface Props {
   likeCount: number;
   replyCount: number;
   postId: string;
+  newRepliesSwitch?: boolean;
 }
 
 const CommentContainer = ({
@@ -29,6 +30,7 @@ const CommentContainer = ({
   likeCount,
   replyCount,
   postId,
+  newRepliesSwitch,
 }: Props) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
   const [showInput, setShowInput] = useState<boolean>(false);
@@ -39,6 +41,10 @@ const CommentContainer = ({
   const [secondaryReplyLoader, setSecondaryReplyLoader] =
     useState<boolean>(false);
   const [replyDeleteId, setReplyDeleteId] = useState<string>(``);
+  const [newReplies, setNewReplies] = useState<any[]>([]);
+  const [showNewReplies, setShowNewReplies] = useState<boolean>(
+    newRepliesSwitch ? newRepliesSwitch : false,
+  );
 
   const { Moralis } = useMoralis();
 
@@ -53,7 +59,7 @@ const CommentContainer = ({
   useEffect(() => {
     if (newReplyId.length !== 0) {
       replyQuery.get(newReplyId[0]).then((reply) => {
-        setReplies((replies) => [reply, ...replies]);
+        setNewReplies((replies) => [reply, ...replies]);
       });
     }
   }, [newReplyId]);
@@ -114,6 +120,13 @@ const CommentContainer = ({
     }
   }, [replyFetchOffset]);
 
+  useEffect(() => {
+    if (newRepliesSwitch) {
+      setNewReplyId([]);
+      setNewReplies([]);
+    }
+  }, [newRepliesSwitch]);
+
   //Reply Delete
 
   const handleReplyDelete = (id: string) => {
@@ -141,9 +154,17 @@ const CommentContainer = ({
 
         reply.destroy();
 
-        setReplies((replies) =>
-          replies.filter((reply) => reply.id !== replyDeleteId),
-        );
+        if (newReplies.length !== 0) {
+          setNewReplies((replies) =>
+            replies.filter((reply) => reply.id !== replyDeleteId),
+          );
+        }
+
+        if (showReplies) {
+          setReplies((replies) =>
+            replies.filter((reply) => reply.id !== replyDeleteId),
+          );
+        }
 
         setReplyDeleteId(``);
       });
@@ -179,6 +200,19 @@ const CommentContainer = ({
               />
             </li>
           )}
+          {newReplies.length !== 0 &&
+            newReplies.map((item) => (
+              <Comment
+                timestamp={item.attributes.createdAt}
+                key={item.id}
+                id={item.id}
+                media={item.attributes?.media && item.attributes.media}
+                text={item.attributes.text}
+                handleCommentDelete={handleReplyDelete}
+                createdById={item.attributes.createdBy.id}
+                likeCount={item.attributes.likeCount}
+              />
+            ))}
           {showReplies && replyLoader ? (
             <Loader variant="small" relative />
           ) : showReplies ? (
@@ -209,6 +243,8 @@ const CommentContainer = ({
                   }}
                   secondOnClick={() => {
                     setShowReplies(false);
+                    setNewReplyId([]);
+                    setNewReplies([]);
                     if (showInput) {
                       setShowInput(false);
                     }

@@ -21,7 +21,7 @@ interface Props {
   handleReplyDelete?(id: string): void;
   createdById: string;
   likeCount: number;
-  replyCount: number;
+  replyCount?: number;
 }
 
 const Comment = ({
@@ -165,7 +165,7 @@ const Comment = ({
           >
             <span>Reply</span>
           </div>
-          {!isReply && replyCount >= 1 && (
+          {!isReply && replyCount! >= 1 && (
             <div
               className={styles.commentBtn}
               onClick={() => handleShowReplies && handleShowReplies()}
