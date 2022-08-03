@@ -46,6 +46,7 @@ const Post = ({
   const [commentFetchOffset, setCommentFetchOffset] = useState<number>(0);
   const [newCommentId, setNewCommentId] = useState<string[]>([]);
   const [commentDeleteId, setCommentDeleteId] = useState(``);
+  const [noReplyCounter, setNoReplyCounter] = useState<number>(0);
 
   const { Moralis, user } = useMoralis();
 
@@ -134,7 +135,7 @@ const Post = ({
         .relation(`comments`)
         .query()
         .equalTo(`replyTo`, undefined)
-        .descending(`likeCount`)
+        // .descending(`likeCount`)
         .limit(3)
         .notContainedIn(`objectId`, newCommentId)
         .skip(commentFetchOffset)
@@ -156,9 +157,12 @@ const Post = ({
       setCommentLoader(true);
       commentFetch();
       setShowComments(true);
+      commentQuery.equalTo(`replyTo`, undefined);
+      commentQuery.count().then((res) => setNoReplyCounter(res));
     } else {
       setComments([]);
       setShowComments(false);
+      setNoReplyCounter(0);
     }
   };
 
@@ -270,7 +274,7 @@ const Post = ({
             {secondaryCommentLoader && <Loader variant="small" relative />}
           </div>
           <CommentInteraction
-            showMoreCondition={commentCount - 3 - commentFetchOffset > 0}
+            showMoreCondition={noReplyCounter - 3 - commentFetchOffset > 0}
             firstOnClick={() => {
               setCommentFetchOffset(
                 (commentFetchOffset) => commentFetchOffset + 3,
@@ -282,6 +286,11 @@ const Post = ({
               setShowComments(false);
               setCommentFetchOffset(0);
             }}
+            counter={
+              commentFetchOffset === 0
+                ? noReplyCounter - 3
+                : noReplyCounter - 3 - commentFetchOffset
+            }
           />
         </>
       ) : null}

@@ -39,7 +39,7 @@ const CommentContainer = ({
   const [secondaryReplyLoader, setSecondaryReplyLoader] =
     useState<boolean>(false);
   const [replyDeleteId, setReplyDeleteId] = useState<string>(``);
-  const [replyCounter, setReplyCounter] = useState<number>(replyCount);
+  // const [replyCounter, setReplyCounter] = useState<number>(replyCount - 3);
 
   const { Moralis } = useMoralis();
 
@@ -123,43 +123,31 @@ const CommentContainer = ({
 
   useEffect(() => {
     if (replyDeleteId !== ``) {
-      const commentQuery = new Moralis.Query(`Comment`);
+      new Moralis.Query(`Posts`).get(postId).then((post) => {
+        post.decrement(`commentCount`);
+        post.save();
+      });
 
-      setReplyCounter((commentCounter) => commentCounter - 1);
-      new Moralis.Query(`Posts`)
-        .get(postId)
-        .then((post) => {
-          post.decrement(`commentCount`);
-          post.save();
-        })
-        .catch((err) => console.log(err));
+      new Moralis.Query(`Comment`).get(commentId).then((comment) => {
+        comment.decrement(`replyCount`);
+        comment.save();
+      });
 
-      commentQuery
-        .get(commentId)
-        .then((comment) => {
-          comment.decrement(`replyCount`);
-          comment.save();
-        })
-        .catch((err) => console.log(err));
+      new Moralis.Query(`Comment`).get(replyDeleteId).then((reply) => {
+        const likeQuery = new Moralis.Query(`Likes`);
+        likeQuery
+          .equalTo(`likedComment`, reply)
+          .find()
+          .then((res) => Moralis.Object.destroyAll(res));
 
-      commentQuery
-        .get(replyDeleteId)
-        .then((reply) => {
-          const likeQuery = new Moralis.Query(`Likes`);
-          likeQuery
-            .equalTo(`likedComment`, reply)
-            .find()
-            .then((res) => Moralis.Object.destroyAll(res));
+        reply.destroy();
 
-          reply.destroy();
+        setReplies((replies) =>
+          replies.filter((reply) => reply.id !== replyDeleteId),
+        );
 
-          setReplies((replies) =>
-            replies.filter((reply) => reply.id !== replyDeleteId),
-          );
-
-          setReplyDeleteId(``);
-        })
-        .catch((err) => console.log(err));
+        setReplyDeleteId(``);
+      });
     }
   }, [replyDeleteId]);
 
@@ -226,6 +214,11 @@ const CommentContainer = ({
                       setShowInput(false);
                     }
                   }}
+                  counter={
+                    replyFetchOffset === 0
+                      ? replyCount - 3
+                      : replyCount - 3 - replyFetchOffset
+                  }
                 />
               </li>
             </>
