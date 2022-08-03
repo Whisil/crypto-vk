@@ -42,9 +42,7 @@ const CommentContainer = ({
     useState<boolean>(false);
   const [replyDeleteId, setReplyDeleteId] = useState<string>(``);
   const [newReplies, setNewReplies] = useState<any[]>([]);
-  const [showNewReplies, setShowNewReplies] = useState<boolean>(
-    newRepliesSwitch ? newRepliesSwitch : false,
-  );
+  const [inputUsername, setInputUsername] = useState<string>(``);
 
   const { Moralis } = useMoralis();
 
@@ -76,7 +74,11 @@ const CommentContainer = ({
   };
 
   const handleShowInput = () => {
-    setShowInput((showInput) => !showInput);
+    setShowInput(true);
+  };
+
+  const handleReplyToReply = (username: string) => {
+    setInputUsername(username);
   };
 
   //Replies fetching
@@ -197,6 +199,7 @@ const CommentContainer = ({
                 replyTo={createdById}
                 commentedPostId={postId}
                 newCommentInfo={newReplyInfo}
+                inputUsername={inputUsername}
               />
             </li>
           )}
@@ -228,6 +231,9 @@ const CommentContainer = ({
                   createdById={item.attributes.createdBy.id}
                   likeCount={item.attributes.likeCount}
                   replyCount={item.attributes.replyCount}
+                  handleReplyToReply={handleReplyToReply}
+                  handleShowInput={handleShowInput}
+                  isReply
                 />
               ))}
               {secondaryReplyLoader && <Loader variant="small" relative />}

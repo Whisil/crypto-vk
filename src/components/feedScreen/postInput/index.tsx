@@ -20,6 +20,7 @@ interface Props {
   isReply?: boolean;
   replyTo?: string;
   replyOn?: string;
+  inputUsername?: string;
 }
 
 const PostInput = ({
@@ -31,6 +32,7 @@ const PostInput = ({
   isReply,
   replyOn,
   replyTo,
+  inputUsername,
 }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
@@ -197,6 +199,32 @@ const PostInput = ({
     }
   };
 
+  //Reply username push
+  useEffect(() => {
+    if (
+      textInput &&
+      textInput.current &&
+      isReply &&
+      inputUsername &&
+      inputUsername.length !== 0
+    ) {
+      textInput.current.textContent = `@${inputUsername} `;
+      setInputText(`nothing`);
+      setEndOfInput(textInput.current);
+    }
+  }, [inputUsername]);
+
+  const setEndOfInput = (target: HTMLDivElement) => {
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(target);
+    range.collapse(false);
+    sel?.removeAllRanges();
+    sel?.addRange(range);
+    target.focus();
+    range.detach();
+  };
+
   return (
     <div
       className={classNames(
@@ -250,6 +278,7 @@ const PostInput = ({
             contentEditable="true"
             onInput={(e) => setInputText(e.currentTarget.textContent as string)}
             ref={textInput}
+            onFocus={(e) => setEndOfInput(e.target)}
           />
         </div>
         {mediaURI && (

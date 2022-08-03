@@ -22,6 +22,7 @@ interface Props {
   createdById: string;
   likeCount: number;
   replyCount?: number;
+  handleReplyToReply?(username: string): void;
 }
 
 const Comment = ({
@@ -38,6 +39,7 @@ const Comment = ({
   createdById,
   likeCount,
   replyCount,
+  handleReplyToReply,
 }: Props) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<{
@@ -52,7 +54,7 @@ const Comment = ({
   const { Moralis, user } = useMoralis();
 
   //User fetching and like check
-
+  console.log(userInfo.username);
   const commentQuery = new Moralis.Query(`Comment`);
 
   useEffect(() => {
@@ -161,7 +163,12 @@ const Comment = ({
 
           <div
             className={styles.commentBtn}
-            onClick={() => handleShowInput && handleShowInput()}
+            onClick={() => {
+              handleShowInput && handleShowInput();
+              isReply &&
+                handleReplyToReply &&
+                handleReplyToReply(userInfo.username);
+            }}
           >
             <span>Reply</span>
           </div>
