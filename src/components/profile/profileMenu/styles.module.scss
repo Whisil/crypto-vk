@@ -1,0 +1,130 @@
+@import '@/styles/colors.scss';
+
+.container{
+    max-width: 384px;
+    height: fit-content;
+    width: 100%;
+    border-radius: 20px;
+    background: $primaryDark;
+    overflow: hidden;
+
+    .menu{
+        
+        display: flex;
+        flex-direction: column;
+
+        .menuUpper{
+            border-bottom: 1px solid rgba($secondaryLight, 0.5);
+            padding: 10px 15px 10px 15px;
+
+            .link{
+                display: block;
+                padding: 5px 0px;
+                width: fit-content;
+                .menuItem{
+                    width: fit-content;
+                    border-radius: 20px;
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 10px;
+                    transition: background-color .15s ease;
+        
+                    svg{
+                        path{
+                            fill: $primaryLight;
+                            transition: fill .15s ease;
+                        }
+                    }
+    
+                    .title{
+                        color: $primaryLight;
+                        font-size: 18px;
+                        font-weight: 500;
+                        line-height: 1;
+                        user-select: none;
+                    }
+                }
+                &:hover{
+                    .menuItem{
+                        background-color: rgba($primaryLightDark, 0.5);
+                    }
+                }
+            }
+    
+            .activeLink{
+                .menuItem{
+                    background-color: $secondaryLight !important;
+                    svg{
+                        filter: drop-shadow(0 0 2px rgba($primaryAccent, 0.5));
+                        path{
+                            fill: $primaryAccent;
+                        }
+                    }
+                    .title{
+                        color: $bodyDark;
+                    }
+                }
+            }
+        }
+
+        .menuBottom{
+            padding: 20px 15px 15px 15px;
+
+            .header{
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: fit-content;
+                padding-left: 10px;
+                margin-bottom: 10px;
+                
+                &Text{
+                    color: $primaryLight;
+                    font-size: 18px;
+                    font-weight: 500;
+                    line-height: 1;
+                    user-select: none;
+                }
+            }
+
+            .cards{
+                display: grid;
+                grid-template-areas: "a a";
+                gap: 4px;
+                border-radius: 10px;
+                overflow: hidden;
+
+                .card{
+                    position: relative;
+                    height: 175.5px;
+                    width: 175.5px;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-position: center center;
+
+                    .price{
+                        position: absolute;
+                        bottom: 5px;
+                        right: 5px;
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                        padding: 5px 10px 5px 5px;
+                        border-radius: 20px;
+                        background-color: $primaryLight;
+                        
+                        &Number{
+                            color: $bodyDark;
+                            font-size: 14px;
+                            font-weight: bold;
+                            line-height: 1;
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
+}

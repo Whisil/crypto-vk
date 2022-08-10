@@ -1,14 +1,12 @@
 import Feed from '@/components/feedScreen/feed';
 import ProfileBlock from '@/components/feedScreen/profileBlock';
-import WhoToFollow from '@/components/feedScreen/whoToFollow';
+import WhoToFollow from '@/components/unknown/whoToFollow';
 import MainLayout from '@/containers/MainLayout';
-
-import styles from '../styles/home.module.scss';
 
 export default function Home() {
   return (
     <MainLayout>
-      <div className={styles.homeContainer}>
+      <div className="container">
         <ProfileBlock />
         <Feed />
         <WhoToFollow />

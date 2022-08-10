@@ -1,6 +1,8 @@
 
-.feed__container{
-    max-width: 640px;
+.container{
+    max-width: 1440px;
     margin: 0 auto;
-    padding-top: 60px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }

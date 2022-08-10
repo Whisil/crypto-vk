@@ -1,8 +1,8 @@
 import AccountImage from '@/components/unknown/accountImage';
 import { useMoralis } from 'react-moralis';
-import RippleBtn from '@/components/unknown/rippleBtn';
 import Link from 'next/link';
 import styles from './styles.module.scss';
+import LinkRippleBtn from '@/components/unknown/linkRippleBtn';
 
 const ProfileBlock = () => {
   const { user } = useMoralis();
@@ -57,11 +57,7 @@ const ProfileBlock = () => {
         </div>
       </div>
 
-      <RippleBtn className={styles.profileBtnRipple}>
-        <Link href="/">
-          <a className={styles.profileBtn}>My profile</a>
-        </Link>
-      </RippleBtn>
+      <LinkRippleBtn text="My profile" link="/profile" />
     </div>
   );
 };

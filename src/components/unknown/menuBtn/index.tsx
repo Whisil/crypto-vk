@@ -26,7 +26,7 @@ const MenuBtn = ({ icon, text, accent, onClick, link }: Props) => {
           <span>{text}</span>
         </div>
       ) : (
-        <Link href="/" passHref>
+        <Link href={link} passHref>
           <a>
             <div
               className={classNames(

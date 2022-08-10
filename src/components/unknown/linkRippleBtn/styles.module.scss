@@ -1,0 +1,24 @@
+@import '@/styles/colors.scss';
+
+.btnRipple{
+    border-radius: 0;
+    border-top: 1px solid rgba($primaryLightDark, 0.5);
+    cursor: pointer;
+}
+.btn{
+    display: block;
+    padding: 20px 40px;
+    width: 100%;
+    text-align: center;
+    color: $primaryAccent;
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 1;
+    transition: background-color .2s ease;
+    position: relative;
+    z-index: 2;
+
+    &:hover{
+        background-color: rgba($primaryLightDark, 0.25);
+    }
+}

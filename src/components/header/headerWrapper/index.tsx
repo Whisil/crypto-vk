@@ -8,17 +8,15 @@ import styles from './styles.module.scss';
 import Link from 'next/link';
 import HeaderAccount from '../headerAccount';
 
-const menu = [
-  { title: `Home`, path: `/` },
-  { title: `Explore`, path: `/explore` },
-  { title: `Messages`, path: `/messages` },
-  { title: `Market`, path: `/market` },
-];
-
-type variantType = 'Home' | 'Explore' | 'Messages' | 'Market' | 'Notifications';
-
 const HeaderWrapper = () => {
   const router = useRouter();
+
+  const menu = [
+    { title: `Home`, path: `/`, iconName: `home` },
+    { title: `Explore`, path: `/explore`, iconName: `explore` },
+    { title: `Messages`, path: `/messages`, iconName: `messages` },
+    { title: `Market`, path: `/market`, iconName: `market` },
+  ];
 
   return (
     <header>
@@ -38,22 +36,17 @@ const HeaderWrapper = () => {
         <div className={styles.navSide}>
           {menu.map((item) => (
             <Link href={item.path} key={item.title}>
-              <a
-                className={
-                  router.pathname === item.path
-                    ? styles.activeLink
-                    : styles.link
-                }
-              >
+              <a className={router.pathname === item.path ? `` : styles.link}>
                 <NavBtn
-                  variant={item.title as variantType}
+                  text={item.title}
+                  icon={item.iconName}
                   active={router.pathname === item.path ? true : false}
                 />
               </a>
             </Link>
           ))}
           <div className={styles.notifications}>
-            <NavBtn variant="Notifications" active={false} />
+            <NavBtn icon="notifications" active={false} />
           </div>
 
           <span className={styles.divider} />
