@@ -1,0 +1,29 @@
+@import '@/styles/colors.scss';
+
+.card{
+    position: relative;
+    height: 175.5px;
+    width: 175.5px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+
+    .price{
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 10px 5px 5px;
+        border-radius: 20px;
+        background-color: $primaryLight;
+        
+        &Number{
+            color: $bodyDark;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+        }
+    }
+}

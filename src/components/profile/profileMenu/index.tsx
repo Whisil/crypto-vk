@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import IconImport from '@/components/unknown/IconImport';
 import LinkRippleBtn from '@/components/unknown/linkRippleBtn';
-import MaticIcon from '@/public/images/icons/matic.svg';
+import MenuNftCard from '../menuNftCard';
 
 import styles from './styles.module.scss';
 
@@ -59,42 +59,10 @@ const ProfileMenu = () => {
           </div>
 
           <div className={styles.cards}>
-            <div
-              className={styles.card}
-              style={{ backgroundImage: `url('/images/nft-card.webp')` }}
-            >
-              <div className={styles.price}>
-                <MaticIcon />
-                <span className={styles.priceNumber}>125.5</span>
-              </div>
-            </div>
-            <div
-              className={styles.card}
-              style={{ backgroundImage: `url('/images/nft-card.webp')` }}
-            >
-              <div className={styles.price}>
-                <MaticIcon />
-                <span className={styles.priceNumber}>125.5</span>
-              </div>
-            </div>
-            <div
-              className={styles.card}
-              style={{ backgroundImage: `url('/images/nft-card.webp')` }}
-            >
-              <div className={styles.price}>
-                <MaticIcon />
-                <span className={styles.priceNumber}>125.5</span>
-              </div>
-            </div>
-            <div
-              className={styles.card}
-              style={{ backgroundImage: `url('/images/nft-card.webp')` }}
-            >
-              <div className={styles.price}>
-                <MaticIcon />
-                <span className={styles.priceNumber}>125.5</span>
-              </div>
-            </div>
+            <MenuNftCard image="/images/nft-card.webp" price={125.5} />
+            <MenuNftCard image="/images/nft-card.webp" price={125.5} />
+            <MenuNftCard image="/images/nft-card.webp" price={125.5} />
+            <MenuNftCard image="/images/nft-card.webp" price={125.5} />
           </div>
         </div>
 
