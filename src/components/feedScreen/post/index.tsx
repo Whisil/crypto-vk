@@ -158,8 +158,10 @@ const Post = ({
       setCommentLoader(true);
       commentFetch();
       setShowComments(true);
-      commentQuery.equalTo(`replyTo`, undefined);
-      commentQuery.count().then((res) => setNoReplyCounter(res));
+      postQuery.get(postId).then((res) => {
+        commentQuery.equalTo(`replyTo`, undefined).equalTo(`onPost`, res);
+        commentQuery.count().then((res) => setNoReplyCounter(res));
+      });
     } else {
       setComments([]);
       setShowComments(false);
