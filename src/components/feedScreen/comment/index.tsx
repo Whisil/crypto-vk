@@ -54,7 +54,6 @@ const Comment = ({
   const { Moralis, user } = useMoralis();
 
   //User fetching and like check
-  console.log(userInfo.username);
   const commentQuery = new Moralis.Query(`Comment`);
 
   useEffect(() => {

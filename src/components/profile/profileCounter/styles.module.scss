@@ -1,0 +1,21 @@
+@import '@/styles/colors.scss';
+
+.counter{
+    display: flex;
+    align-items: center;
+    gap: 3.5px;
+
+    .number{
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1;
+        color: $primaryLight;
+    }
+    
+    .title{
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        color: rgba($primaryLight, 0.5);
+    }
+}
