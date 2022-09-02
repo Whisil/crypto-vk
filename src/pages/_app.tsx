@@ -5,6 +5,9 @@ import '@/styles/global.scss';
 import AuthCheck from '@/components/authentication/authCheck';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const AppId = process.env.NEXT_PUBLIC_REACT_APP_MORALIS_APP_ID;
+  const ServerUrl = process.env.NEXT_PUBLIC_REACT_APP_MORALIS_SERVER_URL;
+
   return (
     <>
       <Head>
@@ -18,10 +21,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           url(&apos;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap&apos;);
         </style>
       </Head>
-      <MoralisProvider
-        appId="3LhvQSOy3gt2PTZ0ua8AQuEDwtisUhTvOGS6sMUg"
-        serverUrl="https://ew7afpe1clbr.usemoralis.com:2053/server"
-      >
+      <MoralisProvider appId={AppId as string} serverUrl={ServerUrl as string}>
         <AuthCheck>
           <Component {...pageProps} />
         </AuthCheck>

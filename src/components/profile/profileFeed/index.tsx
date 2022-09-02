@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Post from '@/components/feedScreen/post';
 import { useEffect } from 'react';
 import { useMoralis } from 'react-moralis';
@@ -9,15 +10,28 @@ const ProfileFeed = () => {
 
   const { Moralis, user } = useMoralis();
 
+  const router = useRouter();
+
   const postQuery = new Moralis.Query(`Posts`);
 
   useEffect(() => {
-    user?.attributes.posts
-      .query()
-      .find()
-      .then((fetchedPosts: object[]) => setPosts(fetchedPosts));
-  }, []);
-
+    if (!router.query[0]) {
+      setPosts([]);
+      user?.attributes.posts
+        .query()
+        .find()
+        .then((fetchedPosts: object[]) => setPosts(fetchedPosts));
+    }
+    if (router.query.tab === `media`) {
+      setPosts([]);
+      user?.attributes.posts
+        .query()
+        .notEqualTo(`media`, undefined)
+        .find()
+        .then((fetchedPosts: object[]) => setPosts(fetchedPosts));
+    }
+  }, [router.query]);
+  console.log(router.query);
   useEffect(() => {
     if (postDeleteId !== ``) {
       postQuery.get(postDeleteId).then(async (post) => {
