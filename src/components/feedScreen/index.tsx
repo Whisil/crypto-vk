@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useMoralis } from 'react-moralis';
-import Post from '../post';
-import PostInput from '../postInput';
+import Post from './post';
+import PostInput from './postInput';
 import Loader from '@/components/unknown/loader';
 
 import styles from './styles.module.scss';

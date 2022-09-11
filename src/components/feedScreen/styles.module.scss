@@ -1,8 +1,11 @@
 .feed{
-    width: 100%;
 
     .loaderWrapper{
         position: relative;
         margin-top: 30px;
     }
+    @media screen and (max-width: 768px){
+        margin-top: 15px;
+    }
 }
+

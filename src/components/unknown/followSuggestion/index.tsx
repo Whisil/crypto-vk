@@ -7,7 +7,10 @@ const FollowSuggestion = () => {
   return (
     <Link href="/">
       <a className={styles.item}>
-        <AccountInfo bio="That's my bio, it's not much but" />
+        <AccountInfo
+          bio="That's my bio, it's not much but"
+          className={styles.infoResponsive}
+        />
         <div
           onClick={(e) => {
             e.stopPropagation();

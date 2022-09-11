@@ -1,12 +1,12 @@
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import Search from '../search';
-import NavBtn from '../navBtn';
+import Search from './search';
+import NavBtn from './navBtn';
 import Logo from 'public/images/icons/logo.svg';
 
 import styles from './styles.module.scss';
 import Link from 'next/link';
-import HeaderAccount from '../headerAccount';
+import HeaderAccount from './headerAccount';
 
 const HeaderWrapper = () => {
   const router = useRouter();
@@ -19,7 +19,7 @@ const HeaderWrapper = () => {
   ];
 
   return (
-    <header>
+    <header className={styles.header}>
       <div className={classNames(styles.headerContainer, `container`)}>
         <div className={styles.logoSide}>
           <Link href="/">

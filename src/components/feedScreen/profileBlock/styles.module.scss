@@ -1,12 +1,12 @@
 @import '@/styles/colors.scss';
 
 .container{
-    max-width: 384px;
     height: fit-content;
-    width: 100%;
     border-radius: 20px;
     background: $primaryDark;
     overflow: hidden;
+    position: sticky;
+    top: 100px;
 
     .banner{
         display: block;
@@ -62,28 +62,45 @@
     }
 
     .numbers{
-        display: flex;
+        display: grid;
+        grid-template-columns: 50% 50%;
+        gap: 80px;
         justify-content: center;
-        padding: 15px 40px;
+        padding: 15px;
         border-top: 1px solid rgba($primaryLightDark, 0.5);
+        position: relative;
+
+        @media screen and (max-width: 1160px){
+            gap: 30px;
+        }
 
         .divider{
+            position: absolute;
             display: block;
             width: 1px;
             height: 48px;
-            margin: 0 40px;
+            right: 0;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto auto;
             background-color: rgba($primaryLightDark, 0.5);
         }
 
         &Item{
-            width: 100%;
-            text-align: center;
+            width: fit-content;
+            display: flex;
+            flex-direction: column;
+            margin-right: 0;
+            margin-left: auto;
             h3{
                 @extend .infoName;
+                display: inline-block;
                 margin-bottom: 5px;
             }
             span{
-                display: inline-block;
+                width: fit-content;
+                display: inline;
                 cursor: auto;
                 font-size: 14px;
                 line-height: 1.15;
@@ -91,6 +108,11 @@
                 color: $primaryLightDark;
             }
 
+        }
+
+        &Item:last-child{
+            margin-left: 0;
+            margin-right: auto;
         }
     }
 

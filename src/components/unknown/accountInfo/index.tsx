@@ -12,6 +12,7 @@ interface Props {
   href?: string;
   small?: boolean;
   xs?: boolean;
+  className?: string;
 }
 
 const AccountInfo = ({
@@ -21,6 +22,7 @@ const AccountInfo = ({
   href = ``,
   small,
   xs,
+  className,
 }: Props) => {
   const [time, setTime] = useState(``);
 
@@ -81,7 +83,11 @@ const AccountInfo = ({
         <AccountImage className={styles.avatar} small={small} xs={xs} />
       )}
       <div
-        className={classNames(styles.info, bio?.length != 0 && styles.textCut)}
+        className={classNames(
+          styles.info,
+          bio?.length != 0 && styles.textCut,
+          className,
+        )}
       >
         {href.length !== 0 ? (
           <Link href={href}>

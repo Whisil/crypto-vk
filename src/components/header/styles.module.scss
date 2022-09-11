@@ -1,5 +1,18 @@
 @import '@/styles/colors.scss';
 
+.header{
+    background-color: $bodyDark;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+
+    @supports ((-webkit-backdrop-filter:none) or (backdrop-filter:none)){
+        backdrop-filter: blur(20px);
+        background: rgba($bodyDark, 0.75);
+    }
+
+}
+
 .headerContainer{
     display: flex;
     align-items: center;

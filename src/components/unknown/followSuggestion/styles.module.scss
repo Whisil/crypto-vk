@@ -14,4 +14,17 @@
     .followBtn{
         margin-left: auto;
     }
+
+    @media screen and (max-width: 1520px) {
+        .infoResponsive{
+            max-width: 130px;
+        }
+    }
+
+    @media screen and (max-width: 1160px) {
+        padding: 10px 15px;
+        .infoResponsive{
+            max-width: 70px;
+        }
+    }
 }

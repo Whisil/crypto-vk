@@ -1,8 +1,30 @@
-
-.container{
+.container {
     max-width: 1440px;
+    width: 100%;
     margin: 0 auto;
-    display: flex;
-    justify-content: center;
+    display: grid;
     gap: 15px;
+    grid-template-columns: 1fr 640px 1fr;
+    
+
+    @media screen and (max-width: 1520px){
+        max-width: 1240px;
+        grid-template-columns: 1fr 600px 1fr;
+    }
+
+    @media screen and (max-width: 1280px){
+        max-width: 1120px;
+        grid-template-columns: 1fr 480px 1fr;
+    }
+
+    @media screen and (max-width: 1160px){
+        max-width: 992px;
+        padding: 0 15px;
+    }
+
+    @media screen and (max-width: 1040px){
+        max-width: 760px;
+        grid-template-columns: 1fr 460px;
+    }
+    
 }
