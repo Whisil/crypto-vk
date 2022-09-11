@@ -18,6 +18,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 25px 20px;
+    
+    @media screen and (max-width: 600px){
+        flex-direction: column;
+    }
 }
 .logoSide{
     display: flex;
@@ -71,4 +75,8 @@
     width: 1px;
     background-color: rgba($primaryLightDark, 0.5);
     margin: 0 10px;
+
+    @media screen and (max-width: 992px){
+        margin: 0 5px;
+    }
 }

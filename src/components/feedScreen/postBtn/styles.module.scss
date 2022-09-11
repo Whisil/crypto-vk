@@ -27,6 +27,10 @@
         pointer-events: none;
         user-select: none;
         transition: color .2s ease;
+
+        @media screen and (max-width: 475px){
+            display: none;
+        }
     }
 
     svg{

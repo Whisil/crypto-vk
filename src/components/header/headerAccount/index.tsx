@@ -35,14 +35,17 @@ const HeaderAccount = () => {
   return (
     <div className={styles.headerAccount}>
       <div
-        className={styles.headerAccountBtn}
+        className={classNames(
+          styles.headerAccountBtn,
+          showMenu && styles.headerAccountBtnActive,
+        )}
         onClick={() => setShowMenu(!showMenu)}
       >
         <AccountImage />
         <div className={styles.nameWrapper}>
           <span className={styles.name}>{user?.attributes.displayName}</span>
         </div>
-        <Triangle />
+        <Triangle className={styles.triangle} />
       </div>
 
       {showMenu && (

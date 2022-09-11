@@ -42,4 +42,13 @@
         line-height: 1;
         user-select: none;
     }
+
+    @media screen and (max-width: 992px){
+        padding: 10px;
+        margin: 0 5px;
+
+        .btnLabel{
+            display: none !important;
+        }
+    }
 }
