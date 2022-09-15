@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
@@ -33,7 +33,10 @@ const Post = ({
   commentCount,
   likeCount,
 }: Props) => {
-  const [userInfo, setUserInfo] = useState<string>(``);
+  const [userInfo, setUserInfo] = useState<{
+    displayName: string;
+    username: string;
+  }>({ username: ``, displayName: `` });
   const [likeId, setLikeId] = useState<string | undefined>(undefined);
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCounter, setLikeCounter] = useState<number>(likeCount);
@@ -51,8 +54,11 @@ const Post = ({
 
   const { Moralis, user } = useMoralis();
 
-  const postQuery = new Moralis.Query(`Posts`);
-  const commentQuery = new Moralis.Query(`Comment`);
+  const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
+  const commentQuery = useMemo(
+    () => new Moralis.Query(`Comment`),
+    [Moralis.Query],
+  );
 
   //New comment
 
@@ -66,13 +72,16 @@ const Post = ({
         setComments((comments) => [comment, ...comments]);
       });
     }
-  }, [newCommentId]);
+  }, [newCommentId, commentQuery]);
 
   //User fetching and like check
 
   useEffect(() => {
     Moralis.Cloud.run(`userFetch`, { id: createdBy.id }).then((res) =>
-      setUserInfo(res[0].attributes.displayName),
+      setUserInfo({
+        displayName: res[0].attributes.displayName,
+        username: res[0].attributes.username,
+      }),
     );
     postQuery.get(postId).then(function (result) {
       result
@@ -87,7 +96,7 @@ const Post = ({
           }
         });
     });
-  }, []);
+  }, [Moralis.Cloud, createdBy.id, postId, postQuery, user]);
 
   // Likes
 
@@ -130,7 +139,7 @@ const Post = ({
 
   //Comments
 
-  const commentFetch = () => {
+  const commentFetch = useCallback(() => {
     postQuery.get(postId).then((res) => {
       res
         .relation(`comments`)
@@ -151,7 +160,7 @@ const Post = ({
           setSecondaryCommentLoader(false);
         });
     });
-  };
+  }, [commentFetchOffset, comments, newCommentId, postId, postQuery]);
 
   const commentsShowToggle = () => {
     if (!showComments) {
@@ -173,7 +182,7 @@ const Post = ({
     if (commentFetchOffset !== 0) {
       commentFetch();
     }
-  }, [commentFetchOffset]);
+  }, [commentFetchOffset, commentFetch]);
 
   //Comment Delete
 
@@ -203,12 +212,23 @@ const Post = ({
         setCommentDeleteId(``);
       });
     }
-  }, [commentDeleteId]);
+  }, [
+    commentDeleteId,
+    Moralis.Object,
+    Moralis.Query,
+    commentQuery,
+    postId,
+    postQuery,
+  ]);
 
   return (
     <div className={styles.post}>
       <div className={styles.header}>
-        <AccountInfo timestamp={timestamp} displayName={userInfo} href="/" />
+        <AccountInfo
+          timestamp={timestamp}
+          displayName={userInfo.displayName}
+          href={`/profile/${createdBy.id}`}
+        />
 
         <PostMenu
           handlePostDelete={handlePostDelete}

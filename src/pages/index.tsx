@@ -1,7 +1,6 @@
 import Feed from '@/components/feedScreen';
 import ProfileBlock from '@/components/feedScreen/profileBlock';
 import WhoToFollow from '@/components/unknown/whoToFollow';
-import MainLayout from '@/containers/MainLayout';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 
@@ -26,12 +25,10 @@ export default function Home() {
   }, []);
 
   return (
-    <MainLayout>
-      <div className={classNames(`container`, styles.containerSmall)}>
-        <ProfileBlock />
-        <Feed />
-        {showFollow && <WhoToFollow />}
-      </div>
-    </MainLayout>
+    <div className={classNames(`container`, styles.containerSmall)}>
+      <ProfileBlock />
+      <Feed />
+      {showFollow && <WhoToFollow />}
+    </div>
   );
 }

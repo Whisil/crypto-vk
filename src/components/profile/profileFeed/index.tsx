@@ -1,37 +1,33 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useMemo, useState } from 'react';
 import Post from '@/components/feedScreen/post';
 import { useEffect } from 'react';
 import { useMoralis } from 'react-moralis';
 
-const ProfileFeed = () => {
+const ProfileFeed = ({ variant = `` }: { variant?: string }) => {
   const [posts, setPosts] = useState<any[]>([]);
   const [postDeleteId, setPostDeleteId] = useState<string>(``);
 
   const { Moralis, user } = useMoralis();
 
-  const router = useRouter();
-
-  const postQuery = new Moralis.Query(`Posts`);
+  const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
 
   useEffect(() => {
-    if (!router.query[0]) {
-      setPosts([]);
+    if (variant.length === 0) {
+      // setPosts([]);
       user?.attributes.posts
         .query()
         .find()
         .then((fetchedPosts: object[]) => setPosts(fetchedPosts));
-    }
-    if (router.query.tab === `media`) {
-      setPosts([]);
+    } else if (variant === `media`) {
+      // setPosts([]);
       user?.attributes.posts
         .query()
         .notEqualTo(`media`, undefined)
         .find()
         .then((fetchedPosts: object[]) => setPosts(fetchedPosts));
     }
-  }, [router.query]);
-  console.log(router.query);
+  }, [variant, user?.attributes.posts]);
+
   useEffect(() => {
     if (postDeleteId !== ``) {
       postQuery.get(postDeleteId).then(async (post) => {
@@ -52,14 +48,14 @@ const ProfileFeed = () => {
         setPostDeleteId(``);
       });
     }
-  }, [postDeleteId]);
+  }, [postDeleteId, Moralis.Object, postQuery]);
 
   const handlePostDelete = (id: string) => {
     setPostDeleteId(id);
   };
 
   return (
-    <>
+    <div>
       {posts.map((item) => (
         <Post
           key={item.id}
@@ -73,7 +69,7 @@ const ProfileFeed = () => {
           likeCount={item.attributes.likeCount}
         />
       ))}
-    </>
+    </div>
   );
 };
 

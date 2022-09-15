@@ -11,7 +11,7 @@ const ProfileMenu = () => {
   const menu = [
     {
       title: `Posts`,
-      query: undefined,
+      query: false,
       iconName: `profile-posts`,
     },
     {
@@ -34,7 +34,12 @@ const ProfileMenu = () => {
         <div className={styles.menuUpper}>
           {menu.map((item) => (
             <Link
-              href={item.query ? { query: { tab: item.query } } : `/profile`}
+              href={item.query ? `/[profileId]/${item.query}` : `/[profileId]`}
+              as={
+                item.query
+                  ? `/${router.query.profileId}/${item.query}`
+                  : `/${router.query.profileId}`
+              }
               key={item.title}
             >
               <a

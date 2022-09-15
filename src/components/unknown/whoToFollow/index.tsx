@@ -2,7 +2,6 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import FollowSuggestion from '../followSuggestion';
 import styles from './styles.module.scss';
-import RippleBtn from '@/components/unknown/rippleBtn';
 import LinkRippleBtn from '../linkRippleBtn';
 
 const WhoToFollow = () => {

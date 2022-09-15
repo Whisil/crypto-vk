@@ -3,10 +3,27 @@ import { MoralisProvider } from 'react-moralis';
 import Head from 'next/head';
 import '@/styles/global.scss';
 import AuthCheck from '@/components/authentication/authCheck';
+import MainLayout from '@/containers/MainLayout';
+import React from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import type { NextPage } from 'next';
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export type NextPageWithLayout<P = any, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function MyApp({
+  Component,
+  pageProps,
+}: AppPropsWithLayout & AppProps) {
   const AppId = process.env.NEXT_PUBLIC_REACT_APP_MORALIS_APP_ID;
   const ServerUrl = process.env.NEXT_PUBLIC_REACT_APP_MORALIS_SERVER_URL;
+
+  const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <>
@@ -23,9 +40,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <MoralisProvider appId={AppId as string} serverUrl={ServerUrl as string}>
         <AuthCheck>
-          <Component {...pageProps} />
+          <MainLayout>{getLayout(<Component {...pageProps} />)}</MainLayout>
         </AuthCheck>
-        {/* <Component {...pageProps} /> */}
       </MoralisProvider>
     </>
   );

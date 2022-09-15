@@ -57,7 +57,7 @@ const ProfileBlock = () => {
         </div>
       </div>
 
-      <LinkRippleBtn text="My profile" link="/profile" />
+      <LinkRippleBtn text="My profile" link={`/${user?.id}`} />
     </div>
   );
 };

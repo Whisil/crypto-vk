@@ -1,4 +1,3 @@
-import { useMoralis } from 'react-moralis';
 import classNames from 'classnames';
 import AccentBtn from '@/components/unknown/accentBtn';
 import DmIcon from '@/public/images/icons/messages.svg';
@@ -6,9 +5,17 @@ import ProfileCounter from '../profileCounter';
 
 import styles from './styles.module.scss';
 
-const ProfileHeader = () => {
-  const { user } = useMoralis();
+interface ProfileHeaderProps {
+  displayName: string;
+  username: string;
+  ethAddress: string;
+}
 
+const ProfileHeader = ({
+  displayName,
+  username,
+  ethAddress,
+}: ProfileHeaderProps) => {
   return (
     <div className={styles.header}>
       <div className={styles.banner} />
@@ -18,19 +25,14 @@ const ProfileHeader = () => {
             <div className={styles.avatar} />
 
             <div>
-              <h2 className={styles.name}>David Haidamaka</h2>
+              <h2 className={styles.name}>{displayName}</h2>
               <div className={styles.infoTags}>
-                <span className={styles.tag}>@{user?.attributes.username}</span>
+                <span className={styles.tag}>@{username}</span>
                 <span
-                  onClick={() =>
-                    navigator.clipboard.writeText(user?.attributes.ethAddress)
-                  }
+                  onClick={() => navigator.clipboard.writeText(ethAddress)}
                   className={classNames(styles.tag, styles.walletAdress)}
-                >{`${user?.attributes.ethAddress.slice(
-                  0,
-                  5,
-                )}...${user?.attributes.ethAddress.slice(
-                  user?.attributes.ethAddress.length - 10,
+                >{`${ethAddress.slice(0, 5)}...${ethAddress.slice(
+                  ethAddress.length - 10,
                   -5,
                 )}`}</span>
               </div>

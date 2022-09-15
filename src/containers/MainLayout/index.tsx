@@ -7,10 +7,10 @@ interface Props {
 
 const MainLayout = ({ children }: Props) => {
   return (
-    <div className="backgroundColor">
+    <>
       <Header />
       {children}
-    </div>
+    </>
   );
 };
 
