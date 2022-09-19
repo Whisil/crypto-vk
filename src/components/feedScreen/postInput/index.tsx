@@ -56,7 +56,7 @@ const PostInput = ({
         }),
       );
     }
-  }, [replyTo]);
+  }, [replyTo, Moralis.Cloud, isReply]);
 
   const handleCloseBtn = async () => {
     URL.revokeObjectURL(mediaURI);
@@ -200,6 +200,18 @@ const PostInput = ({
   };
 
   //Reply username push
+
+  const setEndOfInput = (target: HTMLDivElement) => {
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(target);
+    range.collapse(false);
+    sel?.removeAllRanges();
+    sel?.addRange(range);
+    target.focus();
+    range.detach();
+  };
+
   useEffect(() => {
     if (
       textInput &&
@@ -212,18 +224,7 @@ const PostInput = ({
       setInputText(`nothing`);
       setEndOfInput(textInput.current);
     }
-  }, [inputUsername]);
-
-  const setEndOfInput = (target: HTMLDivElement) => {
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.selectNodeContents(target);
-    range.collapse(false);
-    sel?.removeAllRanges();
-    sel?.addRange(range);
-    target.focus();
-    range.detach();
-  };
+  }, [inputUsername, isReply]);
 
   return (
     <div

@@ -47,7 +47,7 @@ const Post = ({
   const [commentInputFocus, setCommentInputFocus] = useState<boolean>(false);
   const [comments, setComments] = useState<any[]>([]);
   const [commentFetchOffset, setCommentFetchOffset] = useState<number>(0);
-  const [newCommentId, setNewCommentId] = useState<string[]>([]);
+  const [newCommentId, setNewCommentId] = useState<string>(``);
   const [commentDeleteId, setCommentDeleteId] = useState(``);
   const [noReplyCounter, setNoReplyCounter] = useState<number>(0);
   const [newRepliesSwitch, setNewRepliesSwitch] = useState<boolean>(false);
@@ -57,18 +57,14 @@ const Post = ({
   const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
   const commentQuery = useMemo(
     () => new Moralis.Query(`Comment`),
-    [Moralis.Query],
+    [Moralis.Query, newCommentId], // eslint-disable-line
   );
 
   //New comment
 
-  const newCommentInfo = (id: string) => {
-    setNewCommentId((previousId) => [id, ...previousId]);
-  };
-
   useEffect(() => {
     if (newCommentId.length !== 0) {
-      commentQuery.get(newCommentId[0]).then((comment) => {
+      commentQuery.get(newCommentId).then((comment) => {
         setComments((comments) => [comment, ...comments]);
       });
     }
@@ -145,9 +141,7 @@ const Post = ({
         .relation(`comments`)
         .query()
         .equalTo(`replyTo`, undefined)
-        // .descending(`likeCount`)
         .limit(3)
-        .notContainedIn(`objectId`, newCommentId)
         .skip(commentFetchOffset)
         .find()
         .then((fetchedComments) => {
@@ -160,7 +154,7 @@ const Post = ({
           setSecondaryCommentLoader(false);
         });
     });
-  }, [commentFetchOffset, comments, newCommentId, postId, postQuery]);
+  }, [commentFetchOffset, comments, postId, postQuery]);
 
   const commentsShowToggle = () => {
     if (!showComments) {
@@ -278,7 +272,7 @@ const Post = ({
               commentInput
               commentInputFocus={commentInputFocus}
               commentedPostId={postId}
-              newCommentInfo={newCommentInfo}
+              newCommentInfo={(id: string) => setNewCommentId(id)}
             />
             {comments.map((item) => (
               <CommentContainer
