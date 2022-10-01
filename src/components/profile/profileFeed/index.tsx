@@ -3,7 +3,11 @@ import Post from '@/components/feedScreen/post';
 import { useEffect } from 'react';
 import { useMoralis } from 'react-moralis';
 
-const ProfileFeed = ({ variant = `` }: { variant?: string }) => {
+const ProfileFeed = ({
+  variant = ``,
+}: {
+  variant?: string | string[] | undefined;
+}) => {
   const [posts, setPosts] = useState<any[]>([]);
   const [postDeleteId, setPostDeleteId] = useState<string>(``);
 
