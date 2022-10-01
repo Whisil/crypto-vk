@@ -4,14 +4,13 @@ import type { NextPageWithLayout } from '@/pages/_app';
 import { ReactElement } from 'react';
 import { useRouter } from 'next/router';
 
-const ProfileTab: NextPageWithLayout = () => {
+const ProfileFeedContainer: NextPageWithLayout = () => {
   const router = useRouter();
-
-  return <ProfileFeed variant={router.query.profileTab} />;
+  return <ProfileFeed variant={router.query.profileFeedVariant} />;
 };
 
-ProfileTab.getLayout = function getLayout(page: ReactElement) {
+ProfileFeedContainer.getLayout = function getLayout(page: ReactElement) {
   return <ProfileLayout>{page}</ProfileLayout>;
 };
 
-export default ProfileTab;
+export default ProfileFeedContainer;

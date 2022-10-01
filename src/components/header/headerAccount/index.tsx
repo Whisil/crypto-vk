@@ -50,7 +50,7 @@ const HeaderAccount = () => {
 
       {showMenu && (
         <div className={styles.headerAccountMenu} ref={menuRef}>
-          <MenuBtn icon="avatar" text="Profile" link="/profile" />
+          <MenuBtn icon="avatar" text="Profile" link={`/${user?.id}`} />
 
           <span className={styles.divider} />
 

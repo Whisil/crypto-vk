@@ -221,7 +221,7 @@ const Post = ({
         <AccountInfo
           timestamp={timestamp}
           displayName={userInfo.displayName}
-          href={`/profile/${createdBy.id}`}
+          href={`/${createdBy.id}`}
         />
 
         <PostMenu

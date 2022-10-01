@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useMoralis } from 'react-moralis';
 import Post from './post';
 import PostInput from './postInput';
@@ -14,7 +14,7 @@ const Feed = () => {
 
   const { Moralis } = useMoralis();
 
-  const postQuery = new Moralis.Query(`Posts`);
+  const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
 
   useEffect(() => {
     if (newPostId !== ``) {
@@ -22,7 +22,7 @@ const Feed = () => {
         setFeedPosts((feedPosts) => [post, ...feedPosts]);
       });
     }
-  }, [newPostId]);
+  }, [newPostId, postQuery]);
 
   //Post Delete
 
@@ -47,7 +47,7 @@ const Feed = () => {
         setPostDeleteId(``);
       });
     }
-  }, [postDeleteId]);
+  }, [postDeleteId, Moralis.Object, postQuery]);
 
   //Pushing state
 
@@ -61,18 +61,18 @@ const Feed = () => {
 
   //Post fetch Query
 
-  const postsQuery = () => {
-    postQuery
-      .descending(`createdAt`)
-      .find()
-      .then((posts) => {
-        setFeedPosts(posts);
-      })
-      .then(() => setLoader(false));
-  };
   useEffect(() => {
+    const postsQuery = () => {
+      postQuery
+        .descending(`createdAt`)
+        .find()
+        .then((posts) => {
+          setFeedPosts(posts);
+        })
+        .then(() => setLoader(false));
+    };
     postsQuery();
-  }, []);
+  }, [postQuery]);
 
   return (
     <div className={styles.feed}>

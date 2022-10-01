@@ -28,15 +28,17 @@ const ProfileMenu = () => {
 
   const router = useRouter();
 
-  // console.log(router.query.profileTab);
-
   return (
     <div className={styles.container}>
       <div className={styles.menu}>
         <div className={styles.menuUpper}>
           {menu.map((item) => (
             <Link
-              href={item.query ? `/[profileId]/[profileTab]` : `/[profileId]`}
+              href={
+                item.query
+                  ? `/[profileId]/[profileFeedVariant]`
+                  : `/[profileId]`
+              }
               as={
                 item.query
                   ? `/${router.query.profileId}/${item.query}`
@@ -47,7 +49,8 @@ const ProfileMenu = () => {
               <a
                 className={classNames(
                   styles.link,
-                  router.query.profileTab === item.query && styles.activeLink,
+                  router.query.profileFeedVariant === item.query &&
+                    styles.activeLink,
                 )}
               >
                 <div className={styles.menuItem}>

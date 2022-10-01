@@ -84,7 +84,7 @@ const PostInput = ({
     newPost
       .save({
         text: inputText.length !== 0 ? inputText.trim() : undefined,
-        media: file && file._source ? file : undefined,
+        media: file && file._source ? file : null,
       })
       .then(() => {
         user?.relation(`posts`).add(newPost);
