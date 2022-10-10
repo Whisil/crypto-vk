@@ -1,12 +1,14 @@
 import classNames from 'classnames';
 import AccentBtn from '@/components/unknown/accentBtn';
 import DmIcon from '@/public/images/icons/messages.svg';
+import SettingsBtn from '@/public/images/icons/settings.svg';
 import ProfileCounter from '../profileCounter';
 import { useMoralis } from 'react-moralis';
 
 import styles from './styles.module.scss';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import RippleBtn from '@/components/unknown/rippleBtn';
 
 interface ProfileHeaderProps {
   displayName: string;
@@ -49,7 +51,9 @@ const ProfileHeader = ({
             </div>
           </div>
           {isCurrentUser ? (
-            <></>
+            <RippleBtn className={styles.upperSettingsBtn}>
+              <SettingsBtn />
+            </RippleBtn>
           ) : (
             <div className={styles.upperBtns}>
               <div className={styles.dmBtn}>

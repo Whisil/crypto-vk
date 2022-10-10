@@ -6,7 +6,7 @@ import styles from './styles.module.scss';
 
 interface Props {
   icon: string;
-  text: string;
+  text?: string;
   accent?: boolean;
   onClick?(): void;
   link?: string;
