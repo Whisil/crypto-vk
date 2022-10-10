@@ -26,7 +26,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   });
 
   const router = useRouter();
-  const { Moralis } = useMoralis();
+  const { Moralis, user } = useMoralis();
 
   useEffect(() => {
     if (router.query.profileId && router.query.profileId.length !== 0) {

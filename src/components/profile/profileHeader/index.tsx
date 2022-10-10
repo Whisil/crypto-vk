@@ -2,8 +2,11 @@ import classNames from 'classnames';
 import AccentBtn from '@/components/unknown/accentBtn';
 import DmIcon from '@/public/images/icons/messages.svg';
 import ProfileCounter from '../profileCounter';
+import { useMoralis } from 'react-moralis';
 
 import styles from './styles.module.scss';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 interface ProfileHeaderProps {
   displayName: string;
@@ -16,6 +19,13 @@ const ProfileHeader = ({
   username,
   ethAddress,
 }: ProfileHeaderProps) => {
+  const { user } = useMoralis();
+  const router = useRouter();
+
+  const [isCurrentUser] = useState<boolean>(
+    user?.id === router.query.profileId,
+  );
+
   return (
     <div className={styles.header}>
       <div className={styles.banner} />
@@ -38,12 +48,16 @@ const ProfileHeader = ({
               </div>
             </div>
           </div>
-          <div className={styles.upperBtns}>
-            <div className={styles.dmBtn}>
-              <DmIcon />
+          {isCurrentUser ? (
+            <></>
+          ) : (
+            <div className={styles.upperBtns}>
+              <div className={styles.dmBtn}>
+                <DmIcon />
+              </div>
+              <AccentBtn text="Follow" className={styles.followBtn} />
             </div>
-            <AccentBtn text="Follow" className={styles.followBtn} />
-          </div>
+          )}
         </div>
 
         <div className={styles.middle}>
