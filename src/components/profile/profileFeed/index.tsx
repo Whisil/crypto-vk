@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import Post from '@/components/feedScreen/post';
 import { useEffect } from 'react';
-import { useMoralis } from 'react-moralis';
 import Loader from '@/components/unknown/loader';
 
 import styles from './styles.module.scss';
@@ -17,62 +16,60 @@ const ProfileFeed = ({
   const [postDeleteId, setPostDeleteId] = useState<string>(``);
   const [loader, setLoader] = useState<boolean>(true);
 
-  const { Moralis } = useMoralis();
-
-  const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
+  // const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
 
   const router = useRouter();
 
-  useEffect(() => {
-    if (variant.length === 0) {
-      Moralis.Cloud.run(`userFetch`, { id: router.query.profileId }).then(
-        (fetchedUser) => {
-          fetchedUser[0]?.attributes.posts
-            .query()
-            .find()
-            .then((fetchedPosts: object[]) => {
-              setPosts(fetchedPosts);
-              setLoader(false);
-            });
-        },
-      );
-    } else if (variant === `media`) {
-      Moralis.Cloud.run(`userFetch`, { id: router.query.profileId }).then(
-        (fetchedUser) => {
-          fetchedUser[0]?.attributes.posts
-            .query()
-            .notEqualTo(`media`, null)
-            .find()
-            .then((fetchedPosts: object[]) => {
-              setPosts(fetchedPosts);
-              setLoader(false);
-            });
-        },
-      );
-    }
-  }, [variant, Moralis.Cloud, router.query.profileId]);
+  // useEffect(() => {
+  //   if (variant.length === 0) {
+  //     Moralis.Cloud.run(`userFetch`, { id: router.query.profileId }).then(
+  //       (fetchedUser) => {
+  //         fetchedUser[0]?.attributes.posts
+  //           .query()
+  //           .find()
+  //           .then((fetchedPosts: object[]) => {
+  //             setPosts(fetchedPosts);
+  //             setLoader(false);
+  //           });
+  //       },
+  //     );
+  //   } else if (variant === `media`) {
+  //     Moralis.Cloud.run(`userFetch`, { id: router.query.profileId }).then(
+  //       (fetchedUser) => {
+  //         fetchedUser[0]?.attributes.posts
+  //           .query()
+  //           .notEqualTo(`media`, null)
+  //           .find()
+  //           .then((fetchedPosts: object[]) => {
+  //             setPosts(fetchedPosts);
+  //             setLoader(false);
+  //           });
+  //       },
+  //     );
+  //   }
+  // }, [variant, Moralis.Cloud, router.query.profileId]);
 
-  useEffect(() => {
-    if (postDeleteId !== ``) {
-      postQuery.get(postDeleteId).then(async (post) => {
-        await post.attributes.likes
-          .query()
-          .find()
-          .then((res: any[]) => Moralis.Object.destroyAll(res));
-        await post.attributes.comments
-          .query()
-          .find()
-          .then((res: any[]) => Moralis.Object.destroyAll(res));
-        post.destroy();
+  // useEffect(() => {
+  //   if (postDeleteId !== ``) {
+  //     postQuery.get(postDeleteId).then(async (post) => {
+  //       await post.attributes.likes
+  //         .query()
+  //         .find()
+  //         .then((res: any[]) => Moralis.Object.destroyAll(res));
+  //       await post.attributes.comments
+  //         .query()
+  //         .find()
+  //         .then((res: any[]) => Moralis.Object.destroyAll(res));
+  //       post.destroy();
 
-        setPosts((feedPosts) =>
-          feedPosts.filter((post) => post.id !== postDeleteId),
-        );
+  //       setPosts((feedPosts) =>
+  //         feedPosts.filter((post) => post.id !== postDeleteId),
+  //       );
 
-        setPostDeleteId(``);
-      });
-    }
-  }, [postDeleteId, Moralis.Object, postQuery]);
+  //       setPostDeleteId(``);
+  //     });
+  //   }
+  // }, [postDeleteId, Moralis.Object, postQuery]);
 
   const handlePostDelete = (id: string) => {
     setPostDeleteId(id);

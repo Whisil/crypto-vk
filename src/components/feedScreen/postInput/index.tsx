@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useMoralis } from 'react-moralis';
 import classNames from 'classnames';
 import AccountImage from '@/components/unknown/accountImage';
 import AccentBtn from '@/components/unknown/accentBtn';
@@ -45,18 +44,16 @@ const PostInput = ({
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
 
-  const { Moralis, user } = useMoralis();
-
   useEffect(() => {
     if (isReply && replyTo && replyTo.length !== 0) {
-      Moralis.Cloud.run(`userFetch`, { id: replyTo }).then((res) =>
-        setReplyToInfo({
-          id: res[0].id,
-          displayName: res[0].attributes.displayName,
-        }),
-      );
+      // Moralis.Cloud.run(`userFetch`, { id: replyTo }).then((res) =>
+      //   setReplyToInfo({
+      //     id: res[0].id,
+      //     displayName: res[0].attributes.displayName,
+      //   }),
+      // );
     }
-  }, [replyTo, Moralis.Cloud, isReply]);
+  }, [replyTo, isReply]);
 
   const handleCloseBtn = async () => {
     URL.revokeObjectURL(mediaURI);
@@ -69,92 +66,93 @@ const PostInput = ({
   //Database
 
   const handlePost = async () => {
-    const Post = Moralis.Object.extend(`Posts`);
+    // const Post = Moralis.Object.extend(`Posts`);
 
     let fileInputValue;
-    let file: { [key: string]: any } = {};
+    // let file: { [key: string]: any } = {};
 
     if (fileInput.current && fileInput.current.files) {
       fileInputValue = fileInput.current.files[0];
-      file = new Moralis.File(`postMedia by ${user?.id}`, fileInputValue);
+      // file = new Moralis.File(`postMedia by ${user?.id}`, fileInputValue);
     }
 
-    const newPost = new Post();
+    // const newPost = new Post();
+    // newPost
+    //   .save({
+    //     text: inputText.length !== 0 ? inputText.trim() : undefined,
+    //     media: file && file._source ? file : null,
+    //     likeCount: 0,
+    //     commentCount: 0,
+    //   })
+    //   .then(() => {
+    //     user?.relation(`posts`).add(newPost);
+    //     user?.save();
+    //     newPost.set(`createdBy`, user);
+    //     postedPostInfo && postedPostInfo(newPost.id);
 
-    newPost
-      .save({
-        text: inputText.length !== 0 ? inputText.trim() : undefined,
-        media: file && file._source ? file : null,
-      })
-      .then(() => {
-        user?.relation(`posts`).add(newPost);
-        user?.save();
-        newPost.set(`createdBy`, user);
-        postedPostInfo && postedPostInfo(newPost.id);
+    //     newPost.save();
 
-        newPost.save();
-
-        handleCloseBtn();
-        if (textInput.current) {
-          textInput.current.textContent = ``;
-        }
-        setInputText(``);
-      });
+    //     handleCloseBtn();
+    //     if (textInput.current) {
+    //       textInput.current.textContent = ``;
+    //     }
+    //     setInputText(``);
+    //   });
   };
 
   const handleComment = async (reply?: boolean) => {
-    const Comment = Moralis.Object.extend(`Comment`);
+    // const Comment = Moralis.Object.extend(`Comment`);
 
-    const commentedPostQuery = new Moralis.Query(`Posts`);
-    commentedPostQuery.equalTo(`objectId`, commentedPostId);
-    const commentedPostResult = await commentedPostQuery.first();
+    // const commentedPostQuery = new Moralis.Query(`Posts`);
+    // commentedPostQuery.equalTo(`objectId`, commentedPostId);
+    // const commentedPostResult = await commentedPostQuery.first();
 
     let fileInputValue;
-    let file: { [key: string]: any } = {};
+    // let file: { [key: string]: any } = {};
 
     if (fileInput.current && fileInput.current.files) {
       fileInputValue = fileInput.current.files[0];
-      file = new Moralis.File(`comment media by ${user?.id}`, fileInputValue);
+      // file = new Moralis.File(`comment media by ${user?.id}`, fileInputValue);
     }
 
     const newComment = new Comment();
 
-    newComment
-      .save({
-        text: inputText.length !== 0 ? inputText.trim() : undefined,
-        media: file._source ? file : undefined,
-      })
-      .then(async () => {
-        user?.relation(`comments`).add(newComment);
-        user?.save();
-        newComment.set(`createdBy`, user);
-        newComment.set(`onPost`, commentedPostResult);
-        if (reply) {
-          const repliedToComment = new Moralis.Query(`Comment`);
-          await repliedToComment
-            .equalTo(`objectId`, replyOn)
-            .first()
-            .then((res) => {
-              newComment.set(`replyTo`, res);
-              if (res) {
-                res.increment(`replyCount`);
-                res.save();
-              }
-            });
-        }
-        newCommentInfo && newCommentInfo(newComment.id);
-        commentedPostResult?.relation(`comments`).add(newComment);
-        commentedPostResult?.increment(`commentCount`);
+    // newComment
+    //   .save({
+    //     text: inputText.length !== 0 ? inputText.trim() : undefined,
+    //     media: file._source ? file : undefined,
+    //   })
+    //   .then(async () => {
+    //     user?.relation(`comments`).add(newComment);
+    //     user?.save();
+    //     newComment.set(`createdBy`, user);
+    //     newComment.set(`onPost`, commentedPostResult);
+    //     if (reply) {
+    //       const repliedToComment = new Moralis.Query(`Comment`);
+    //       await repliedToComment
+    //         .equalTo(`objectId`, replyOn)
+    //         .first()
+    //         .then((res) => {
+    //           newComment.set(`replyTo`, res);
+    //           if (res) {
+    //             res.increment(`replyCount`);
+    //             res.save();
+    //           }
+    //         });
+    //     }
+    //     newCommentInfo && newCommentInfo(newComment.id);
+    //     commentedPostResult?.relation(`comments`).add(newComment);
+    //     commentedPostResult?.increment(`commentCount`);
 
-        newComment.save();
-        commentedPostResult?.save();
+    //     newComment.save();
+    //     commentedPostResult?.save();
 
-        handleCloseBtn();
-        if (textInput.current) {
-          textInput.current.textContent = ``;
-        }
-        setInputText(``);
-      });
+    //     handleCloseBtn();
+    //     if (textInput.current) {
+    //       textInput.current.textContent = ``;
+    //     }
+    //     setInputText(``);
+    //   });
   };
 
   //Input handlers

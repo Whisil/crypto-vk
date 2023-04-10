@@ -1,22 +1,50 @@
 import RippleBtn from '@/components/unknown/rippleBtn';
 import Image from 'next/image';
-import { useMoralis } from 'react-moralis';
-
 import styles from './styles.module.scss';
 
 const WalletForm = () => {
-  const { authenticate } = useMoralis();
+  // const { Moralis, authenticate, enableWeb3 } = useMoralis();
 
-  const loginWalletConnect = async () => {
-    await authenticate({
-      provider: `walletconnect`,
-      chainId: 80001,
-      signingMessage: `Welcome to a true web`,
-    });
-  };
-  const loginMetamask = async () => {
-    await authenticate({ signingMessage: `Welcome to a true web` });
-  };
+  // const loginWalletConnect = async () => {
+  //   await authenticate({
+  //     provider: `walletconnect`,
+  //     chainId: 80001,
+  //     signingMessage: `Welcome to a true web`,
+  //   });
+  // };
+  // const loginMetamask = async () => {
+  //   await authenticate({ signingMessage: `Welcome to a true web` });
+  // };
+  // const handleAuth = async (provider: 'metamask' | 'walletconnect') => {
+  //   try {
+  //     await enableWeb3({ throwOnError: true, provider });
+  //     const { account, chainId } = Moralis;
+
+  //     if (!account) {
+  //       throw new Error(
+  //         `Connecting to chain failed, as no connected account was found`,
+  //       );
+  //     }
+  //     if (!chainId) {
+  //       throw new Error(
+  //         `Connecting to chain failed, as no connected chain was found`,
+  //       );
+  //     }
+
+  //     const { message } = await Moralis.Cloud.run(`requestMessage`, {
+  //       address: account,
+  //       chain: 80001,
+  //     });
+
+  //     // auth and login via parse
+  //     await authenticate({
+  //       signingMessage: message,
+  //       throwOnError: true,
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <>
@@ -34,7 +62,7 @@ const WalletForm = () => {
         you want to connect with
       </p>
       <RippleBtn className={styles.spacing}>
-        <div className={styles.wallet} onClick={loginMetamask}>
+        {/* <div className={styles.wallet} onClick={() => handleAuth(`metamask`)}>
           <Image
             src="/images/icons/metamask.svg"
             width="34px"
@@ -42,11 +70,14 @@ const WalletForm = () => {
             alt="Metamask"
           />
           <span>MetaMask</span>
-        </div>
+        </div> */}
       </RippleBtn>
 
       <RippleBtn className={styles.spacing}>
-        <div className={styles.wallet} onClick={loginWalletConnect}>
+        <div
+          className={styles.wallet}
+          // onClick={() => handleAuth(`walletconnect`)}
+        >
           <Image
             src="/images/icons/wallet-connect.svg"
             width="34px"

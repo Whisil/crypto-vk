@@ -1,6 +1,5 @@
 import AccentBtn from '@/components/unknown/accentBtn';
 import RippleBtn from '@/components/unknown/rippleBtn';
-import { useMoralis } from 'react-moralis';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -8,8 +7,6 @@ import * as Yup from 'yup';
 import styles from './styles.module.scss';
 
 const MoreInfoForm = () => {
-  const { setUserData } = useMoralis();
-
   const formik = useFormik({
     initialValues: {
       username: ``,
@@ -38,10 +35,10 @@ const MoreInfoForm = () => {
         .required(`Required`),
     }),
     onSubmit: (values) => {
-      setUserData({
-        username: values.username,
-        displayName: values.displayName,
-      });
+      // setUserData({
+      //   username: values.username,
+      //   displayName: values.displayName,
+      // });
     },
   });
 

@@ -7,9 +7,7 @@ import { useEffect, useState } from 'react';
 import styles from '../styles/index.module.scss';
 
 export default function Home() {
-  const [showFollow, setShowFollow] = useState<boolean>(
-    window.innerWidth <= 1040 ? false : true,
-  );
+  const [showFollow, setShowFollow] = useState<boolean>(false);
 
   useEffect(() => {
     function handleResize() {

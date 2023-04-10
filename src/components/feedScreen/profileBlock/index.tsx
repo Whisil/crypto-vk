@@ -1,12 +1,9 @@
 import AccountImage from '@/components/unknown/accountImage';
-import { useMoralis } from 'react-moralis';
 import Link from 'next/link';
 import styles from './styles.module.scss';
 import LinkRippleBtn from '@/components/unknown/linkRippleBtn';
 
 const ProfileBlock = () => {
-  const { user } = useMoralis();
-
   return (
     <div className={styles.container}>
       <div
@@ -23,23 +20,23 @@ const ProfileBlock = () => {
 
         <Link href="/">
           <a className={styles.infoName}>
-            <h3>{user?.attributes.displayName}</h3>
+            {/* <h3>{user?.attributes.displayName}</h3> */}
           </a>
         </Link>
 
         <span
           className={styles.infoWallet}
-          onClick={() =>
-            navigator.clipboard.writeText(user?.attributes.ethAddress)
-          }
+          // onClick={() =>
+          //   navigator.clipboard.writeText(user?.attributes.ethAddress)
+          // }
         >
-          {`${user?.attributes.ethAddress.slice(
+          {/* {`${user?.attributes.ethAddress.slice(
             0,
             5,
           )}...${user?.attributes.ethAddress.slice(
             user?.attributes.ethAddress.length - 10,
             -5,
-          )}`}
+          )}`} */}
         </span>
       </div>
 
@@ -57,7 +54,7 @@ const ProfileBlock = () => {
         </div>
       </div>
 
-      <LinkRippleBtn text="My profile" link={`/${user?.id}`} />
+      {/* <LinkRippleBtn text="My profile" link={`/${user?.id}`} /> */}
     </div>
   );
 };

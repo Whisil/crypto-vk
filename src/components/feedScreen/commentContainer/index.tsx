@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useMoralis } from 'react-moralis';
 import Comment from '../comment';
 import Loader from '@/components/unknown/loader';
 import PostInput from '../postInput';
@@ -44,9 +43,7 @@ const CommentContainer = ({
   const [newReplies, setNewReplies] = useState<any[]>([]);
   const [inputUsername, setInputUsername] = useState<string>(``);
 
-  const { Moralis } = useMoralis();
-
-  const replyQuery = new Moralis.Query(`Comment`);
+  // const replyQuery = new Moralis.Query(`Comment`);
 
   //New Reply
 
@@ -54,13 +51,13 @@ const CommentContainer = ({
     setNewReplyId((previousId) => [id, ...previousId]);
   };
 
-  useEffect(() => {
-    if (newReplyId.length !== 0) {
-      replyQuery.get(newReplyId[0]).then((reply) => {
-        setNewReplies((replies) => [reply, ...replies]);
-      });
-    }
-  }, [newReplyId]);
+  // useEffect(() => {
+  //   if (newReplyId.length !== 0) {
+  //     replyQuery.get(newReplyId[0]).then((reply) => {
+  //       setNewReplies((replies) => [reply, ...replies]);
+  //     });
+  //   }
+  // }, [newReplyId]);
 
   //Handle functions
 
@@ -83,33 +80,33 @@ const CommentContainer = ({
 
   //Replies fetching
 
-  const repliesFetch = () => {
-    new Moralis.Query(`Comment`)
-      .equalTo(`objectId`, commentId)
-      .find()
-      .then((repliedComment) => {
-        replyQuery
-          .equalTo(`replyTo`, repliedComment[0])
-          .limit(3)
-          .notContainedIn(`objectId`, newReplyId)
-          .skip(replyFetchOffset)
-          .find()
-          .then((fetchedReplies) => {
-            if (replies.length === 0) {
-              setReplies(fetchedReplies);
-            } else {
-              setReplies([...replies, ...fetchedReplies]);
-            }
-            setReplyLoader(false);
-            setSecondaryReplyLoader(false);
-          });
-      });
-  };
+  // const repliesFetch = () => {
+  //   new Moralis.Query(`Comment`)
+  //     .equalTo(`objectId`, commentId)
+  //     .find()
+  //     .then((repliedComment) => {
+  //       replyQuery
+  //         .equalTo(`replyTo`, repliedComment[0])
+  //         .limit(3)
+  //         .notContainedIn(`objectId`, newReplyId)
+  //         .skip(replyFetchOffset)
+  //         .find()
+  //         .then((fetchedReplies) => {
+  //           if (replies.length === 0) {
+  //             setReplies(fetchedReplies);
+  //           } else {
+  //             setReplies([...replies, ...fetchedReplies]);
+  //           }
+  //           setReplyLoader(false);
+  //           setSecondaryReplyLoader(false);
+  //         });
+  //     });
+  // };
 
   useEffect(() => {
     if (showReplies) {
       setReplyLoader(true);
-      repliesFetch();
+      // repliesFetch();
     } else {
       setReplies([]);
       setReplyFetchOffset(0);
@@ -118,7 +115,7 @@ const CommentContainer = ({
 
   useEffect(() => {
     if (replyFetchOffset !== 0) {
-      repliesFetch();
+      // repliesFetch();
     }
   }, [replyFetchOffset]);
 
@@ -135,43 +132,43 @@ const CommentContainer = ({
     setReplyDeleteId(id);
   };
 
-  useEffect(() => {
-    if (replyDeleteId !== ``) {
-      new Moralis.Query(`Posts`).get(postId).then((post) => {
-        post.decrement(`commentCount`);
-        post.save();
-      });
+  // useEffect(() => {
+  //   if (replyDeleteId !== ``) {
+  //     new Moralis.Query(`Posts`).get(postId).then((post) => {
+  //       post.decrement(`commentCount`);
+  //       post.save();
+  //     });
 
-      new Moralis.Query(`Comment`).get(commentId).then((comment) => {
-        comment.decrement(`replyCount`);
-        comment.save();
-      });
+  //     new Moralis.Query(`Comment`).get(commentId).then((comment) => {
+  //       comment.decrement(`replyCount`);
+  //       comment.save();
+  //     });
 
-      new Moralis.Query(`Comment`).get(replyDeleteId).then((reply) => {
-        const likeQuery = new Moralis.Query(`Likes`);
-        likeQuery
-          .equalTo(`likedComment`, reply)
-          .find()
-          .then((res) => Moralis.Object.destroyAll(res));
+  //     new Moralis.Query(`Comment`).get(replyDeleteId).then((reply) => {
+  //       const likeQuery = new Moralis.Query(`Likes`);
+  //       likeQuery
+  //         .equalTo(`likedComment`, reply)
+  //         .find()
+  //         .then((res) => Moralis.Object.destroyAll(res));
 
-        reply.destroy();
+  //       reply.destroy();
 
-        if (newReplies.length !== 0) {
-          setNewReplies((replies) =>
-            replies.filter((reply) => reply.id !== replyDeleteId),
-          );
-        }
+  //       if (newReplies.length !== 0) {
+  //         setNewReplies((replies) =>
+  //           replies.filter((reply) => reply.id !== replyDeleteId),
+  //         );
+  //       }
 
-        if (showReplies) {
-          setReplies((replies) =>
-            replies.filter((reply) => reply.id !== replyDeleteId),
-          );
-        }
+  //       if (showReplies) {
+  //         setReplies((replies) =>
+  //           replies.filter((reply) => reply.id !== replyDeleteId),
+  //         );
+  //       }
 
-        setReplyDeleteId(``);
-      });
-    }
-  }, [replyDeleteId]);
+  //       setReplyDeleteId(``);
+  //     });
+  //   }
+  // }, [replyDeleteId]);
 
   return (
     <ul>

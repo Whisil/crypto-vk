@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useMoralis } from 'react-moralis';
 import AccountImage from '@/components/unknown/accountImage';
 import Triangle from 'public/images/icons/triangle.svg';
 import DarkModeIcon from 'public/images/icons/darkmode-switch.svg';
@@ -11,8 +10,6 @@ import styles from './styles.module.scss';
 
 const HeaderAccount = () => {
   const [showMenu, setShowMenu] = useState(false);
-
-  const { logout, user } = useMoralis();
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -28,9 +25,9 @@ const HeaderAccount = () => {
     return () => window.removeEventListener(`click`, handleOutsideClick);
   }, [showMenu]);
 
-  async function handleLogout() {
-    await logout();
-  }
+  // async function handleLogout() {
+  //   await logout();
+  // }
 
   return (
     <div className={styles.headerAccount}>
@@ -43,14 +40,14 @@ const HeaderAccount = () => {
       >
         <AccountImage />
         <div className={styles.nameWrapper}>
-          <span className={styles.name}>{user?.attributes.displayName}</span>
+          {/* <span className={styles.name}>{user?.attributes.displayName}</span> */}
         </div>
         <Triangle className={styles.triangle} />
       </div>
 
       {showMenu && (
         <div className={styles.headerAccountMenu} ref={menuRef}>
-          <MenuBtn icon="avatar" text="Profile" link={`/${user?.id}`} />
+          {/* <MenuBtn icon="avatar" text="Profile" link={`/${user?.id}`} /> */}
 
           <span className={styles.divider} />
 
@@ -72,7 +69,7 @@ const HeaderAccount = () => {
           <MenuBtn
             icon="log-out"
             text="Log out"
-            onClick={handleLogout}
+            // onClick={handleLogout}
             accent
           />
         </div>

@@ -3,7 +3,6 @@ import AccentBtn from '@/components/unknown/accentBtn';
 import DmIcon from '@/public/images/icons/messages.svg';
 import SettingsBtn from '@/public/images/icons/settings.svg';
 import ProfileCounter from '../profileCounter';
-import { useMoralis } from 'react-moralis';
 
 import styles from './styles.module.scss';
 import { useState } from 'react';
@@ -21,12 +20,10 @@ const ProfileHeader = ({
   username,
   ethAddress,
 }: ProfileHeaderProps) => {
-  const { user } = useMoralis();
   const router = useRouter();
 
-  const [isCurrentUser] = useState<boolean>(
-    user?.id === router.query.profileId,
-  );
+  const [isCurrentUser] = useState<boolean>();
+  // user?.id === router.query.profileId,
 
   return (
     <div className={styles.header}>
@@ -51,8 +48,11 @@ const ProfileHeader = ({
             </div>
           </div>
           {isCurrentUser ? (
-            <RippleBtn className={styles.upperSettingsBtn}>
-              <SettingsBtn />
+            <RippleBtn className={styles.settingsRipple}>
+              <div className={styles.upperSettingsBtn}>
+                <SettingsBtn />
+                <span>Edit</span>
+              </div>
             </RippleBtn>
           ) : (
             <div className={styles.upperBtns}>

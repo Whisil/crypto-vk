@@ -8,6 +8,6 @@ module.exports = {
     return config;
   },
   images: {
-    domains: ['ew7afpe1clbr.usemoralis.com'],
+    domains: ['ew7afpe1clbr.usemoralis.com', 'localhost', 'crypto-vk-server.herokuapp.com'],
   },
 };

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useMoralis } from 'react-moralis';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
 import CommentContainer from '../commentContainer';
@@ -52,119 +51,116 @@ const Post = ({
   const [noReplyCounter, setNoReplyCounter] = useState<number>(0);
   const [newRepliesSwitch, setNewRepliesSwitch] = useState<boolean>(false);
 
-  const { Moralis, user } = useMoralis();
-
-  const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
-  const commentQuery = useMemo(
-    () => new Moralis.Query(`Comment`),
-    [Moralis.Query, newCommentId], // eslint-disable-line
-  );
+  // const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
+  // const commentQuery = useMemo(
+  //   () => new Moralis.Query(`Comment`),
+  //   [Moralis.Query, newCommentId], // eslint-disable-line
+  // );
 
   //New comment
 
   useEffect(() => {
     if (newCommentId.length !== 0) {
-      commentQuery.get(newCommentId).then((comment) => {
-        setComments((comments) => [comment, ...comments]);
-      });
+      // commentQuery.get(newCommentId).then((comment) => {
+      //   setComments((comments) => [comment, ...comments]);
+      // });
     }
-  }, [newCommentId, commentQuery]);
+  }, [newCommentId]);
 
   //User fetching and like check
 
-  useEffect(() => {
-    Moralis.Cloud.run(`userFetch`, { id: createdBy.id }).then((res) =>
-      setUserInfo({
-        displayName: res[0].attributes.displayName,
-        username: res[0].attributes.username,
-      }),
-    );
-    postQuery.get(postId).then(function (result) {
-      result
-        .relation(`likes`)
-        .query()
-        .equalTo(`likedBy`, user)
-        .find()
-        .then((res) => {
-          setLikeId(res[0]?.id);
-          if (res[0]) {
-            setLiked(true);
-          }
-        });
-    });
-  }, [Moralis.Cloud, createdBy.id, postId, postQuery, user]);
+  // useEffect(() => {
+  //   Moralis.Cloud.run(`userFetch`, { id: createdBy.id }).then((res) =>
+  //     setUserInfo({
+  //       displayName: res[0].attributes.displayName,
+  //       username: res[0].attributes.username,
+  //     }),
+  //   );
+  //   postQuery.get(postId).then(function (result) {
+  //     result
+  //       .relation(`likes`)
+  //       .query()
+  //       .equalTo(`likedBy`, user)
+  //       .find()
+  //       .then((res) => {
+  //         setLikeId(res[0]?.id);
+  //         if (res[0]) {
+  //           setLiked(true);
+  //         }
+  //       });
+  //   });
+  // }, [Moralis.Cloud, createdBy.id, postId, postQuery, user]);
 
   // Likes
 
   const handleLike = async () => {
-    const Like = Moralis.Object.extend(`Likes`);
+    // const Like = Moralis.Object.extend(`Likes`);
 
     const newLike = new Like();
-    newLike.save().then(() => {
-      postQuery.get(postId).then((post) => {
-        post.relation(`likes`).add(newLike);
-        post.increment(`likeCount`);
-        setLikeId(newLike.id);
-        newLike.set(`likedBy`, user);
-        newLike.set(`likedPost`, post);
-        user?.relation(`likes`).add(newLike);
-        user?.save();
-        newLike.save();
-        post.save();
-        setLiked(true);
-        setLikeCounter((likeCounter) => likeCounter + 1);
-      });
-    });
+    // newLike.save().then(() => {
+    //   postQuery.get(postId).then((post) => {
+    //     post.relation(`likes`).add(newLike);
+    //     post.increment(`likeCount`);
+    //     setLikeId(newLike.id);
+    //     newLike.set(`likedBy`, user);
+    //     newLike.set(`likedPost`, post);
+    //     user?.relation(`likes`).add(newLike);
+    //     user?.save();
+    //     newLike.save();
+    //     post.save();
+    //     setLiked(true);
+    //     setLikeCounter((likeCounter) => likeCounter + 1);
+    //   });
+    // });
   };
 
   const handleLikeRemove = async () => {
-    const likeQuery = new Moralis.Query(`Likes`);
-    if (likeId) {
-      (await likeQuery.get(likeId)).destroy().then(() => {
-        setLiked(false);
-        setLikeId(undefined);
-      });
-      setLikeCounter((likeCounter) => likeCounter - 1);
-    }
-
-    postQuery.get(postId).then((post) => {
-      post.decrement(`likeCount`);
-      post.save();
-    });
+    // const likeQuery = new Moralis.Query(`Likes`);
+    // if (likeId) {
+    //   (await likeQuery.get(likeId)).destroy().then(() => {
+    //     setLiked(false);
+    //     setLikeId(undefined);
+    //   });
+    //   setLikeCounter((likeCounter) => likeCounter - 1);
+    // }
+    // postQuery.get(postId).then((post) => {
+    //   post.decrement(`likeCount`);
+    //   post.save();
+    // });
   };
 
   //Comments
 
-  const commentFetch = useCallback(() => {
-    postQuery.get(postId).then((res) => {
-      res
-        .relation(`comments`)
-        .query()
-        .equalTo(`replyTo`, undefined)
-        .limit(3)
-        .skip(commentFetchOffset)
-        .find()
-        .then((fetchedComments) => {
-          if (comments.length === 0) {
-            setComments(fetchedComments);
-          } else {
-            setComments([...comments, ...fetchedComments]);
-          }
-          setCommentLoader(false);
-          setSecondaryCommentLoader(false);
-        });
-    });
-  }, [commentFetchOffset, comments, postId, postQuery]);
+  // const commentFetch = useCallback(() => {
+  //   postQuery.get(postId).then((res) => {
+  //     res
+  //       .relation(`comments`)
+  //       .query()
+  //       .equalTo(`replyTo`, undefined)
+  //       .limit(3)
+  //       .skip(commentFetchOffset)
+  //       .find()
+  //       .then((fetchedComments) => {
+  //         if (comments.length === 0) {
+  //           setComments(fetchedComments);
+  //         } else {
+  //           setComments([...comments, ...fetchedComments]);
+  //         }
+  //         setCommentLoader(false);
+  //         setSecondaryCommentLoader(false);
+  //       });
+  //   });
+  // }, [commentFetchOffset, comments, postId, postQuery]);
 
   const commentsShowToggle = () => {
     if (!showComments) {
       setCommentLoader(true);
-      commentFetch();
+      // commentFetch();
       setShowComments(true);
-      postQuery.get(postId).then((res) => {
-        commentQuery.equalTo(`replyTo`, undefined).equalTo(`onPost`, res);
-        commentQuery.count().then((res) => setNoReplyCounter(res));
-      });
+      // postQuery.get(postId).then((res) => {
+      //   commentQuery.equalTo(`replyTo`, undefined).equalTo(`onPost`, res);
+      //   commentQuery.count().then((res) => setNoReplyCounter(res));
+      // });
     } else {
       setComments([]);
       setShowComments(false);
@@ -174,9 +170,9 @@ const Post = ({
 
   useEffect(() => {
     if (commentFetchOffset !== 0) {
-      commentFetch();
+      // commentFetch();
     }
-  }, [commentFetchOffset, commentFetch]);
+  }, [commentFetchOffset]);
 
   //Comment Delete
 
@@ -184,36 +180,36 @@ const Post = ({
     setCommentDeleteId(id);
   };
 
-  useEffect(() => {
-    if (commentDeleteId !== ``) {
-      postQuery.get(postId).then((post) => {
-        post.decrement(`commentCount`);
-        post.save();
-      });
-      commentQuery.get(commentDeleteId).then((comment) => {
-        const likeQuery = new Moralis.Query(`Likes`);
-        likeQuery
-          .equalTo(`likedComment`, comment)
-          .find()
-          .then((res) => Moralis.Object.destroyAll(res));
+  // useEffect(() => {
+  //   if (commentDeleteId !== ``) {
+  //     postQuery.get(postId).then((post) => {
+  //       post.decrement(`commentCount`);
+  //       post.save();
+  //     });
+  //     commentQuery.get(commentDeleteId).then((comment) => {
+  //       const likeQuery = new Moralis.Query(`Likes`);
+  //       likeQuery
+  //         .equalTo(`likedComment`, comment)
+  //         .find()
+  //         .then((res) => Moralis.Object.destroyAll(res));
 
-        comment.destroy();
+  //       comment.destroy();
 
-        setComments((comments) =>
-          comments.filter((comment) => comment.id !== commentDeleteId),
-        );
+  //       setComments((comments) =>
+  //         comments.filter((comment) => comment.id !== commentDeleteId),
+  //       );
 
-        setCommentDeleteId(``);
-      });
-    }
-  }, [
-    commentDeleteId,
-    Moralis.Object,
-    Moralis.Query,
-    commentQuery,
-    postId,
-    postQuery,
-  ]);
+  //       setCommentDeleteId(``);
+  //     });
+  //   }
+  // }, [
+  //   commentDeleteId,
+  //   Moralis.Object,
+  //   Moralis.Query,
+  //   commentQuery,
+  //   postId,
+  //   postQuery,
+  // ]);
 
   return (
     <div className={styles.post}>

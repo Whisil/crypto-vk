@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useMoralis } from 'react-moralis';
 import Post from './post';
 import PostInput from './postInput';
 import Loader from '@/components/unknown/loader';
@@ -12,42 +11,38 @@ const Feed = () => {
   const [newPostId, setNewPostId] = useState(``);
   const [postDeleteId, setPostDeleteId] = useState(``);
 
-  const { Moralis } = useMoralis();
-
-  const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
-
   useEffect(() => {
     if (newPostId !== ``) {
-      postQuery.get(newPostId).then((post) => {
-        setFeedPosts((feedPosts) => [post, ...feedPosts]);
-      });
+      // postQuery.get(newPostId).then((post) => {
+      //   setFeedPosts((feedPosts) => [post, ...feedPosts]);
+      // });
     }
-  }, [newPostId, postQuery]);
+  }, []);
 
   //Post Delete
 
   useEffect(() => {
     if (postDeleteId !== ``) {
-      postQuery.get(postDeleteId).then(async (post) => {
-        await post.attributes.likes
-          .query()
-          .find()
-          .then((res: any[]) => Moralis.Object.destroyAll(res));
-        await post.attributes.comments
-          .query()
-          .find()
-          .then((res: any[]) => Moralis.Object.destroyAll(res));
+      // postQuery.get(postDeleteId).then(async (post) => {
+      //   await post.attributes.likes
+      //     .query()
+      //     .find()
+      //     .then((res: any[]) => Moralis.Object.destroyAll(res));
+      //   await post.attributes.comments
+      //     .query()
+      //     .find()
+      //     .then((res: any[]) => Moralis.Object.destroyAll(res));
 
-        post.destroy();
+      //   post.destroy();
 
-        setFeedPosts((feedPosts) =>
-          feedPosts.filter((post) => post.id !== postDeleteId),
-        );
+      setFeedPosts((feedPosts) =>
+        feedPosts.filter((post) => post.id !== postDeleteId),
+      );
 
-        setPostDeleteId(``);
-      });
+      setPostDeleteId(``);
+      // });
     }
-  }, [postDeleteId, Moralis.Object, postQuery]);
+  }, []);
 
   //Pushing state
 
@@ -63,16 +58,16 @@ const Feed = () => {
 
   useEffect(() => {
     const postsQuery = () => {
-      postQuery
-        .descending(`createdAt`)
-        .find()
-        .then((posts) => {
-          setFeedPosts(posts);
-        })
-        .then(() => setLoader(false));
+      // postQuery
+      //   .descending(`createdAt`)
+      //   .find()
+      //   .then((posts) => {
+      //     setFeedPosts(posts);
+      //   })
+      //   .then(() => setLoader(false));
     };
     postsQuery();
-  }, [postQuery]);
+  }, []);
 
   return (
     <div className={styles.feed}>

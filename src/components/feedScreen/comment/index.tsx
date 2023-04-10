@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useMoralis } from 'react-moralis';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostMenu from '../postMenu';
 import Like from 'public/images/icons/like.svg';
@@ -51,72 +50,70 @@ const Comment = ({
   const [likeId, setLikeId] = useState<string | undefined>(undefined);
   const [liked, setLiked] = useState<boolean>(false);
 
-  const { Moralis, user } = useMoralis();
-
   //User fetching and like check
-  const commentQuery = new Moralis.Query(`Comment`);
+  // const commentQuery = new Moralis.Query(`Comment`);
 
-  useEffect(() => {
-    Moralis.Cloud.run(`userFetch`, { id: createdById }).then((res) =>
-      setUserInfo({
-        id: res[0].id,
-        displayName: res[0].attributes.displayName,
-        username: res[0].attributes.username,
-      }),
-    );
-    commentQuery.get(id).then(function (result) {
-      result
-        .relation(`likes`)
-        .query()
-        .equalTo(`likedBy`, user)
-        .find()
-        .then((res) => {
-          setLikeId(res[0]?.id);
-          if (res[0]) {
-            setLiked(true);
-          }
-        });
-    });
-  }, []);
+  // useEffect(() => {
+  //   Moralis.Cloud.run(`userFetch`, { id: createdById }).then((res) =>
+  //     setUserInfo({
+  //       id: res[0].id,
+  //       displayName: res[0].attributes.displayName,
+  //       username: res[0].attributes.username,
+  //     }),
+  //   );
+  //   commentQuery.get(id).then(function (result) {
+  //     result
+  //       .relation(`likes`)
+  //       .query()
+  //       .equalTo(`likedBy`, user)
+  //       .find()
+  //       .then((res) => {
+  //         setLikeId(res[0]?.id);
+  //         if (res[0]) {
+  //           setLiked(true);
+  //         }
+  //       });
+  //   });
+  // }, []);
 
   //Likes
 
-  const handleLike = async () => {
-    const Like = Moralis.Object.extend(`Likes`);
+  // const handleLike = async () => {
+  //   const Like = Moralis.Object.extend(`Likes`);
 
-    const newLike = new Like();
-    newLike.save().then(() => {
-      commentQuery.get(id).then((comment) => {
-        comment.relation(`likes`).add(newLike);
-        comment.increment(`likeCount`);
-        setLikeId(newLike.id);
-        newLike.set(`likedBy`, user);
-        newLike.set(`likedComment`, comment);
-        user?.relation(`likes`).add(newLike);
-        user?.save();
-        newLike.save();
-        comment.save();
-        setLiked(true);
-        setLikeCounter((likeCounter) => likeCounter + 1);
-      });
-    });
-  };
+  //   const newLike = new Like();
+  //   newLike.save().then(() => {
+  //     commentQuery.get(id).then((comment) => {
+  //       comment.relation(`likes`).add(newLike);
+  //       comment.increment(`likeCount`);
+  //       setLikeId(newLike.id);
+  //       newLike.set(`likedBy`, user);
+  //       newLike.set(`likedComment`, comment);
+  //       user?.relation(`likes`).add(newLike);
+  //       user?.save();
+  //       newLike.save();
+  //       comment.save();
+  //       setLiked(true);
+  //       setLikeCounter((likeCounter) => likeCounter + 1);
+  //     });
+  //   });
+  // };
 
-  const handleLikeRemove = async () => {
-    const likeQuery = new Moralis.Query(`Likes`);
-    if (likeId) {
-      (await likeQuery.get(likeId)).destroy().then(() => {
-        setLiked(false);
-        setLikeId(undefined);
-      });
-      setLikeCounter((likeCounter) => likeCounter - 1);
-    }
+  // const handleLikeRemove = async () => {
+  //   const likeQuery = new Moralis.Query(`Likes`);
+  //   if (likeId) {
+  //     (await likeQuery.get(likeId)).destroy().then(() => {
+  //       setLiked(false);
+  //       setLikeId(undefined);
+  //     });
+  //     setLikeCounter((likeCounter) => likeCounter - 1);
+  //   }
 
-    commentQuery.get(id).then((comment) => {
-      comment.decrement(`likeCount`);
-      comment.save();
-    });
-  };
+  //   commentQuery.get(id).then((comment) => {
+  //     comment.decrement(`likeCount`);
+  //     comment.save();
+  //   });
+  // };
 
   return (
     <li
@@ -152,7 +149,7 @@ const Comment = ({
         <div className={styles.commentBottom}>
           <div
             className={classNames(styles.commentBtn, styles.likes)}
-            onClick={likeId === `` || !likeId ? handleLike : handleLikeRemove}
+            // onClick={likeId === `` || !likeId ? handleLike : handleLikeRemove}
           >
             <Like
               className={classNames(styles.likeIcon, liked && styles.liked)}

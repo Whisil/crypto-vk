@@ -38,11 +38,13 @@ export default function MyApp({
           url(&apos;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap&apos;);
         </style>
       </Head>
-      <MoralisProvider appId={AppId as string} serverUrl={ServerUrl as string}>
+      {/* <MoralisProvider appId={AppId as string} serverUrl={ServerUrl as string}>
         <AuthCheck>
           <MainLayout>{getLayout(<Component {...pageProps} />)}</MainLayout>
         </AuthCheck>
-      </MoralisProvider>
+        
+      </MoralisProvider> */}
+      <MainLayout>{getLayout(<Component {...pageProps} />)}</MainLayout>
     </>
   );
 }

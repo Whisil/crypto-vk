@@ -4,7 +4,6 @@ import WhoToFollow from '@/components/unknown/whoToFollow';
 import React from 'react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useMoralis } from 'react-moralis';
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const [userInfo, setUserInfo] = useState<{
@@ -26,20 +25,19 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   });
 
   const router = useRouter();
-  const { Moralis, user } = useMoralis();
 
-  useEffect(() => {
-    if (router.query.profileId && router.query.profileId.length !== 0) {
-      Moralis.Cloud.run(`userFetch`, { id: router.query.profileId }).then(
-        (res) =>
-          res[0] &&
-          setUserInfo({
-            id: res[0].id,
-            attributes: res[0].attributes,
-          }),
-      );
-    }
-  }, [router.query.profileId, Moralis.Cloud]);
+  // useEffect(() => {
+  //   if (router.query.profileId && router.query.profileId.length !== 0) {
+  //     Moralis.Cloud.run(`userFetch`, { id: router.query.profileId }).then(
+  //       (res) =>
+  //         res[0] &&
+  //         setUserInfo({
+  //           id: res[0].id,
+  //           attributes: res[0].attributes,
+  //         }),
+  //     );
+  //   }
+  // }, [router.query.profileId, Moralis.Cloud]);
 
   return (
     <div className="container">
