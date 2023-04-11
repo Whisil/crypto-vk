@@ -1,5 +1,4 @@
 import { AppProps } from 'next/app';
-import { MoralisProvider } from 'react-moralis';
 import Head from 'next/head';
 import '@/styles/global.scss';
 import AuthCheck from '@/components/authentication/authCheck';
@@ -7,6 +6,8 @@ import MainLayout from '@/containers/MainLayout';
 import React from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
+import { Provider } from 'react-redux';
+import { store } from '@/app/store';
 
 export type NextPageWithLayout<P = any, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -44,7 +45,9 @@ export default function MyApp({
         </AuthCheck>
         
       </MoralisProvider> */}
-      <MainLayout>{getLayout(<Component {...pageProps} />)}</MainLayout>
+      <Provider store={store}>
+        <MainLayout>{getLayout(<Component {...pageProps} />)}</MainLayout>
+      </Provider>
     </>
   );
 }

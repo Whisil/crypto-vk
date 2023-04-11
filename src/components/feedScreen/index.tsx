@@ -12,11 +12,11 @@ const Feed = () => {
   const [postDeleteId, setPostDeleteId] = useState(``);
 
   useEffect(() => {
-    if (newPostId !== ``) {
-      // postQuery.get(newPostId).then((post) => {
-      //   setFeedPosts((feedPosts) => [post, ...feedPosts]);
-      // });
-    }
+    // if (newPostId !== ``) {
+    //   postQuery.get(newPostId).then((post) => {
+    //     setFeedPosts((feedPosts) => [post, ...feedPosts]);
+    //   });
+    // }
   }, []);
 
   //Post Delete
