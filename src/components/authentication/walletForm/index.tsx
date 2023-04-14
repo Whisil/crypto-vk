@@ -3,8 +3,6 @@ import Image from 'next/image';
 import styles from './styles.module.scss';
 
 const WalletForm = () => {
-  // const { Moralis, authenticate, enableWeb3 } = useMoralis();
-
   // const loginWalletConnect = async () => {
   //   await authenticate({
   //     provider: `walletconnect`,
@@ -46,6 +44,30 @@ const WalletForm = () => {
   //   }
   // };
 
+  const handleMetamask = async () => {
+    try {
+      const provider = window.ethereum;
+      if (provider) {
+        await provider
+          .request({ method: `eth_requestAccounts` })
+          .then((accounts: string[]) => {
+            console.log(accounts);
+            const user = fetch(`http://localhost:5000/api/auth/login`, {
+              method: `POST`,
+              headers: { 'Content-Type': `application/json` },
+              body: JSON.stringify({ ethAddress: accounts[0] }),
+            }).then((res) => res.json());
+            return user;
+          })
+          .then((res: { exists: boolean }) => console.log(res));
+      } else {
+        window.open(`https://metamask.io/`);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <h1 className={styles.heading}>Connect wallet</h1>
@@ -62,7 +84,7 @@ const WalletForm = () => {
         you want to connect with
       </p>
       <RippleBtn className={styles.spacing}>
-        {/* <div className={styles.wallet} onClick={() => handleAuth(`metamask`)}>
+        <div className={styles.wallet} onClick={handleMetamask}>
           <Image
             src="/images/icons/metamask.svg"
             width="34px"
@@ -70,13 +92,13 @@ const WalletForm = () => {
             alt="Metamask"
           />
           <span>MetaMask</span>
-        </div> */}
+        </div>
       </RippleBtn>
 
-      <RippleBtn className={styles.spacing}>
+      {/* <RippleBtn className={styles.spacing}>
         <div
           className={styles.wallet}
-          // onClick={() => handleAuth(`walletconnect`)}
+          onClick={() => handleAuth(`walletconnect`)}
         >
           <Image
             src="/images/icons/wallet-connect.svg"
@@ -86,7 +108,7 @@ const WalletForm = () => {
           />
           <span>Wallet Connect</span>
         </div>
-      </RippleBtn>
+      </RippleBtn> */}
 
       <p className={styles.infoText}>
         Soon we&apos;ll be able to support more :{`)`}

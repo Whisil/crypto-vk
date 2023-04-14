@@ -46,7 +46,9 @@ export default function MyApp({
         
       </MoralisProvider> */}
       <Provider store={store}>
-        <MainLayout>{getLayout(<Component {...pageProps} />)}</MainLayout>
+        <AuthCheck>
+          <MainLayout>{getLayout(<Component {...pageProps} />)}</MainLayout>
+        </AuthCheck>
       </Provider>
     </>
   );

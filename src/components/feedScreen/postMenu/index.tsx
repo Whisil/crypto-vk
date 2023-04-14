@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { useMoralis } from 'react-moralis';
 import classNames from 'classnames';
 import MenuBtn from '@/components/unknown/menuBtn';
 import DotsIcon from 'public/images/icons/dots.svg';
@@ -27,9 +26,6 @@ const PostMenu = ({
 }: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
-
-  const { user } = useMoralis();
-
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

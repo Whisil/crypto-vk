@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import Login from '@/pages/login';
 import React, { useEffect, useRef } from 'react';
 import Loader from '@/components/unknown/loader';
+import { useAppSelector } from '@/app/hooks';
 
 import styles from './styles.module.scss';
 
@@ -13,31 +14,44 @@ const AuthCheck = ({ children }: Props) => {
   const router = useRouter();
   const mountedRef = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
-  //   if (mountedRef.current) {
-  //     if (isAuthenticated) return;
-  //     else if (!isAuthenticated) {
-  //       router.push({ pathname: `/` });
-  //     }
-  //   }
-  // }, [isAuthenticated, router]);
+  const { isAuthenticated, isAuthenticating, displayName } = useAppSelector(
+    (state) => state.auth,
+  );
+
+  useEffect(() => {
+    if (mountedRef.current) {
+      if (isAuthenticated) return;
+      else if (!isAuthenticated) {
+        router.push({ pathname: `/` });
+      }
+    }
+  }, [isAuthenticated, router]);
 
   // if (!isAuthenticated || user?.attributes.displayName === undefined) {
-  //   return (
-  //     <>
-  //       <div
-  //         className={styles.loaderWrapper}
-  //         style={isAuthenticating ? { opacity: `1`, pointerEvents: `all` } : {}}
-  //       >
-  //         <Loader />
-  //       </div>
-  //       <Login />
-  //     </>
-  //   );
-  // } else {
-  //   return <>{children}</>;
-  // }
-  return <>{children}</>;
+  if (!isAuthenticated || displayName === ``) {
+    return (
+      <>
+        <div
+          className={styles.loaderWrapper}
+          style={isAuthenticating ? { opacity: `1`, pointerEvents: `all` } : {}}
+        >
+          <Loader />
+        </div>
+        <Login />
+      </>
+    );
+  } else {
+    return <>{children}</>;
+  }
+  // return <>{children}</>;
+  // return (
+  //   <>
+  //     <div className={styles.loaderWrapper}>
+  //       <Loader />
+  //     </div>
+  //     <Login />
+  //   </>
+  // );
 };
 
 export default AuthCheck;
