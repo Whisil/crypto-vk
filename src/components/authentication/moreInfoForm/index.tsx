@@ -1,5 +1,7 @@
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import AccentBtn from '@/components/unknown/accentBtn';
 import RippleBtn from '@/components/unknown/rippleBtn';
+import { setUser } from '@/features/userSlice';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -7,6 +9,9 @@ import * as Yup from 'yup';
 import styles from './styles.module.scss';
 
 const MoreInfoForm = () => {
+  const { user } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
   const formik = useFormik({
     initialValues: {
       username: ``,
@@ -34,11 +39,19 @@ const MoreInfoForm = () => {
         )
         .required(`Required`),
     }),
-    onSubmit: (values) => {
-      // setUserData({
-      //   username: values.username,
-      //   displayName: values.displayName,
-      // });
+    onSubmit: async (values) => {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+        method: `POST`,
+        headers: { 'Content-Type': `application/json` },
+        body: JSON.stringify({
+          ethAddress: user.ethAddress,
+          username: values.username,
+          displayName: values.displayName,
+        }),
+      })
+        .then((res) => res.json())
+        .then((userInfo) => dispatch(setUser(userInfo)))
+        .catch((err) => console.log(err));
     },
   });
 
@@ -57,7 +70,7 @@ const MoreInfoForm = () => {
               formik.errors.displayName &&
               styles.errorBorder,
           )}
-          placeholder="The one, who knocks"
+          placeholder="Joe Biden"
           autoComplete="off"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -80,7 +93,7 @@ const MoreInfoForm = () => {
               formik.errors.username &&
               styles.errorBorder,
           )}
-          placeholder="theOne_whoKnocks13"
+          placeholder="JoeBiden322"
           autoComplete="off"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}

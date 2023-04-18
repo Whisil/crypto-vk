@@ -14,26 +14,23 @@ const AuthCheck = ({ children }: Props) => {
   const router = useRouter();
   const mountedRef = useRef<HTMLDivElement>(null);
 
-  const { isAuthenticated, isAuthenticating, displayName } = useAppSelector(
-    (state) => state.auth,
-  );
+  const { loading, user } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     if (mountedRef.current) {
-      if (isAuthenticated) return;
-      else if (!isAuthenticated) {
+      if (user.ethAddress) return;
+      else if (!user.ethAddress) {
         router.push({ pathname: `/` });
       }
     }
-  }, [isAuthenticated, router]);
+  }, [user.ethAddress, router]);
 
-  // if (!isAuthenticated || user?.attributes.displayName === undefined) {
-  if (!isAuthenticated || displayName === ``) {
+  if (!user.ethAddress || user.displayName === ``) {
     return (
       <>
         <div
           className={styles.loaderWrapper}
-          style={isAuthenticating ? { opacity: `1`, pointerEvents: `all` } : {}}
+          style={loading ? { opacity: `1`, pointerEvents: `all` } : {}}
         >
           <Loader />
         </div>
@@ -43,15 +40,6 @@ const AuthCheck = ({ children }: Props) => {
   } else {
     return <>{children}</>;
   }
-  // return <>{children}</>;
-  // return (
-  //   <>
-  //     <div className={styles.loaderWrapper}>
-  //       <Loader />
-  //     </div>
-  //     <Login />
-  //   </>
-  // );
 };
 
 export default AuthCheck;

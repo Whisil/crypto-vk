@@ -1,26 +1,29 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import WalletForm from '@/components/authentication/walletForm';
 import styles from '../styles/login.module.scss';
 import MoreInfoForm from '@/components/authentication/moreInfoForm';
 import { useAppSelector } from '@/app/hooks';
 
 const Login = () => {
-  const mountedRef = useRef<HTMLDivElement>(null);
+  // const mountedRef = useRef<HTMLDivElement>(null);
 
-  const { isAuthenticated, displayName } = useAppSelector(
-    (state) => state.auth,
-  );
+  const { user } = useAppSelector((state) => state.user);
 
+  useEffect(() => {
+    console.log(user.ethAddress);
+  }, [user]);
   return (
-    <div className={styles.wrapper} ref={mountedRef}>
+    <div
+      className={styles.wrapper}
+      // ref={mountedRef}
+    >
       <div className={styles.illustration} />
       <div className={styles.login}>
-        {!isAuthenticated && mountedRef.current ? (
+        {user.ethAddress.length === 0 ? (
           <WalletForm />
-        ) : isAuthenticated && displayName === `` && mountedRef.current ? (
+        ) : user.ethAddress && user.displayName === `` ? (
           <MoreInfoForm />
         ) : null}
-        <WalletForm />
       </div>
     </div>
   );

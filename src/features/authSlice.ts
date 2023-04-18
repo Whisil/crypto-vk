@@ -16,12 +16,16 @@ export const authSlice = createSlice({
   name: `auth`,
   initialState,
   reducers: {
+    setIsAuthenticated: (state) => {
+      state.isAuthenticated = true;
+      state.isAuthenticating = false;
+    },
     changeIsAuthenticating: (state) => {
-      state.isAuthenticating = !state.isAuthenticating;
+      state.isAuthenticating = true;
     },
   },
 });
 
-export const { changeIsAuthenticating } = authSlice.actions;
+export const { changeIsAuthenticating, setIsAuthenticated } = authSlice.actions;
 
 export default authSlice.reducer;
