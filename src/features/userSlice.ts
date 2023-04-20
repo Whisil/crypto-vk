@@ -17,7 +17,7 @@ const initialState: UserState = {
     displayName: ``,
   },
   token: ``,
-  loading: false,
+  loading: true,
 };
 
 const userSlice = createSlice({
@@ -34,9 +34,20 @@ const userSlice = createSlice({
       state.user = { ...action.payload.user };
       state.token = action.payload.token;
     },
+    clearUser: (state) => {
+      state.user = {
+        _id: ``,
+        username: ``,
+        createdAt: ``,
+        updatedAt: ``,
+        ethAddress: ``,
+        displayName: ``,
+      };
+    },
   },
 });
 
-export const { setUserWallet, changeUserLoading, setUser } = userSlice.actions;
+export const { setUserWallet, changeUserLoading, setUser, clearUser } =
+  userSlice.actions;
 
 export default userSlice.reducer;

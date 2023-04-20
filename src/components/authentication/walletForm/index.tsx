@@ -6,6 +6,7 @@ import {
   setUserWallet,
 } from '@/features/userSlice';
 import { useAppDispatch } from '@/app/hooks';
+import { handleUserLogin } from '../authAPI';
 
 import styles from './styles.module.scss';
 
@@ -24,23 +25,13 @@ const WalletForm = () => {
             return accounts[0];
           })
           .then((account: string) => {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-              method: `POST`,
-              headers: { 'Content-Type': `application/json` },
-              body: JSON.stringify({ ethAddress: account }),
-            })
-              .then((res) => res.json())
-              .then((result) => {
-                if (!result) {
-                  dispatch(setUserWallet(account));
-                  console.log(
-                    `doesn't exists, setting the ethAdress`,
-                    account.length,
-                  );
-                } else {
-                  dispatch(setUser(result));
-                }
-              });
+            handleUserLogin(account).then((result) => {
+              if (!result) {
+                dispatch(setUserWallet(account));
+              } else {
+                dispatch(setUser(result));
+              }
+            });
           });
       } else {
         window.open(`https://metamask.io/`);

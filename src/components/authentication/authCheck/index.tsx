@@ -1,8 +1,15 @@
 import { useRouter } from 'next/router';
 import Login from '@/pages/login';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Loader from '@/components/unknown/loader';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { handleUserLogin } from '../authAPI';
+import {
+  changeUserLoading,
+  clearUser,
+  setUser,
+  setUserWallet,
+} from '@/features/userSlice';
 
 import styles from './styles.module.scss';
 
@@ -11,10 +18,12 @@ interface Props {
 }
 
 const AuthCheck = ({ children }: Props) => {
+  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
   const router = useRouter();
   const mountedRef = useRef<HTMLDivElement>(null);
 
   const { loading, user } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (mountedRef.current) {
@@ -23,9 +32,56 @@ const AuthCheck = ({ children }: Props) => {
         router.push({ pathname: `/` });
       }
     }
+
+    //fake loader to avoid flickering
+    setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 2000);
   }, [user.ethAddress, router]);
 
-  if (!user.ethAddress || user.displayName === ``) {
+  // auto metamask connect
+  useEffect(() => {
+    if (typeof window.ethereum !== `undefined`) {
+      if (window.ethereum.isConnected()) {
+        const account = window.ethereum.selectedAddress;
+        handleUserLogin(account).then((result) => {
+          if (!result) {
+            dispatch(setUserWallet(account));
+          } else {
+            dispatch(setUser(result));
+          }
+        });
+      } else {
+        console.log(`Metamask is not connected to Ethereum network.`);
+      }
+      dispatch(changeUserLoading());
+    } else {
+      window.open(`https://metamask.io/`);
+    }
+  }, [dispatch]);
+
+  //metamask logout listener
+  useEffect(() => {
+    if (window.ethereum.isConnected()) {
+      const handleMetamaskDisconnect = () => {
+        dispatch(clearUser());
+        console.log(`disconnected`);
+      };
+
+      window.ethereum.on(`accountsChanged`, handleMetamaskDisconnect);
+
+      return () => {
+        window.ethereum.removeEventListener(
+          `accountsChanged`,
+          handleMetamaskDisconnect,
+        );
+      };
+    }
+  }, [dispatch]);
+
+  if (isInitialLoading) {
+    return <Loader />;
+  } else if (!user.ethAddress || !user.displayName) {
     return (
       <>
         <div
