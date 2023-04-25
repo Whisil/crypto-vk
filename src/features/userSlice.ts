@@ -17,7 +17,7 @@ const initialState: UserState = {
     displayName: ``,
   },
   token: ``,
-  loading: true,
+  loading: false,
 };
 
 const userSlice = createSlice({
@@ -34,16 +34,7 @@ const userSlice = createSlice({
       state.user = { ...action.payload.user };
       state.token = action.payload.token;
     },
-    clearUser: (state) => {
-      state.user = {
-        _id: ``,
-        username: ``,
-        createdAt: ``,
-        updatedAt: ``,
-        ethAddress: ``,
-        displayName: ``,
-      };
-    },
+    clearUser: () => initialState,
   },
 });
 

@@ -4,14 +4,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import Loader from '@/components/unknown/loader';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { handleUserLogin } from '../authAPI';
-import {
-  changeUserLoading,
-  clearUser,
-  setUser,
-  setUserWallet,
-} from '@/features/userSlice';
+import { setUser, setUserWallet } from '@/features/userSlice';
 
 import styles from './styles.module.scss';
+import { useAccount } from 'wagmi';
+import useIsMounted from '@/hooks/useIsMounted';
 
 interface Props {
   children: React.ReactNode;
@@ -25,6 +22,9 @@ const AuthCheck = ({ children }: Props) => {
   const { loading, user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
+  const { address } = useAccount();
+  const { mounted } = useIsMounted();
+
   useEffect(() => {
     if (mountedRef.current) {
       if (user.ethAddress) return;
@@ -32,56 +32,33 @@ const AuthCheck = ({ children }: Props) => {
         router.push({ pathname: `/` });
       }
     }
-
-    //fake loader to avoid flickering
-    setTimeout(() => {
-      setIsInitialLoading(false);
-    }, 2000);
   }, [user.ethAddress, router]);
 
-  // auto metamask connect
   useEffect(() => {
-    if (typeof window.ethereum !== `undefined`) {
-      if (window.ethereum.isConnected()) {
-        const account = window.ethereum.selectedAddress;
-        handleUserLogin(account).then((result) => {
-          if (!result) {
-            dispatch(setUserWallet(account));
-          } else {
-            dispatch(setUser(result));
-          }
-        });
+    const fetchAndSetUser = async () => {
+      if (address) {
+        await handleUserLogin(address)
+          .then((result) => {
+            if (!result) {
+              dispatch(setUserWallet(address));
+            } else {
+              dispatch(setUser(result));
+            }
+          })
+          .then(() => setIsInitialLoading(false));
       } else {
-        console.log(`Metamask is not connected to Ethereum network.`);
+        setIsInitialLoading(false);
       }
-      dispatch(changeUserLoading());
-    } else {
-      window.open(`https://metamask.io/`);
-    }
-  }, [dispatch]);
+    };
 
-  //metamask logout listener
-  useEffect(() => {
-    if (window.ethereum.isConnected()) {
-      const handleMetamaskDisconnect = () => {
-        dispatch(clearUser());
-        console.log(`disconnected`);
-      };
+    fetchAndSetUser();
+  }, [address, dispatch]);
 
-      window.ethereum.on(`accountsChanged`, handleMetamaskDisconnect);
-
-      return () => {
-        window.ethereum.removeEventListener(
-          `accountsChanged`,
-          handleMetamaskDisconnect,
-        );
-      };
-    }
-  }, [dispatch]);
-
-  if (isInitialLoading) {
+  if (isInitialLoading || !mounted) {
     return <Loader />;
-  } else if (!user.ethAddress || !user.displayName) {
+  }
+
+  if (!isInitialLoading && (!user.ethAddress || !user.displayName)) {
     return (
       <>
         <div
@@ -93,9 +70,9 @@ const AuthCheck = ({ children }: Props) => {
         <Login />
       </>
     );
-  } else {
-    return <>{children}</>;
   }
+
+  return <>{children}</>;
 };
 
 export default AuthCheck;

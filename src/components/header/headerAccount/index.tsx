@@ -5,13 +5,21 @@ import DarkModeIcon from 'public/images/icons/darkmode-switch.svg';
 import classNames from 'classnames';
 import Switch from '@/components/unknown/switch';
 import MenuBtn from '@/components/unknown/menuBtn';
+import { clearUser } from '@/features/userSlice';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 import styles from './styles.module.scss';
+import { useDisconnect } from 'wagmi';
 
 const HeaderAccount = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
+
+  const { disconnect } = useDisconnect();
 
   useEffect(() => {
     if (!showMenu) return;
@@ -25,9 +33,10 @@ const HeaderAccount = () => {
     return () => window.removeEventListener(`click`, handleOutsideClick);
   }, [showMenu]);
 
-  // async function handleLogout() {
-  //   await logout();
-  // }
+  const handleWalletDisconnect = () => {
+    disconnect();
+    dispatch(clearUser());
+  };
 
   return (
     <div className={styles.headerAccount}>
@@ -40,7 +49,7 @@ const HeaderAccount = () => {
       >
         <AccountImage />
         <div className={styles.nameWrapper}>
-          {/* <span className={styles.name}>{user?.attributes.displayName}</span> */}
+          <span className={styles.name}>{user.displayName}</span>
         </div>
         <Triangle className={styles.triangle} />
       </div>
@@ -69,7 +78,7 @@ const HeaderAccount = () => {
           <MenuBtn
             icon="log-out"
             text="Log out"
-            // onClick={handleLogout}
+            onClick={handleWalletDisconnect}
             accent
           />
         </div>

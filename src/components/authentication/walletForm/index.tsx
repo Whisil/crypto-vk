@@ -1,47 +1,14 @@
 import RippleBtn from '@/components/unknown/rippleBtn';
 import Image from 'next/image';
-import {
-  changeUserLoading,
-  setUser,
-  setUserWallet,
-} from '@/features/userSlice';
-import { useAppDispatch } from '@/app/hooks';
-import { handleUserLogin } from '../authAPI';
+import { InjectedConnector } from 'wagmi/connectors/injected';
 
 import styles from './styles.module.scss';
+import { useConnect } from 'wagmi';
 
 const WalletForm = () => {
-  const dispatch = useAppDispatch();
-
-  const handleMetamask = async () => {
-    try {
-      dispatch(changeUserLoading());
-
-      const provider = window.ethereum;
-      if (provider) {
-        await provider
-          .request({ method: `eth_requestAccounts` })
-          .then((accounts: string[]) => {
-            return accounts[0];
-          })
-          .then((account: string) => {
-            handleUserLogin(account).then((result) => {
-              if (!result) {
-                dispatch(setUserWallet(account));
-              } else {
-                dispatch(setUser(result));
-              }
-            });
-          });
-      } else {
-        window.open(`https://metamask.io/`);
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      dispatch(changeUserLoading());
-    }
-  };
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  });
 
   return (
     <>
@@ -59,7 +26,7 @@ const WalletForm = () => {
         you want to connect with
       </p>
       <RippleBtn className={styles.spacing}>
-        <div className={styles.wallet} onClick={handleMetamask}>
+        <div className={styles.wallet} onClick={() => connect()}>
           <Image
             src="/images/icons/metamask.svg"
             width="34px"

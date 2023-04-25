@@ -12,7 +12,7 @@ const Login = () => {
       <div className={styles.login}>
         {!user.ethAddress ? (
           <WalletForm />
-        ) : !user.ethAddress && !user.displayName ? (
+        ) : user.ethAddress && !user.displayName ? (
           <MoreInfoForm />
         ) : null}
       </div>
