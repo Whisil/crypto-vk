@@ -65,7 +65,7 @@ const PostMenu = ({
             if (menuMounted) setShowMenu(false);
           }}
         >
-          {userId === user?.id ? (
+          {/* {userId === user?.id ? (
             <MenuBtn
               icon="bin"
               text="Delete"
@@ -92,7 +92,7 @@ const PostMenu = ({
 
               <MenuBtn icon="report" text="Report" accent />
             </>
-          )}
+          )} */}
         </div>
       )}
     </div>
