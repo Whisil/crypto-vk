@@ -1,4 +1,3 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import Feed from '@/components/feedScreen';
 import ProfileBlock from '@/components/feedScreen/profileBlock';
 import WhoToFollow from '@/components/unknown/whoToFollow';
