@@ -29,7 +29,6 @@ const Post = ({
   media,
   handlePostDelete,
   createdBy,
-  commentCount,
   likeCount,
 }: Props) => {
   const [userInfo, setUserInfo] = useState<{
@@ -238,7 +237,7 @@ const Post = ({
         </div>
 
         <div className={styles.comments} onClick={() => commentsShowToggle()}>
-          {commentCount} comments
+          {/* {commentCount} comments */}
         </div>
       </div>
 

@@ -9,6 +9,7 @@ import ImageIcon from 'public/images/icons/image-media.svg';
 import CloseIcon from 'public/images/icons/close.svg';
 
 import styles from './styles.module.scss';
+import { useAppSelector } from '@/app/hooks';
 
 interface Props {
   postedPostInfo?(id: string): void;
@@ -41,6 +42,8 @@ const PostInput = ({
     displayName: string;
   }>({ id: ``, displayName: `` });
 
+  const { token } = useAppSelector((state) => state.user);
+
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
 
@@ -63,41 +66,22 @@ const PostInput = ({
     }
   };
 
-  //Database
-
   const handlePost = async () => {
-    // const Post = Moralis.Object.extend(`Posts`);
-
-    let fileInputValue;
+    // let fileInputValue;
     // let file: { [key: string]: any } = {};
+    // if (fileInput.current && fileInput.current.files) {
+    //   fileInputValue = fileInput.current.files[0];
+    //   file = new Moralis.File(`postMedia by ${user?.id}`, fileInputValue);
+    // }
 
-    if (fileInput.current && fileInput.current.files) {
-      fileInputValue = fileInput.current.files[0];
-      // file = new Moralis.File(`postMedia by ${user?.id}`, fileInputValue);
-    }
-
-    // const newPost = new Post();
-    // newPost
-    //   .save({
-    //     text: inputText.length !== 0 ? inputText.trim() : undefined,
-    //     media: file && file._source ? file : null,
-    //     likeCount: 0,
-    //     commentCount: 0,
-    //   })
-    //   .then(() => {
-    //     user?.relation(`posts`).add(newPost);
-    //     user?.save();
-    //     newPost.set(`createdBy`, user);
-    //     postedPostInfo && postedPostInfo(newPost.id);
-
-    //     newPost.save();
-
-    //     handleCloseBtn();
-    //     if (textInput.current) {
-    //       textInput.current.textContent = ``;
-    //     }
-    //     setInputText(``);
-    //   });
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/create`, {
+      method: `POST`,
+      headers: {
+        'Content-Type': `application/json`,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ text: inputText, media: mediaURI }),
+    });
   };
 
   const handleComment = async (reply?: boolean) => {
@@ -175,7 +159,7 @@ const PostInput = ({
     }
   }, [inputText, mediaURI]);
 
-  const handleInputChange = (
+  const handleFileInputChange = (
     e: Event | React.ChangeEvent<HTMLInputElement>,
   ) => {
     const target = e.target as HTMLInputElement;
@@ -319,7 +303,7 @@ const PostInput = ({
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 className={styles.mediaInput}
-                onChange={handleInputChange}
+                onChange={handleFileInputChange}
                 ref={fileInput}
                 disabled={mediaURI.length !== 0 ? true : false}
               />

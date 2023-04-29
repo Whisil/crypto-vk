@@ -1,15 +1,14 @@
-import { User } from '@/types/user';
+import { IUser } from '@/types/user';
 import { createSlice } from '@reduxjs/toolkit';
 
 interface UserState {
-  user: User;
+  user: IUser;
   token: string;
   loading: boolean;
 }
 
 const initialState: UserState = {
   user: {
-    _id: ``,
     username: ``,
     createdAt: ``,
     updatedAt: ``,

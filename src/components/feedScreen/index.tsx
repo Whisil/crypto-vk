@@ -1,15 +1,24 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Post from './post';
 import PostInput from './postInput';
 import Loader from '@/components/unknown/loader';
 
 import styles from './styles.module.scss';
+import { IPost } from '@/types/post';
 
 const Feed = () => {
-  const [feedPosts, setFeedPosts] = useState<any[]>([]);
+  const [feedPosts, setFeedPosts] = useState<IPost[]>([]);
   const [loader, setLoader] = useState(true);
   const [newPostId, setNewPostId] = useState(``);
   const [postDeleteId, setPostDeleteId] = useState(``);
+
+  const fetchPosts = useCallback(async () => {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post`)
+      .then((res) => res.json())
+      .then((posts) => setFeedPosts(posts))
+      .catch((err) => console.log(err));
+    setLoader(false);
+  }, []);
 
   useEffect(() => {
     // if (newPostId !== ``) {
@@ -57,18 +66,9 @@ const Feed = () => {
   //Post fetch Query
 
   useEffect(() => {
-    const postsQuery = () => {
-      // postQuery
-      //   .descending(`createdAt`)
-      //   .find()
-      //   .then((posts) => {
-      //     setFeedPosts(posts);
-      //   })
-      //   .then(() => setLoader(false));
-    };
-    postsQuery();
+    fetchPosts();
   }, []);
-
+  console.log(feedPosts);
   return (
     <div className={styles.feed}>
       <PostInput postedPostInfo={postedPostInfo} />
@@ -78,7 +78,7 @@ const Feed = () => {
         </div>
       )}
       <div id="feed">
-        {feedPosts?.map((item) => (
+        {/* {feedPosts?.map((item) => (
           <Post
             key={item.id}
             postId={item.id}
@@ -90,7 +90,7 @@ const Feed = () => {
             commentCount={item.attributes.commentCount}
             likeCount={item.attributes.likeCount}
           />
-        ))}
+        ))} */}
       </div>
     </div>
   );

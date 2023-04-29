@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Post } from '@/types/post';
+import { IPost } from '@/types/post';
 
 interface PostsState {
-  posts: Post[];
+  posts: IPost[];
   loading: boolean;
 }
 
 const initialState: PostsState = {
-  posts: [{ createdAt: ``, text: ``, createdBy: ``, likes: [] }],
+  posts: [{ id: ``, createdAt: ``, text: ``, createdBy: ``, likesCount: 0 }],
   loading: true,
 };
 
