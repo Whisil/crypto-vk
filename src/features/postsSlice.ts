@@ -7,14 +7,20 @@ interface PostsState {
 }
 
 const initialState: PostsState = {
-  posts: [{ id: ``, createdAt: ``, text: ``, createdBy: ``, likesCount: 0 }],
+  posts: [],
   loading: true,
 };
 
 export const postsSlice = createSlice({
   name: `posts`,
   initialState,
-  reducers: {},
+  reducers: {
+    setNewPost: (state, action) => {
+      state.posts.push(action.payload);
+    },
+  },
 });
+
+export const { setNewPost } = postsSlice.actions;
 
 export default postsSlice.reducer;

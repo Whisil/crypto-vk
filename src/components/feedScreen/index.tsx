@@ -5,6 +5,7 @@ import Loader from '@/components/unknown/loader';
 
 import styles from './styles.module.scss';
 import { IPost } from '@/types/post';
+import { useAppSelector } from '@/app/hooks';
 
 const Feed = () => {
   const [feedPosts, setFeedPosts] = useState<IPost[]>([]);
@@ -12,13 +13,18 @@ const Feed = () => {
   const [newPostId, setNewPostId] = useState(``);
   const [postDeleteId, setPostDeleteId] = useState(``);
 
+  const { token } = useAppSelector((state) => state.user);
+
   const fetchPosts = useCallback(async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post`)
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post`, {
+      method: `GET`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((res) => res.json())
       .then((posts) => setFeedPosts(posts))
       .catch((err) => console.log(err));
     setLoader(false);
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     // if (newPostId !== ``) {

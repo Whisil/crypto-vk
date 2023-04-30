@@ -9,7 +9,8 @@ import ImageIcon from 'public/images/icons/image-media.svg';
 import CloseIcon from 'public/images/icons/close.svg';
 
 import styles from './styles.module.scss';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setNewPost } from '@/features/postsSlice';
 
 interface Props {
   postedPostInfo?(id: string): void;
@@ -43,6 +44,7 @@ const PostInput = ({
   }>({ id: ``, displayName: `` });
 
   const { token } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
@@ -67,21 +69,24 @@ const PostInput = ({
   };
 
   const handlePost = async () => {
-    // let fileInputValue;
-    // let file: { [key: string]: any } = {};
-    // if (fileInput.current && fileInput.current.files) {
-    //   fileInputValue = fileInput.current.files[0];
-    //   file = new Moralis.File(`postMedia by ${user?.id}`, fileInputValue);
-    // }
+    const formData = new FormData();
+    formData.append(`text`, inputText);
+
+    if (fileInput.current && fileInput.current.files) {
+      const fileInputValue = fileInput.current.files[0];
+      formData.append(`file`, fileInputValue);
+    }
 
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/create`, {
       method: `POST`,
       headers: {
-        'Content-Type': `application/json`,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ text: inputText, media: mediaURI }),
-    });
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((post) => dispatch(setNewPost(post)))
+      .catch((err) => console.log(err));
   };
 
   const handleComment = async (reply?: boolean) => {
@@ -301,6 +306,7 @@ const PostInput = ({
                     : `postMediaInput`
                 }
                 type="file"
+                name="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 className={styles.mediaInput}
                 onChange={handleFileInputChange}
