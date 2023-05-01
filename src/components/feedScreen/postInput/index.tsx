@@ -7,13 +7,13 @@ import Triangle from 'public/images/icons/triangle.svg';
 import EmojiIcon from 'public/images/icons/emoji.svg';
 import ImageIcon from 'public/images/icons/image-media.svg';
 import CloseIcon from 'public/images/icons/close.svg';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { IPost } from '@/types/post';
 
 import styles from './styles.module.scss';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setNewPost } from '@/features/postsSlice';
 
 interface Props {
-  postedPostInfo?(id: string): void;
+  setNewPost?(post: IPost): void;
   commentInput?: boolean;
   commentedPostId?: string;
   newCommentInfo?(id: string): void;
@@ -25,7 +25,7 @@ interface Props {
 }
 
 const PostInput = ({
-  postedPostInfo,
+  setNewPost,
   commentInput,
   commentedPostId,
   newCommentInfo,
@@ -48,17 +48,6 @@ const PostInput = ({
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isReply && replyTo && replyTo.length !== 0) {
-      // Moralis.Cloud.run(`userFetch`, { id: replyTo }).then((res) =>
-      //   setReplyToInfo({
-      //     id: res[0].id,
-      //     displayName: res[0].attributes.displayName,
-      //   }),
-      // );
-    }
-  }, [replyTo, isReply]);
 
   const handleCloseBtn = async () => {
     URL.revokeObjectURL(mediaURI);
@@ -85,7 +74,7 @@ const PostInput = ({
       body: formData,
     })
       .then((res) => res.json())
-      .then((post) => dispatch(setNewPost(post)))
+      .then((post) => setNewPost && setNewPost(post))
       .catch((err) => console.log(err));
   };
 

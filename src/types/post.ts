@@ -1,8 +1,10 @@
+import { IUser } from './user';
+
 export interface IPost {
-  id: string;
+  _id: string;
   createdAt: string;
   text: string;
-  createdBy: string;
-  media?: any;
-  likesCount: number;
+  createdBy: IUser;
+  mediaURL?: string;
+  likeCount: number;
 }

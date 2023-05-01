@@ -4,33 +4,28 @@ import PostBtn from '../postBtn';
 import CommentContainer from '../commentContainer';
 import Loader from '@/components/unknown/loader';
 import Like from 'public/images/icons/like.svg';
-
-import styles from './styles.module.scss';
 import PostMenu from '../postMenu';
 import PostInput from '../postInput';
 import MediaContainer from '../mediaContainer';
 import CommentInteraction from '../commentInteraction';
+import { IPost } from '@/types/post';
 
-interface Props {
-  postId: string;
-  timestamp: string;
-  text?: string;
-  media?: string;
+import styles from './styles.module.scss';
+
+interface PostProps extends IPost {
   handlePostDelete?(id: string): void;
-  createdBy: { id: string };
-  commentCount: number;
-  likeCount: number;
+  // commentCount: number;
 }
 
 const Post = ({
-  postId,
-  timestamp,
+  _id,
+  createdAt,
   text,
-  media,
+  mediaURL,
   handlePostDelete,
   createdBy,
   likeCount,
-}: Props) => {
+}: PostProps) => {
   const [userInfo, setUserInfo] = useState<{
     displayName: string;
     username: string;
@@ -131,24 +126,7 @@ const Post = ({
   //Comments
 
   // const commentFetch = useCallback(() => {
-  //   postQuery.get(postId).then((res) => {
-  //     res
-  //       .relation(`comments`)
-  //       .query()
-  //       .equalTo(`replyTo`, undefined)
-  //       .limit(3)
-  //       .skip(commentFetchOffset)
-  //       .find()
-  //       .then((fetchedComments) => {
-  //         if (comments.length === 0) {
-  //           setComments(fetchedComments);
-  //         } else {
-  //           setComments([...comments, ...fetchedComments]);
-  //         }
-  //         setCommentLoader(false);
-  //         setSecondaryCommentLoader(false);
-  //       });
-  //   });
+
   // }, [commentFetchOffset, comments, postId, postQuery]);
 
   const commentsShowToggle = () => {
@@ -179,56 +157,25 @@ const Post = ({
     setCommentDeleteId(id);
   };
 
-  // useEffect(() => {
-  //   if (commentDeleteId !== ``) {
-  //     postQuery.get(postId).then((post) => {
-  //       post.decrement(`commentCount`);
-  //       post.save();
-  //     });
-  //     commentQuery.get(commentDeleteId).then((comment) => {
-  //       const likeQuery = new Moralis.Query(`Likes`);
-  //       likeQuery
-  //         .equalTo(`likedComment`, comment)
-  //         .find()
-  //         .then((res) => Moralis.Object.destroyAll(res));
-
-  //       comment.destroy();
-
-  //       setComments((comments) =>
-  //         comments.filter((comment) => comment.id !== commentDeleteId),
-  //       );
-
-  //       setCommentDeleteId(``);
-  //     });
-  //   }
-  // }, [
-  //   commentDeleteId,
-  //   Moralis.Object,
-  //   Moralis.Query,
-  //   commentQuery,
-  //   postId,
-  //   postQuery,
-  // ]);
-
   return (
     <div className={styles.post}>
       <div className={styles.header}>
         <AccountInfo
-          timestamp={timestamp}
+          timestamp={createdAt}
           displayName={userInfo.displayName}
-          href={`/${createdBy.id}`}
+          href={`/${createdBy.ethAddress}`}
         />
 
         <PostMenu
           handlePostDelete={handlePostDelete}
-          postId={postId}
-          userId={createdBy.id}
+          postId={_id}
+          // userId={createdBy}
         />
       </div>
 
       {text && <span className={styles.description}>{text}</span>}
 
-      {media && <MediaContainer src={media} />}
+      {mediaURL && <MediaContainer src={mediaURL} />}
 
       <div className={styles.info}>
         <div className={styles.likes}>
@@ -266,7 +213,7 @@ const Post = ({
             <PostInput
               commentInput
               commentInputFocus={commentInputFocus}
-              commentedPostId={postId}
+              commentedPostId={_id}
               newCommentInfo={(id: string) => setNewCommentId(id)}
             />
             {comments.map((item) => (
@@ -280,7 +227,7 @@ const Post = ({
                 createdById={item.attributes.createdBy.id}
                 likeCount={item.attributes.likeCount}
                 replyCount={item.attributes.replyCount}
-                postId={postId}
+                postId={_id}
                 newRepliesSwitch={newRepliesSwitch}
               />
             ))}

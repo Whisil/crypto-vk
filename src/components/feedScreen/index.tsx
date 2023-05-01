@@ -51,18 +51,18 @@ const Feed = () => {
       //   post.destroy();
 
       setFeedPosts((feedPosts) =>
-        feedPosts.filter((post) => post.id !== postDeleteId),
+        feedPosts.filter((post) => post._id !== postDeleteId),
       );
 
       setPostDeleteId(``);
       // });
     }
-  }, []);
+  }, [postDeleteId]);
 
   //Pushing state
 
-  const postedPostInfo = (id: string) => {
-    setNewPostId(id);
+  const setNewPost = (post: IPost) => {
+    setFeedPosts((state) => [post, ...state]);
   };
 
   const handlePostDelete = (id: string) => {
@@ -73,30 +73,30 @@ const Feed = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [fetchPosts]);
   console.log(feedPosts);
   return (
     <div className={styles.feed}>
-      <PostInput postedPostInfo={postedPostInfo} />
+      <PostInput setNewPost={setNewPost} />
       {loader && (
         <div className={styles.loaderWrapper}>
           <Loader variant="small" />
         </div>
       )}
       <div id="feed">
-        {/* {feedPosts?.map((item) => (
+        {feedPosts.map((item) => (
           <Post
-            key={item.id}
-            postId={item.id}
-            timestamp={item.attributes.createdAt}
-            text={item.attributes.text}
-            media={item.attributes.media && item.attributes.media._url}
+            key={item._id}
+            _id={item._id}
+            createdAt={item.createdAt}
+            text={item.text}
+            mediaURL={item.mediaURL && item.mediaURL}
             handlePostDelete={handlePostDelete}
-            createdBy={item.attributes.createdBy}
-            commentCount={item.attributes.commentCount}
-            likeCount={item.attributes.likeCount}
+            createdBy={item.createdBy}
+            // commentCount={item.attributes.commentCount}
+            likeCount={item.likeCount}
           />
-        ))} */}
+        ))}
       </div>
     </div>
   );
