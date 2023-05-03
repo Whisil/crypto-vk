@@ -81,6 +81,9 @@ const PostInput = ({
         dispatch(addUserPost(post._id));
         handleCloseBtn();
         setInputText(``);
+        if (textInput.current) {
+          textInput.current.textContent = ``;
+        }
       })
       .catch((err) => console.log(err));
   };

@@ -17,9 +17,7 @@ export const postsSlice = createSlice({
       state.posts = [...state.posts, ...action.payload];
     },
     deletePost: (state, action) => {
-      state.posts = state.posts.filter((post) => {
-        post._id !== action.payload;
-      });
+      state.posts = state.posts.filter((post) => post._id !== action.payload);
     },
   },
 });

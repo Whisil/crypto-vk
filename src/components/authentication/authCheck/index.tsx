@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import Login from '@/pages/login';
 import React, { useEffect, useRef, useState } from 'react';
 import Loader from '@/components/unknown/loader';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -9,6 +8,8 @@ import { setUser, setUserWallet } from '@/features/userSlice';
 import styles from './styles.module.scss';
 import { useAccount } from 'wagmi';
 import useIsMounted from '@/hooks/useIsMounted';
+import WalletForm from '../walletForm';
+import MoreInfoForm from '../moreInfoForm';
 
 interface Props {
   children: React.ReactNode;
@@ -16,13 +17,16 @@ interface Props {
 
 const AuthCheck = ({ children }: Props) => {
   const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
+
   const router = useRouter();
+
   const mountedRef = useRef<HTMLDivElement>(null);
 
-  const { loading, user } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  const { address } = useAccount();
+  const { address, isConnecting } = useAccount();
+
   const { mounted } = useIsMounted();
 
   useEffect(() => {
@@ -58,16 +62,25 @@ const AuthCheck = ({ children }: Props) => {
     return <Loader />;
   }
 
-  if (!isInitialLoading && (!user.ethAddress || !user.displayName)) {
+  if (!user.ethAddress || !user.displayName) {
     return (
       <>
         <div
           className={styles.loaderWrapper}
-          style={loading ? { opacity: `1`, pointerEvents: `all` } : {}}
+          style={isConnecting ? { opacity: `1`, pointerEvents: `all` } : {}}
         >
           <Loader />
         </div>
-        <Login />
+        <div className={styles.wrapper}>
+          <div className={styles.illustration} />
+          <div className={styles.login}>
+            {!user.ethAddress ? (
+              <WalletForm />
+            ) : user.ethAddress && !user.displayName ? (
+              <MoreInfoForm />
+            ) : null}
+          </div>
+        </div>
       </>
     );
   }

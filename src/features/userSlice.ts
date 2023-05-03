@@ -1,4 +1,3 @@
-import { IPost } from '@/types/post';
 import { IUser } from '@/types/user';
 import { createSlice } from '@reduxjs/toolkit';
 
