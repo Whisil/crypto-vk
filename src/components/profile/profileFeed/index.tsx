@@ -95,19 +95,18 @@ const ProfileFeed = ({
             </div>
           ) : (
             <>
-              {posts.map((item) => (
+              {/* {posts.map((item) => (
                 <Post
                   key={item.id}
-                  postId={item.id}
-                  timestamp={item.attributes.createdAt}
+                  _id={item.id}
+                  createdAt={item.attributes.createdAt}
                   text={item.attributes.text}
-                  media={item.attributes.media && item.attributes.media._url}
-                  handlePostDelete={handlePostDelete}
+                  mediaURL={item.attributes.media && item.attributes.media._url}
                   createdBy={item.attributes.createdBy}
-                  commentCount={item.attributes.commentCount}
+                  // commentCount={item.attributes.commentCount}
                   likeCount={item.attributes.likeCount}
                 />
-              ))}
+              ))} */}
             </>
           )}
         </>

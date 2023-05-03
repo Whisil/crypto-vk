@@ -135,7 +135,6 @@ const Comment = ({
             variant="comment"
             handleCommentDelete={handleCommentDelete}
             handleReplyDelete={handleReplyDelete}
-            userId={createdById}
           />
         )}
       </div>
