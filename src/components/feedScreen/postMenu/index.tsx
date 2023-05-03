@@ -4,10 +4,13 @@ import MenuBtn from '@/components/unknown/menuBtn';
 import DotsIcon from 'public/images/icons/dots.svg';
 
 import styles from './styles.module.scss';
+import { IUser } from '@/types/user';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { deletePost } from '@/features/postsSlice';
+import { addUserPost, deleteUserPost } from '@/features/userSlice';
 
 interface Props {
-  userId?: string;
-  handlePostDelete?(postId: string | undefined): void;
+  createdBy?: IUser;
   handleCommentDelete?(id: string | undefined): void;
   handleReplyDelete?(id: string | undefined): void;
   commentId?: string;
@@ -16,8 +19,7 @@ interface Props {
 }
 
 const PostMenu = ({
-  userId,
-  handlePostDelete,
+  createdBy,
   handleCommentDelete,
   handleReplyDelete,
   commentId,
@@ -27,6 +29,25 @@ const PostMenu = ({
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const { user, token } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
+  const handlePostDelete = async () => {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/delete/${postId}`, {
+        method: `DELETE`,
+        headers: {
+          'Content-Type': `application/json`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch(deletePost(postId));
+      dispatch(deleteUserPost(postId));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     if (!showMenu) return;
@@ -65,15 +86,15 @@ const PostMenu = ({
             if (menuMounted) setShowMenu(false);
           }}
         >
-          {/* {userId === user?.id ? (
+          {createdBy?.ethAddress === user.ethAddress ? (
             <MenuBtn
               icon="bin"
               text="Delete"
               accent
               onClick={() => {
-                handlePostDelete && handlePostDelete(postId);
-                handleCommentDelete && handleCommentDelete(commentId);
-                handleReplyDelete && handleReplyDelete(commentId);
+                handlePostDelete();
+                // handleCommentDelete && handleCommentDelete(commentId);
+                // handleReplyDelete && handleReplyDelete(commentId);
                 setShowMenu(false);
               }}
             />
@@ -92,7 +113,7 @@ const PostMenu = ({
 
               <MenuBtn icon="report" text="Report" accent />
             </>
-          )} */}
+          )}
         </div>
       )}
     </div>

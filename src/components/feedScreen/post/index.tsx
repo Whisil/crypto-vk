@@ -12,24 +12,22 @@ import { IPost } from '@/types/post';
 
 import styles from './styles.module.scss';
 
-interface PostProps extends IPost {
-  handlePostDelete?(id: string): void;
-  // commentCount: number;
-}
+// interface PostProps extends IPost {
+// commentCount: number;
+// }
 
 const Post = ({
   _id,
   createdAt,
   text,
   mediaURL,
-  handlePostDelete,
   createdBy,
   likeCount,
-}: PostProps) => {
-  const [userInfo, setUserInfo] = useState<{
-    displayName: string;
-    username: string;
-  }>({ username: ``, displayName: `` });
+}: IPost) => {
+  // const [userInfo, setUserInfo] = useState<{
+  //   displayName: string;
+  //   username: string;
+  // }>({ username: ``, displayName: `` });
   const [likeId, setLikeId] = useState<string | undefined>(undefined);
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCounter, setLikeCounter] = useState<number>(likeCount);
@@ -45,7 +43,6 @@ const Post = ({
   const [noReplyCounter, setNoReplyCounter] = useState<number>(0);
   const [newRepliesSwitch, setNewRepliesSwitch] = useState<boolean>(false);
 
-  // const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
   // const commentQuery = useMemo(
   //   () => new Moralis.Query(`Comment`),
   //   [Moralis.Query, newCommentId], // eslint-disable-line
@@ -162,15 +159,11 @@ const Post = ({
       <div className={styles.header}>
         <AccountInfo
           timestamp={createdAt}
-          displayName={userInfo.displayName}
+          displayName={createdBy.displayName}
           href={`/${createdBy.ethAddress}`}
         />
 
-        <PostMenu
-          handlePostDelete={handlePostDelete}
-          postId={_id}
-          // userId={createdBy}
-        />
+        <PostMenu postId={_id} createdBy={createdBy} />
       </div>
 
       {text && <span className={styles.description}>{text}</span>}

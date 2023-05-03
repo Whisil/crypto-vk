@@ -3,12 +3,10 @@ import { IPost } from '@/types/post';
 
 interface PostsState {
   posts: IPost[];
-  loading: boolean;
 }
 
 const initialState: PostsState = {
   posts: [],
-  loading: true,
 };
 
 export const postsSlice = createSlice({
@@ -16,11 +14,16 @@ export const postsSlice = createSlice({
   initialState,
   reducers: {
     setNewPost: (state, action) => {
-      state.posts.push(action.payload);
+      state.posts = [...state.posts, ...action.payload];
+    },
+    deletePost: (state, action) => {
+      state.posts = state.posts.filter((post) => {
+        post._id !== action.payload;
+      });
     },
   },
 });
 
-export const { setNewPost } = postsSlice.actions;
+export const { setNewPost, deletePost } = postsSlice.actions;
 
 export default postsSlice.reducer;

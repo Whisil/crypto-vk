@@ -1,10 +1,10 @@
+import { IPost } from '@/types/post';
 import { IUser } from '@/types/user';
 import { createSlice } from '@reduxjs/toolkit';
 
 interface UserState {
   user: IUser;
   token: string;
-  loading: boolean;
 }
 
 const initialState: UserState = {
@@ -14,9 +14,9 @@ const initialState: UserState = {
     updatedAt: ``,
     ethAddress: ``,
     displayName: ``,
+    posts: [],
   },
   token: ``,
-  loading: false,
 };
 
 const userSlice = createSlice({
@@ -24,16 +24,30 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUserWallet: (state, action) => {
-      state.user.ethAddress = action.payload;
+      state.user = { ...state.user, ethAddress: action.payload };
     },
     setUser: (state, action) => {
       state.user = { ...action.payload.user };
       state.token = action.payload.token;
     },
+    addUserPost: (state, action) => {
+      state.user.posts = [...state.user.posts, action.payload];
+    },
+    deleteUserPost: (state, action) => {
+      state.user.posts = state.user.posts.filter(
+        (postId) => postId !== action.payload,
+      );
+    },
     clearUser: () => initialState,
   },
 });
 
-export const { setUserWallet, setUser, clearUser } = userSlice.actions;
+export const {
+  setUserWallet,
+  setUser,
+  addUserPost,
+  clearUser,
+  deleteUserPost,
+} = userSlice.actions;
 
 export default userSlice.reducer;

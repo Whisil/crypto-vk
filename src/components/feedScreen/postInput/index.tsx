@@ -9,8 +9,10 @@ import ImageIcon from 'public/images/icons/image-media.svg';
 import CloseIcon from 'public/images/icons/close.svg';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { IPost } from '@/types/post';
+import { setNewPost } from '@/features/postsSlice';
 
 import styles from './styles.module.scss';
+import { addUserPost } from '@/features/userSlice';
 
 interface Props {
   setNewPost?(post: IPost): void;
@@ -25,7 +27,6 @@ interface Props {
 }
 
 const PostInput = ({
-  setNewPost,
   commentInput,
   commentedPostId,
   newCommentInfo,
@@ -59,7 +60,7 @@ const PostInput = ({
 
   const handlePost = async () => {
     const formData = new FormData();
-    formData.append(`text`, inputText);
+    formData.append(`text`, inputText.trim());
 
     if (fileInput.current && fileInput.current.files) {
       const fileInputValue = fileInput.current.files[0];
@@ -74,7 +75,13 @@ const PostInput = ({
       body: formData,
     })
       .then((res) => res.json())
-      .then((post) => setNewPost && setNewPost(post))
+      .then((post) => {
+        // using [post], because reducer has [...state, ...payload]
+        dispatch(setNewPost([post]));
+        dispatch(addUserPost(post._id));
+        handleCloseBtn();
+        setInputText(``);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -188,19 +195,19 @@ const PostInput = ({
     range.detach();
   };
 
-  useEffect(() => {
-    if (
-      textInput &&
-      textInput.current &&
-      isReply &&
-      inputUsername &&
-      inputUsername.length !== 0
-    ) {
-      textInput.current.textContent = `@${inputUsername} `;
-      setInputText(`nothing`);
-      setEndOfInput(textInput.current);
-    }
-  }, [inputUsername, isReply]);
+  // useEffect(() => {
+  //   if (
+  //     textInput &&
+  //     textInput.current &&
+  //     isReply &&
+  //     inputUsername &&
+  //     inputUsername.length !== 0
+  //   ) {
+  //     textInput.current.textContent = `@${inputUsername} `;
+  //     setInputText(`nothing`);
+  //     setEndOfInput(textInput.current);
+  //   }
+  // }, [inputUsername, isReply]);
 
   return (
     <div
