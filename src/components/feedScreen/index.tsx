@@ -1,15 +1,14 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Post from './post';
 import PostInput from './postInput';
 import Loader from '@/components/unknown/loader';
-
-import styles from './styles.module.scss';
-import { IPost } from '@/types/post';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setNewPost } from '@/features/postsSlice';
+import SadFaceIcon from 'public/images/icons/sad-face.svg';
+
+import styles from './styles.module.scss';
 
 const Feed = () => {
-  const [feedPosts, setFeedPosts] = useState<IPost[]>([]);
   const [loader, setLoader] = useState(true);
 
   const { token } = useAppSelector((state) => state.user);
@@ -33,18 +32,15 @@ const Feed = () => {
     fetchPosts();
   }, [fetchPosts]);
 
-  console.log(feedPosts);
-
   return (
     <div className={styles.feed}>
       <PostInput />
-      {loader && (
+      {loader ? (
         <div className={styles.loaderWrapper}>
           <Loader variant="small" />
         </div>
-      )}
-      <div id="feed">
-        {posts.map((item) => (
+      ) : posts.length !== 0 ? (
+        posts.map((item) => (
           <Post
             key={item._id}
             _id={item._id}
@@ -55,8 +51,13 @@ const Feed = () => {
             // commentCount={item.attributes.commentCount}
             likeCount={item.likeCount}
           />
-        ))}
-      </div>
+        ))
+      ) : (
+        <div className={styles.noContent}>
+          <SadFaceIcon className={styles.noContentIcon} />
+          <span className={styles.noContentText}>Nothing here</span>
+        </div>
+      )}
     </div>
   );
 };
