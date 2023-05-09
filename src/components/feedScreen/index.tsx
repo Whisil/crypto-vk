@@ -49,7 +49,7 @@ const Feed = () => {
             mediaURL={item.mediaURL && item.mediaURL}
             createdBy={item.createdBy}
             // commentCount={item.attributes.commentCount}
-            likeCount={item.likeCount}
+            likes={item.likes}
           />
         ))
       ) : (

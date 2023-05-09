@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
 import CommentContainer from '../commentContainer';
@@ -11,26 +11,11 @@ import CommentInteraction from '../commentInteraction';
 import { IPost } from '@/types/post';
 
 import styles from './styles.module.scss';
+import { useAppSelector } from '@/app/hooks';
 
-// interface PostProps extends IPost {
-// commentCount: number;
-// }
-
-const Post = ({
-  _id,
-  createdAt,
-  text,
-  mediaURL,
-  createdBy,
-  likeCount,
-}: IPost) => {
-  // const [userInfo, setUserInfo] = useState<{
-  //   displayName: string;
-  //   username: string;
-  // }>({ username: ``, displayName: `` });
-  const [likeId, setLikeId] = useState<string | undefined>(undefined);
-  const [liked, setLiked] = useState<boolean>(false);
-  const [likeCounter, setLikeCounter] = useState<number>(likeCount);
+const Post = ({ _id, createdAt, text, mediaURL, createdBy, likes }: IPost) => {
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [likesArr, setLikesArr] = useState<string[]>(likes);
   const [showComments, setShowComments] = useState<boolean>(false);
   const [commentLoader, setCommentLoader] = useState<boolean>(false);
   const [secondaryCommentLoader, setSecondaryCommentLoader] =
@@ -42,6 +27,8 @@ const Post = ({
   const [commentDeleteId, setCommentDeleteId] = useState(``);
   const [noReplyCounter, setNoReplyCounter] = useState<number>(0);
   const [newRepliesSwitch, setNewRepliesSwitch] = useState<boolean>(false);
+
+  const { user, token } = useAppSelector((state) => state.user);
 
   // const commentQuery = useMemo(
   //   () => new Moralis.Query(`Comment`),
@@ -58,101 +45,40 @@ const Post = ({
     }
   }, [newCommentId]);
 
-  //User fetching and like check
-
-  // useEffect(() => {
-  //   Moralis.Cloud.run(`userFetch`, { id: createdBy.id }).then((res) =>
-  //     setUserInfo({
-  //       displayName: res[0].attributes.displayName,
-  //       username: res[0].attributes.username,
-  //     }),
-  //   );
-  //   postQuery.get(postId).then(function (result) {
-  //     result
-  //       .relation(`likes`)
-  //       .query()
-  //       .equalTo(`likedBy`, user)
-  //       .find()
-  //       .then((res) => {
-  //         setLikeId(res[0]?.id);
-  //         if (res[0]) {
-  //           setLiked(true);
-  //         }
-  //       });
-  //   });
-  // }, [Moralis.Cloud, createdBy.id, postId, postQuery, user]);
-
   // Likes
 
   const handleLike = async () => {
-    // const Like = Moralis.Object.extend(`Likes`);
+    const fetchUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/${
+      isLiked ? `removeLike` : `like`
+    }/${_id}`;
 
-    const newLike = new Like();
-    // newLike.save().then(() => {
-    //   postQuery.get(postId).then((post) => {
-    //     post.relation(`likes`).add(newLike);
-    //     post.increment(`likeCount`);
-    //     setLikeId(newLike.id);
-    //     newLike.set(`likedBy`, user);
-    //     newLike.set(`likedPost`, post);
-    //     user?.relation(`likes`).add(newLike);
-    //     user?.save();
-    //     newLike.save();
-    //     post.save();
-    //     setLiked(true);
-    //     setLikeCounter((likeCounter) => likeCounter + 1);
-    //   });
-    // });
-  };
-
-  const handleLikeRemove = async () => {
-    // const likeQuery = new Moralis.Query(`Likes`);
-    // if (likeId) {
-    //   (await likeQuery.get(likeId)).destroy().then(() => {
-    //     setLiked(false);
-    //     setLikeId(undefined);
-    //   });
-    //   setLikeCounter((likeCounter) => likeCounter - 1);
-    // }
-    // postQuery.get(postId).then((post) => {
-    //   post.decrement(`likeCount`);
-    //   post.save();
-    // });
-  };
-
-  //Comments
-
-  // const commentFetch = useCallback(() => {
-
-  // }, [commentFetchOffset, comments, postId, postQuery]);
-
-  const commentsShowToggle = () => {
-    if (!showComments) {
-      setCommentLoader(true);
-      // commentFetch();
-      setShowComments(true);
-      // postQuery.get(postId).then((res) => {
-      //   commentQuery.equalTo(`replyTo`, undefined).equalTo(`onPost`, res);
-      //   commentQuery.count().then((res) => setNoReplyCounter(res));
-      // });
-    } else {
-      setComments([]);
-      setShowComments(false);
-      setNoReplyCounter(0);
-    }
+    await fetch(fetchUrl, {
+      method: `POST`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(() => {
+        if (isLiked) {
+          setIsLiked(false);
+          setLikesArr((prevState) =>
+            prevState.filter((item) => item !== user._id),
+          );
+        } else {
+          setIsLiked(true);
+          setLikesArr((prevState) => [...prevState, user._id]);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
-    if (commentFetchOffset !== 0) {
-      // commentFetch();
+    if (likesArr.length !== 0 && likesArr.includes(user._id) && !isLiked) {
+      setIsLiked(true);
     }
-  }, [commentFetchOffset]);
-
-  //Comment Delete
-
-  const handleCommentDelete = (id: string) => {
-    setCommentDeleteId(id);
-  };
+  }, [likesArr, user]); // eslint-disable-line
 
   return (
     <div className={styles.post}>
@@ -173,25 +99,22 @@ const Post = ({
       <div className={styles.info}>
         <div className={styles.likes}>
           <Like />
-          <span className={styles.likesCount}>{likeCounter} Likes</span>
+          <span className={styles.likesCount}>{likesArr.length} Likes</span>
         </div>
 
-        <div className={styles.comments} onClick={() => commentsShowToggle()}>
-          {/* {commentCount} comments */}
-        </div>
+        {/* <div className={styles.comments} onClick={() => commentsShowToggle()}>
+          0 comments
+        </div> */}
       </div>
 
       <div className={styles.interactions}>
-        <div
-          onClick={likeId === `` || !likeId ? handleLike : handleLikeRemove}
-          className={styles.btnWrapper}
-        >
-          <PostBtn variant="like" liked={liked} />
+        <div onClick={handleLike} className={styles.btnWrapper}>
+          <PostBtn variant="like" liked={isLiked} />
         </div>
         <PostBtn
           variant="comment"
           onClick={() => {
-            commentsShowToggle();
+            // commentsShowToggle();
             setCommentInputFocus((commentInputFocus) => !commentInputFocus);
           }}
         />
@@ -216,7 +139,7 @@ const Post = ({
                 commentId={item.id}
                 media={item.attributes?.media && item.attributes.media._url}
                 text={item.attributes?.text}
-                handleCommentDelete={handleCommentDelete}
+                // handleCommentDelete={handleCommentDelete}
                 createdById={item.attributes.createdBy.id}
                 likeCount={item.attributes.likeCount}
                 replyCount={item.attributes.replyCount}

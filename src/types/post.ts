@@ -6,5 +6,5 @@ export interface IPost {
   text: string;
   createdBy: IUser;
   mediaURL?: string;
-  likeCount: number;
+  likes: string[];
 }

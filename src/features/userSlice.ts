@@ -8,12 +8,14 @@ interface UserState {
 
 const initialState: UserState = {
   user: {
+    _id: ``,
     username: ``,
     createdAt: ``,
     updatedAt: ``,
     ethAddress: ``,
     displayName: ``,
     posts: [],
+    likes: [],
   },
   token: ``,
 };
