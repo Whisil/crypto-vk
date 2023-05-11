@@ -7,6 +7,12 @@
     height: fit-content;
     border-radius: 20px;
     background-color: $primaryDark;
+    transition: background-color .25s ease-out;
+    cursor: pointer;
+
+    &:hover{
+        background-color: rgba($primaryLightDark, 0.25);
+    }
 
     .header{
         display: flex;

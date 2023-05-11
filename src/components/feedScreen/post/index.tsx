@@ -12,14 +12,15 @@ import { IPost } from '@/types/post';
 
 import styles from './styles.module.scss';
 import { useAppSelector } from '@/app/hooks';
-import Link from 'next/link';
-import LinkRippleBtn from '@/components/unknown/linkRippleBtn';
+import { useRouter } from 'next/router';
 
 const Post = ({ _id, createdAt, text, mediaURL, createdBy, likes }: IPost) => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likesArr, setLikesArr] = useState<string[]>(likes);
 
   const { user, token } = useAppSelector((state) => state.user);
+
+  const router = useRouter();
 
   // Likes
 
@@ -57,7 +58,7 @@ const Post = ({ _id, createdAt, text, mediaURL, createdBy, likes }: IPost) => {
   }, [likesArr, user]); // eslint-disable-line
 
   return (
-    <div className={styles.post}>
+    <div className={styles.post} onClick={() => router.push(`/post/${_id}`)}>
       <div className={styles.header}>
         <AccountInfo
           timestamp={createdAt}
@@ -85,7 +86,7 @@ const Post = ({ _id, createdAt, text, mediaURL, createdBy, likes }: IPost) => {
         <div onClick={handleLike} className={styles.btnWrapper}>
           <PostBtn variant="like" liked={isLiked} />
         </div>
-        <LinkRippleBtn text="Comments" />
+        <PostBtn variant="comment" />
         <PostBtn variant="share" bgTransparent />
       </div>
     </div>

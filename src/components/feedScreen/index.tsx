@@ -3,7 +3,7 @@ import Post from './post';
 import PostInput from './postInput';
 import Loader from '@/components/unknown/loader';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setNewPost } from '@/features/postsSlice';
+import { setPostsOnFetch } from '@/features/postsSlice';
 import SadFaceIcon from 'public/images/icons/sad-face.svg';
 
 import styles from './styles.module.scss';
@@ -16,17 +16,19 @@ const Feed = () => {
   const dispatch = useAppDispatch();
 
   const fetchPosts = useCallback(async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post`, {
-      method: `GET`,
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((posts) => {
-        dispatch(setNewPost(posts));
+    if (posts.length === 0) {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post`, {
+        method: `GET`,
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .catch((err) => console.log(err));
+        .then((res) => res.json())
+        .then((resPosts) => {
+          dispatch(setPostsOnFetch(resPosts));
+        })
+        .catch((err) => console.log(err));
+    }
     setLoader(false);
-  }, [token, dispatch]);
+  }, [token, dispatch]); // eslint-disable-line
 
   useEffect(() => {
     fetchPosts();

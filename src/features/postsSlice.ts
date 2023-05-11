@@ -13,6 +13,9 @@ export const postsSlice = createSlice({
   name: `posts`,
   initialState,
   reducers: {
+    setPostsOnFetch: (state, action) => {
+      state.posts = action.payload;
+    },
     setNewPost: (state, action) => {
       state.posts = [...state.posts, ...action.payload];
     },
@@ -22,6 +25,6 @@ export const postsSlice = createSlice({
   },
 });
 
-export const { setNewPost, deletePost } = postsSlice.actions;
+export const { setPostsOnFetch, setNewPost, deletePost } = postsSlice.actions;
 
 export default postsSlice.reducer;
