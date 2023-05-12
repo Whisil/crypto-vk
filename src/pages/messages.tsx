@@ -1,7 +1,5 @@
-import MainLayout from '@/containers/MainLayout';
-
 const Messages = () => {
-  return <MainLayout>Messages page</MainLayout>;
+  return `Messages page`;
 };
 
 export default Messages;

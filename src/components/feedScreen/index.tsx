@@ -3,7 +3,7 @@ import Post from './post';
 import PostInput from './postInput';
 import Loader from '@/components/unknown/loader';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setPostsOnFetch } from '@/features/postsSlice';
+import { setPosts } from '@/features/postsSlice';
 import SadFaceIcon from 'public/images/icons/sad-face.svg';
 
 import styles from './styles.module.scss';
@@ -23,7 +23,7 @@ const Feed = () => {
       })
         .then((res) => res.json())
         .then((resPosts) => {
-          dispatch(setPostsOnFetch(resPosts));
+          dispatch(setPosts(resPosts));
         })
         .catch((err) => console.log(err));
     }

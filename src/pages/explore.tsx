@@ -1,7 +1,5 @@
-import MainLayout from '@/containers/MainLayout';
-
 const Explore = () => {
-  return <MainLayout>Explore page</MainLayout>;
+  return `Explore page`;
 };
 
 export default Explore;
