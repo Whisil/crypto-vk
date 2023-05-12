@@ -1,11 +1,7 @@
 import Feed from '@/components/feedScreen';
-import ProfileBlock from '@/components/feedScreen/profileBlock';
-import WhoToFollow from '@/components/unknown/whoToFollow';
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { NextPageWithLayout } from './_app';
 
-import styles from '../styles/index.module.scss';
 import FeedLayout from '@/containers/FeedLayout';
 
 const Home: NextPageWithLayout = () => {

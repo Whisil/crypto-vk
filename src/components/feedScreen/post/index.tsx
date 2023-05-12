@@ -1,13 +1,9 @@
 import { useEffect, useState } from 'react';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
-import CommentContainer from '../commentContainer';
-import Loader from '@/components/unknown/loader';
 import Like from 'public/images/icons/like.svg';
 import PostMenu from '../postMenu';
-import PostInput from '../postInput';
 import MediaContainer from '../mediaContainer';
-import CommentInteraction from '../commentInteraction';
 import { IPost } from '@/types/post';
 
 import styles from './styles.module.scss';
@@ -58,7 +54,11 @@ const Post = ({ _id, createdAt, text, mediaURL, createdBy, likes }: IPost) => {
   }, [likesArr, user]); // eslint-disable-line
 
   return (
-    <div className={styles.post} onClick={() => router.push(`/post/${_id}`)}>
+    <div className={styles.post}>
+      <div
+        className={styles.postBackdrop}
+        onClick={() => router.push(`/post/${_id}`)}
+      />
       <div className={styles.header}>
         <AccountInfo
           timestamp={createdAt}
