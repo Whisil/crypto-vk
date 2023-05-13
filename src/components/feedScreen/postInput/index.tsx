@@ -8,41 +8,20 @@ import EmojiIcon from 'public/images/icons/emoji.svg';
 import ImageIcon from 'public/images/icons/image-media.svg';
 import CloseIcon from 'public/images/icons/close.svg';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { IPost } from '@/types/post';
 import { setNewPost } from '@/features/postsSlice';
 
 import styles from './styles.module.scss';
 import { addUserPost } from '@/features/userSlice';
 
 interface Props {
-  setNewPost?(post: IPost): void;
   commentInput?: boolean;
-  commentedPostId?: string;
-  newCommentInfo?(id: string): void;
-  commentInputFocus?: boolean;
   isReply?: boolean;
-  replyTo?: string;
-  replyOn?: string;
-  inputUsername?: string;
 }
 
-const PostInput = ({
-  commentInput,
-  commentedPostId,
-  newCommentInfo,
-  commentInputFocus,
-  isReply,
-  replyOn,
-  replyTo,
-  inputUsername,
-}: Props) => {
+const PostInput = ({ commentInput, isReply }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
   const [mediaURI, setMediaURI] = useState<string>(``);
-  const [replyToInfo, setReplyToInfo] = useState<{
-    id: string;
-    displayName: string;
-  }>({ id: ``, displayName: `` });
 
   const { token } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
@@ -58,7 +37,7 @@ const PostInput = ({
     }
   };
 
-  const handlePost = async () => {
+  const handleFormData = () => {
     const formData = new FormData();
     formData.append(`text`, inputText.trim());
 
@@ -66,6 +45,20 @@ const PostInput = ({
       const fileInputValue = fileInput.current.files[0];
       formData.append(`file`, fileInputValue);
     }
+
+    return formData;
+  };
+
+  const endOfInteraction = () => {
+    handleCloseBtn();
+    setInputText(``);
+    if (textInput.current) {
+      textInput.current.textContent = ``;
+    }
+  };
+
+  const handlePost = async () => {
+    const formData = handleFormData();
 
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/create`, {
       method: `POST`,
@@ -79,89 +72,30 @@ const PostInput = ({
         // using [post], because reducer has [...state, ...payload]
         dispatch(setNewPost([post]));
         dispatch(addUserPost(post._id));
-        handleCloseBtn();
-        setInputText(``);
-        if (textInput.current) {
-          textInput.current.textContent = ``;
-        }
+        endOfInteraction();
       })
       .catch((err) => console.log(err));
   };
 
-  const handleComment = async (reply?: boolean) => {
-    // const Comment = Moralis.Object.extend(`Comment`);
+  const handleComment = async () => {
+    const formData = handleFormData();
 
-    // const commentedPostQuery = new Moralis.Query(`Posts`);
-    // commentedPostQuery.equalTo(`objectId`, commentedPostId);
-    // const commentedPostResult = await commentedPostQuery.first();
-
-    let fileInputValue;
-    // let file: { [key: string]: any } = {};
-
-    if (fileInput.current && fileInput.current.files) {
-      fileInputValue = fileInput.current.files[0];
-      // file = new Moralis.File(`comment media by ${user?.id}`, fileInputValue);
-    }
-
-    const newComment = new Comment();
-
-    // newComment
-    //   .save({
-    //     text: inputText.length !== 0 ? inputText.trim() : undefined,
-    //     media: file._source ? file : undefined,
-    //   })
-    //   .then(async () => {
-    //     user?.relation(`comments`).add(newComment);
-    //     user?.save();
-    //     newComment.set(`createdBy`, user);
-    //     newComment.set(`onPost`, commentedPostResult);
-    //     if (reply) {
-    //       const repliedToComment = new Moralis.Query(`Comment`);
-    //       await repliedToComment
-    //         .equalTo(`objectId`, replyOn)
-    //         .first()
-    //         .then((res) => {
-    //           newComment.set(`replyTo`, res);
-    //           if (res) {
-    //             res.increment(`replyCount`);
-    //             res.save();
-    //           }
-    //         });
-    //     }
-    //     newCommentInfo && newCommentInfo(newComment.id);
-    //     commentedPostResult?.relation(`comments`).add(newComment);
-    //     commentedPostResult?.increment(`commentCount`);
-
-    //     newComment.save();
-    //     commentedPostResult?.save();
-
-    //     handleCloseBtn();
-    //     if (textInput.current) {
-    //       textInput.current.textContent = ``;
-    //     }
-    //     setInputText(``);
-    //   });
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment/create`, {
+      method: `POST`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((post) => {
+        // using [post], because reducer has [...state, ...payload]
+        // dispatch(setNewPost([post]));
+        // dispatch(addUserPost(post._id));
+        endOfInteraction();
+      })
+      .catch((err) => console.log(err));
   };
-
-  //Input handlers
-
-  useEffect(() => {
-    if (textInput && textInput.current) {
-      textInput.current.focus();
-    }
-  }, [commentInputFocus, textInput]);
-
-  useEffect(() => {
-    if (
-      inputText.length > 500 ||
-      (inputText.length === 0 && mediaURI === ``) ||
-      (inputText.length !== 0 && /^\s*$/.test(inputText))
-    ) {
-      setBtnDissable(true);
-    } else {
-      setBtnDissable(false);
-    }
-  }, [inputText, mediaURI]);
 
   const handleFileInputChange = (
     e: Event | React.ChangeEvent<HTMLInputElement>,
@@ -198,31 +132,35 @@ const PostInput = ({
     range.detach();
   };
 
-  // useEffect(() => {
-  //   if (
-  //     textInput &&
-  //     textInput.current &&
-  //     isReply &&
-  //     inputUsername &&
-  //     inputUsername.length !== 0
-  //   ) {
-  //     textInput.current.textContent = `@${inputUsername} `;
-  //     setInputText(`nothing`);
-  //     setEndOfInput(textInput.current);
-  //   }
-  // }, [inputUsername, isReply]);
+  useEffect(() => {
+    if (textInput && textInput.current) {
+      textInput.current.focus();
+    }
+  }, [textInput]);
+
+  useEffect(() => {
+    if (
+      inputText.length > 500 ||
+      (inputText.length === 0 && mediaURI === ``) ||
+      (inputText.length !== 0 && /^\s*$/.test(inputText))
+    ) {
+      setBtnDissable(true);
+    } else {
+      setBtnDissable(false);
+    }
+  }, [inputText, mediaURI]);
 
   return (
     <div
       className={classNames(
         styles.postInput,
-        (commentInput || isReply) && styles.commentPostInput,
+        commentInput && styles.commentPostInput,
       )}
       onClick={() => textInput.current?.focus()}
     >
       <Link href="/">
         <a className={styles.account}>
-          <AccountImage small={commentInput || isReply} />
+          <AccountImage />
         </a>
       </Link>
       <div className={styles.wrapper}>
@@ -250,13 +188,7 @@ const PostInput = ({
         <div className={styles.inputRow}>
           {inputText.length === 0 && (
             <span className={styles.placeholder}>
-              {commentInput
-                ? `Have a comment?`
-                : isReply && replyToInfo.displayName
-                ? `Reply to ${replyToInfo.displayName}`
-                : isReply && !replyToInfo.displayName
-                ? `Reply`
-                : `What's on your mind?`}
+              {commentInput ? `Have a comment?` : `What's on your mind?`}
             </span>
           )}
 
@@ -329,13 +261,7 @@ const PostInput = ({
             <AccentBtn
               text={commentInput ? `Comment` : isReply ? `Reply` : `Post it!`}
               className={btnDissable && styles.btnDissabled}
-              onClick={
-                commentInput
-                  ? handleComment
-                  : isReply
-                  ? () => handleComment(true)
-                  : handlePost
-              }
+              onClick={commentInput ? handleComment : handlePost}
             />
           </div>
         </div>

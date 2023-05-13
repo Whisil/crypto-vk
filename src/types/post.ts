@@ -7,4 +7,5 @@ export interface IPost {
   createdBy: IUser;
   mediaURL?: string;
   likes: string[];
+  comments: string[];
 }

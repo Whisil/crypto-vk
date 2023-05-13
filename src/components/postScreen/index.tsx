@@ -8,6 +8,7 @@ import Loader from '@/components/unknown/loader';
 import GoBackIcon from '@/public/images/icons/go-back.svg';
 
 import styles from './styles.module.scss';
+import PostInput from '../feedScreen/postInput';
 
 const PostScreen = () => {
   const [loader, setLoader] = useState(true);
@@ -56,10 +57,12 @@ const PostScreen = () => {
           text={post.text}
           mediaURL={post.mediaURL && post.mediaURL}
           createdBy={post.createdBy}
-          // commentCount={item.attributes.commentCount}
+          comments={post.comments}
           likes={post.likes}
         />
       )}
+
+      <PostInput commentInput />
     </div>
   );
 };

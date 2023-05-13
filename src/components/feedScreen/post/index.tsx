@@ -9,6 +9,7 @@ import { IPost } from '@/types/post';
 import styles from './styles.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { useRouter } from 'next/router';
+import classNames from 'classnames';
 
 const Post = ({ _id, createdAt, text, mediaURL, createdBy, likes }: IPost) => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -59,35 +60,40 @@ const Post = ({ _id, createdAt, text, mediaURL, createdBy, likes }: IPost) => {
         className={styles.postBackdrop}
         onClick={() => router.push(`/post/${_id}`)}
       />
-      <div className={styles.header}>
-        <AccountInfo
-          timestamp={createdAt}
-          displayName={createdBy.displayName}
-          href={`/${createdBy.ethAddress}`}
-        />
 
-        <PostMenu postId={_id} createdBy={createdBy} />
-      </div>
+      <div className={styles.postWrapper}>
+        <div className={styles.header}>
+          <AccountInfo
+            timestamp={createdAt}
+            displayName={createdBy.displayName}
+            href={`/${createdBy.ethAddress}`}
+          />
 
-      {text && <span className={styles.description}>{text}</span>}
-
-      {mediaURL && <MediaContainer src={mediaURL} />}
-
-      <div className={styles.info}>
-        <div className={styles.likes}>
-          <Like />
-          <span className={styles.likesCount}>{likesArr.length} Likes</span>
+          <PostMenu postId={_id} createdBy={createdBy} />
         </div>
 
-        <div className={styles.comments}>0 comments</div>
-      </div>
+        <div onClick={() => router.push(`/post/${_id}`)}>
+          {text && <span className={styles.description}>{text}</span>}
 
-      <div className={styles.interactions}>
-        <div onClick={handleLike} className={styles.btnWrapper}>
-          <PostBtn variant="like" liked={isLiked} />
+          {mediaURL && <MediaContainer src={mediaURL} />}
         </div>
-        <PostBtn variant="comment" />
-        <PostBtn variant="share" bgTransparent />
+
+        <div className={styles.info}>
+          <div className={styles.likes}>
+            <Like />
+            <span className={styles.likesCount}>{likesArr.length} Likes</span>
+          </div>
+
+          <div className={styles.comments}>0 comments</div>
+        </div>
+
+        <div className={styles.interactions}>
+          <div onClick={handleLike} className={styles.btnWrapper}>
+            <PostBtn variant="like" liked={isLiked} />
+          </div>
+          <PostBtn variant="comment" />
+          <PostBtn variant="share" bgTransparent />
+        </div>
       </div>
     </div>
   );
