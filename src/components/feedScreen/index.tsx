@@ -50,7 +50,7 @@ const Feed = () => {
             text={item.text}
             mediaURL={item.mediaURL && item.mediaURL}
             createdBy={item.createdBy}
-            // commentCount={item.attributes.commentCount}
+            comments={item.comments}
             likes={item.likes}
           />
         ))
