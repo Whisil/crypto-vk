@@ -73,7 +73,11 @@ const PostScreen = () => {
             comments={post.comments}
             likes={post.likes}
           />
-          <PostInput commentInput setComment={handleNewComment} />
+          <PostInput
+            commentInput
+            setComment={handleNewComment}
+            commentOnPostId={post._id}
+          />
           {loader ? (
             <Loader />
           ) : comments?.length == 0 ? (

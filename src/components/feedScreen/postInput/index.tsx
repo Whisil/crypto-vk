@@ -17,10 +17,16 @@ import { IComment } from '@/types/comment';
 interface Props {
   commentInput?: boolean;
   setComment?: (value: IComment) => void;
+  commentOnPostId?: string;
   isReply?: boolean;
 }
 
-const PostInput = ({ commentInput, isReply, setComment }: Props) => {
+const PostInput = ({
+  commentInput,
+  isReply,
+  setComment,
+  commentOnPostId,
+}: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
   const [mediaURI, setMediaURI] = useState<string>(``);
@@ -43,7 +49,11 @@ const PostInput = ({ commentInput, isReply, setComment }: Props) => {
     const formData = new FormData();
     formData.append(`text`, inputText.trim());
 
-    if (fileInput.current && fileInput.current.files) {
+    if (
+      fileInput.current &&
+      fileInput.current.files &&
+      fileInput.current.files[0]
+    ) {
       const fileInputValue = fileInput.current.files[0];
       formData.append(`file`, fileInputValue);
     }
@@ -82,13 +92,16 @@ const PostInput = ({ commentInput, isReply, setComment }: Props) => {
   const handleComment = async () => {
     const formData = handleFormData();
 
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment/create`, {
-      method: `POST`,
-      headers: {
-        Authorization: `Bearer ${token}`,
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/comment/create/${commentOnPostId}`,
+      {
+        method: `POST`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
       },
-      body: formData,
-    })
+    )
       .then((res) => res.json())
       .then((comment) => {
         setComment && setComment(comment);
@@ -174,7 +187,7 @@ const PostInput = ({ commentInput, isReply, setComment }: Props) => {
           <div
             className={styles.input}
             contentEditable="true"
-            onInput={(e) => setInputText(e.currentTarget.textContent as string)}
+            onInput={(e) => setInputText(e.currentTarget.innerText as string)}
             ref={textInput}
             onFocus={(e) => setEndOfInput(e.target)}
           />
