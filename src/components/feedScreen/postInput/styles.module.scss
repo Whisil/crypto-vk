@@ -17,119 +17,6 @@
         width: 100%;
     }
 
-    .collectionRow{
-        display: flex;
-        align-items: center;
-    }
-
-    .collection {
-        &Btn {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            gap: 10px;
-            border: 1px solid rgba($primaryLightDark, 0.75);
-            border-radius: 20px;
-            padding: 5px 10px;
-            transition: border-color .2s ease;
-            span {
-                font-size: 16px;
-                font-weight: 500;
-                line-height: 1;
-                color: rgba($primaryLight, 0.75);
-                transition: color .2s ease;
-            }
-
-            svg {
-                path {
-                    fill: rgba($primaryLight, 0.75);
-                    transition: fill .2s ease;
-                }
-            }
-            
-
-            &:hover{
-                border-color: rgba($primaryAccent, 1);
-                span{
-                    color: rgba($primaryLight, 1);
-                }
-                svg {
-                    path {
-                        fill: rgba($primaryLight, 1);
-                    }
-                }
-            }
-        }
-    }
-    .info{
-        position: relative;
-        
-        &Btn{
-            height: 20px;
-            width: 20px;
-            background-color: rgba($primaryLightDark, 0.5);
-            border-radius: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 14px;
-            font-weight: bold;
-            line-height: 1;
-            cursor: pointer;
-            margin-left: 10px;
-            user-select: none;
-
-            &:before{
-                content: '';
-                display: none;
-                position: absolute;
-                width: 100px;
-                left: 0;
-                height: 10px;
-                top: 20px;
-            }
-        }
-
-        &Box{
-            position: absolute;
-            z-index: 10;
-            width: 200px;
-            border-radius: 10px;
-            display: block;
-            opacity: 0;
-            visibility: hidden;
-            top: 30px;
-            padding: 10px;
-            background-color: $primaryDark;
-            box-shadow: 0px 0px 5px 0px $primaryLight;
-            transition: all .2s ease;
-
-            @media screen and (max-width: 540px){
-                right: 0;
-            }
-            
-            &:hover{
-                opacity: 1;
-                visibility: visible;
-                
-            }
-
-            a{
-                color: $primaryAccent;
-            }
-        }
-
-        &Btn:hover{
-            &:before{
-                display: block;
-            }
-            +.infoBox{
-                opacity: 1;
-                visibility: visible;
-            }
-        }
-    }
-
     .mediaContainer{
         max-height: 640px;
         position: relative;
@@ -168,7 +55,6 @@
     }
 
     .inputRow{
-        margin-top: 10px;
         position: relative;
 
         .input{
@@ -258,10 +144,6 @@
 
 .commentPostInput{
     margin-top: 20px;
-    
-    .inputRow{
-        margin-top: 0;
-    }
 }
 
 

@@ -12,13 +12,15 @@ import { setNewPost } from '@/features/postsSlice';
 
 import styles from './styles.module.scss';
 import { addUserPost } from '@/features/userSlice';
+import { IComment } from '@/types/comment';
 
 interface Props {
   commentInput?: boolean;
+  setComment?: (value: IComment) => void;
   isReply?: boolean;
 }
 
-const PostInput = ({ commentInput, isReply }: Props) => {
+const PostInput = ({ commentInput, isReply, setComment }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
   const [mediaURI, setMediaURI] = useState<string>(``);
@@ -88,10 +90,8 @@ const PostInput = ({ commentInput, isReply }: Props) => {
       body: formData,
     })
       .then((res) => res.json())
-      .then((post) => {
-        // using [post], because reducer has [...state, ...payload]
-        // dispatch(setNewPost([post]));
-        // dispatch(addUserPost(post._id));
+      .then((comment) => {
+        setComment && setComment(comment);
         endOfInteraction();
       })
       .catch((err) => console.log(err));
@@ -164,27 +164,6 @@ const PostInput = ({ commentInput, isReply }: Props) => {
         </a>
       </Link>
       <div className={styles.wrapper}>
-        {!commentInput && !isReply && (
-          <div className={styles.collectionRow}>
-            <div className={styles.collection}>
-              <div className={styles.collectionBtn}>
-                <span>Collection</span>
-                <Triangle />
-              </div>
-            </div>
-            <div className={styles.info}>
-              <span className={styles.infoBtn}>i</span>
-              <div className={styles.infoBox}>
-                If you choose a collection, the media in your post becomes an
-                {` `}
-                <a href="https://www.theverge.com/22310188/nft-explainer-what-is-blockchain-crypto-art-faq">
-                  NFT
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className={styles.inputRow}>
           {inputText.length === 0 && (
             <span className={styles.placeholder}>

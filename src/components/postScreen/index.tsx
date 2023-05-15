@@ -12,53 +12,43 @@ import PostInput from '../feedScreen/postInput';
 import { IComment } from '@/types/comment';
 
 const PostScreen = () => {
+  const [mainLoader, setMainLoader] = useState(true);
   const [loader, setLoader] = useState(true);
   const [post, setPost] = useState<IPost>();
-  const [comments, setComments] = useState<IComment[]>();
+  const [comments, setComments] = useState<IComment[]>([]);
 
   const { token } = useAppSelector((state) => state.user);
-  const { posts } = useAppSelector((state) => state.posts);
 
   const router = useRouter();
 
-  // const fetchPost = useCallback(async () => {
-  //   await fetch(
-  //     `${process.env.NEXT_PUBLIC_API_URL}/post/${router.query.postId}`,
-  //     {
-  //       method: `GET`,
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     },
-  //   )
-  //     .then((res) => res.json())
-  //     .then((resPost) => {
-  //       setPost(resPost);
-  //     })
-  //     .catch((err) => console.log(err));
-  //   setLoader(false);
-  // }, [token]); // eslint-disable-line
+  const fetchEntity = useCallback(
+    async (url: string) => {
+      try {
+        return await fetch(`${process.env.NEXT_PUBLIC_API_URL + url}`, {
+          method: `GET`,
+          headers: { Authorization: `Bearer ${token}` },
+        }).then((res) => res.json());
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [token],
+  );
 
-  const fetchComments = useCallback(async () => {
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/comment/${router.query.postId}`,
-      {
-        method: `GET`,
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    )
-      .then((res) => res.json())
-      .then((resComment) => {
-        setComments(resComment);
-        setLoader(false);
-      })
-      .catch((err) => console.log(err));
-    // setLoader(false);
-  }, [token, router.query.postId]);
+  const handleNewComment = (newComment: IComment) => {
+    setComments((prevState) => [...prevState, newComment]);
+  };
 
   useEffect(() => {
-    const currPost = posts.find((item) => item._id === router.query.postId);
-    setPost(currPost);
-    fetchComments();
-  }, [router.query.postId, posts]);
+    fetchEntity(`/post/${router.query.postId}`).then((res) => {
+      setPost(res);
+      setMainLoader(false);
+    });
+    fetchEntity(`/comment/${router.query.postId}`).then((res) => {
+      setComments(res);
+      setLoader(false);
+    });
+  }, [fetchEntity, router.query.postId]);
 
   return (
     <div>
@@ -67,22 +57,42 @@ const PostScreen = () => {
         <span className={styles.goBackBtnText}>Go Back</span>
       </button>
 
-      {!post ? (
+      {mainLoader ? (
+        <Loader />
+      ) : !post ? (
         `there's nothing here`
       ) : (
-        <Post
-          key={post._id}
-          _id={post._id}
-          createdAt={post.createdAt}
-          text={post.text}
-          mediaURL={post.mediaURL && post.mediaURL}
-          createdBy={post.createdBy}
-          comments={post.comments}
-          likes={post.likes}
-        />
+        <>
+          <Post
+            key={post._id}
+            _id={post._id}
+            createdAt={post.createdAt}
+            text={post.text}
+            mediaURL={post.mediaURL && post.mediaURL}
+            createdBy={post.createdBy}
+            comments={post.comments}
+            likes={post.likes}
+          />
+          <PostInput commentInput setComment={handleNewComment} />
+          {loader ? (
+            <Loader />
+          ) : comments?.length == 0 ? (
+            `there's nothing here`
+          ) : (
+            comments?.map((item) => (
+              <Post
+                key={item._id}
+                _id={item._id}
+                createdAt={item.createdAt}
+                text={item.text}
+                mediaURL={item.mediaURL && item.mediaURL}
+                createdBy={item.createdBy}
+                likes={item.likes}
+              />
+            ))
+          )}
+        </>
       )}
-
-      <PostInput commentInput />
     </div>
   );
 };
