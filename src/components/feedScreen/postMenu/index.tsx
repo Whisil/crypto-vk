@@ -7,25 +7,16 @@ import styles from './styles.module.scss';
 import { IUser } from '@/types/user';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { deletePost } from '@/features/postsSlice';
-import { addUserPost, deleteUserPost } from '@/features/userSlice';
+import { deleteUserPost } from '@/features/userSlice';
+import { deleteComment } from '@/features/commentsSlice';
 
 interface Props {
   createdBy?: IUser;
-  handleCommentDelete?(id: string | undefined): void;
-  handleReplyDelete?(id: string | undefined): void;
-  commentId?: string;
-  postId?: string;
-  variant?: 'comment';
+  id?: string;
+  isComment?: boolean;
 }
 
-const PostMenu = ({
-  createdBy,
-  handleCommentDelete,
-  handleReplyDelete,
-  commentId,
-  postId,
-  variant,
-}: Props) => {
+const PostMenu = ({ createdBy, id, isComment }: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -35,15 +26,32 @@ const PostMenu = ({
 
   const handlePostDelete = async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/delete/${postId}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/delete/${id}`, {
         method: `DELETE`,
         headers: {
           'Content-Type': `application/json`,
           Authorization: `Bearer ${token}`,
         },
       });
-      dispatch(deletePost(postId));
-      dispatch(deleteUserPost(postId));
+      dispatch(deletePost(id));
+      dispatch(deleteUserPost(id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleCommentDelete = async () => {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment/delete/${id}`, {
+        method: `DELETE`,
+        headers: {
+          'Content-Type': `application/json`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      dispatch(deleteComment(id));
+      //TODO make deletion in user and post
     } catch (err) {
       console.log(err);
     }
@@ -63,10 +71,7 @@ const PostMenu = ({
 
   return (
     <div
-      className={classNames(
-        styles.postMenu,
-        variant === `comment` && styles.commentMenu,
-      )}
+      className={classNames(styles.postMenu, isComment && styles.commentMenu)}
     >
       <span
         className={classNames(styles.dots, showMenu && styles.activeDots)}
@@ -92,13 +97,11 @@ const PostMenu = ({
               text="Delete"
               accent
               onClick={() => {
-                handlePostDelete();
-                // handleCommentDelete && handleCommentDelete(commentId);
-                // handleReplyDelete && handleReplyDelete(commentId);
+                isComment ? handleCommentDelete() : handlePostDelete();
                 setShowMenu(false);
               }}
             />
-          ) : variant === `comment` ? (
+          ) : isComment ? (
             <MenuBtn icon="report" text="Report" accent />
           ) : (
             <>

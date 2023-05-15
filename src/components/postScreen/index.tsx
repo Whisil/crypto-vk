@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useState, useCallback, useEffect } from 'react';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import Post from '@/components/feedScreen/post';
 import { IPost } from '@/types/post';
 import Loader from '@/components/unknown/loader';
@@ -10,14 +10,16 @@ import GoBackIcon from '@/public/images/icons/go-back.svg';
 import styles from './styles.module.scss';
 import PostInput from '../feedScreen/postInput';
 import { IComment } from '@/types/comment';
+import { setComments, setNewComment } from '@/features/commentsSlice';
 
 const PostScreen = () => {
   const [mainLoader, setMainLoader] = useState(true);
   const [loader, setLoader] = useState(true);
   const [post, setPost] = useState<IPost>();
-  const [comments, setComments] = useState<IComment[]>([]);
 
   const { token } = useAppSelector((state) => state.user);
+  const { comments } = useAppSelector((state) => state.comments);
+  const dispatch = useAppDispatch();
 
   const router = useRouter();
 
@@ -36,7 +38,7 @@ const PostScreen = () => {
   );
 
   const handleNewComment = (newComment: IComment) => {
-    setComments((prevState) => [...prevState, newComment]);
+    dispatch(setNewComment([newComment]));
   };
 
   useEffect(() => {
@@ -45,10 +47,10 @@ const PostScreen = () => {
       setMainLoader(false);
     });
     fetchEntity(`/comment/${router.query.postId}`).then((res) => {
-      setComments(res);
+      dispatch(setComments(res));
       setLoader(false);
     });
-  }, [fetchEntity, router.query.postId]);
+  }, [fetchEntity, router.query.postId, dispatch]);
 
   return (
     <div>
@@ -85,6 +87,7 @@ const PostScreen = () => {
           ) : (
             comments?.map((item) => (
               <Post
+                isComment
                 key={item._id}
                 _id={item._id}
                 createdAt={item.createdAt}

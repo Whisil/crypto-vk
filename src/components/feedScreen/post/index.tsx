@@ -9,9 +9,20 @@ import { IPost } from '@/types/post';
 import styles from './styles.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { useRouter } from 'next/router';
-import classNames from 'classnames';
 
-const Post = ({ _id, createdAt, text, mediaURL, createdBy, likes }: IPost) => {
+interface PostProps extends IPost {
+  isComment?: boolean;
+}
+
+const Post = ({
+  _id,
+  createdAt,
+  text,
+  mediaURL,
+  createdBy,
+  likes,
+  isComment = false,
+}: PostProps) => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likesArr, setLikesArr] = useState<string[]>(likes);
 
@@ -69,7 +80,7 @@ const Post = ({ _id, createdAt, text, mediaURL, createdBy, likes }: IPost) => {
             href={`/${createdBy.ethAddress}`}
           />
 
-          <PostMenu postId={_id} createdBy={createdBy} />
+          <PostMenu id={_id} createdBy={createdBy} isComment={isComment} />
         </div>
 
         <div onClick={() => router.push(`/post/${_id}`)}>
