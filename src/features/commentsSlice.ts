@@ -1,6 +1,5 @@
 import { IPost } from '@/types/post';
 import { createSlice } from '@reduxjs/toolkit';
-import postsSlice from './postsSlice';
 
 interface CommentsState {
   comments: IPost[];
@@ -18,7 +17,7 @@ export const commentsSlice = createSlice({
       state.comments = action.payload;
     },
     setNewComment: (state, action) => {
-      state.comments = [...state.comments, ...action.payload];
+      state.comments = [action.payload, ...state.comments];
     },
     deleteComment: (state, action) => {
       state.comments = state.comments.filter(

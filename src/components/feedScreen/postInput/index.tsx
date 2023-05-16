@@ -8,25 +8,19 @@ import EmojiIcon from 'public/images/icons/emoji.svg';
 import ImageIcon from 'public/images/icons/image-media.svg';
 import CloseIcon from 'public/images/icons/close.svg';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setNewPost } from '@/features/postsSlice';
+import { addCommentToPost, setNewPost } from '@/features/postsSlice';
 
 import styles from './styles.module.scss';
 import { addUserPost } from '@/features/userSlice';
-import { IComment } from '@/types/comment';
+import { setNewComment } from '@/features/commentsSlice';
 
 interface Props {
   commentInput?: boolean;
-  setComment?: (value: IComment) => void;
   commentOnPostId?: string;
   isReply?: boolean;
 }
 
-const PostInput = ({
-  commentInput,
-  isReply,
-  setComment,
-  commentOnPostId,
-}: Props) => {
+const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
   const [mediaURI, setMediaURI] = useState<string>(``);
@@ -104,7 +98,10 @@ const PostInput = ({
     )
       .then((res) => res.json())
       .then((comment) => {
-        setComment && setComment(comment);
+        dispatch(setNewComment(comment));
+        dispatch(
+          addCommentToPost({ commentId: comment._id, postId: commentOnPostId }),
+        );
         endOfInteraction();
       })
       .catch((err) => console.log(err));

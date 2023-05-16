@@ -9,8 +9,7 @@ import GoBackIcon from '@/public/images/icons/go-back.svg';
 
 import styles from './styles.module.scss';
 import PostInput from '../feedScreen/postInput';
-import { IComment } from '@/types/comment';
-import { setComments, setNewComment } from '@/features/commentsSlice';
+import { setComments } from '@/features/commentsSlice';
 import NoContent from '../unknown/noContent';
 
 const PostScreen = () => {
@@ -37,10 +36,6 @@ const PostScreen = () => {
     },
     [token],
   );
-
-  const handleNewComment = (newComment: IComment) => {
-    dispatch(setNewComment([newComment]));
-  };
 
   useEffect(() => {
     fetchEntity(`/post/${router.query.postId}`).then((res) => {
@@ -76,11 +71,7 @@ const PostScreen = () => {
             comments={post.comments}
             likes={post.likes}
           />
-          <PostInput
-            commentInput
-            setComment={handleNewComment}
-            commentOnPostId={post._id}
-          />
+          <PostInput commentInput commentOnPostId={post._id} />
           {loader ? (
             <Loader />
           ) : comments?.length == 0 ? (
