@@ -4,9 +4,9 @@ import PostInput from './postInput';
 import Loader from '@/components/unknown/loader';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setPosts } from '@/features/postsSlice';
-import SadFaceIcon from 'public/images/icons/sad-face.svg';
 
 import styles from './styles.module.scss';
+import NoContent from '../unknown/noContent';
 
 const Feed = () => {
   const [loader, setLoader] = useState(true);
@@ -55,10 +55,7 @@ const Feed = () => {
           />
         ))
       ) : (
-        <div className={styles.noContent}>
-          <SadFaceIcon className={styles.noContentIcon} />
-          <span className={styles.noContentText}>Nothing here</span>
-        </div>
+        <NoContent />
       )}
     </div>
   );

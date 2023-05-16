@@ -11,6 +11,7 @@ import styles from './styles.module.scss';
 import PostInput from '../feedScreen/postInput';
 import { IComment } from '@/types/comment';
 import { setComments, setNewComment } from '@/features/commentsSlice';
+import NoContent from '../unknown/noContent';
 
 const PostScreen = () => {
   const [mainLoader, setMainLoader] = useState(true);
@@ -83,7 +84,7 @@ const PostScreen = () => {
           {loader ? (
             <Loader />
           ) : comments?.length == 0 ? (
-            `there's nothing here`
+            <NoContent text="No comments here yet" />
           ) : (
             comments?.map((item) => (
               <Post
