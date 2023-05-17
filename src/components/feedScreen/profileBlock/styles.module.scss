@@ -67,16 +67,11 @@
 
     .numbers{
         display: grid;
-        grid-template-columns: 50% 50%;
-        gap: 80px;
+        grid-template-columns: 1fr 1fr;
         justify-content: center;
         padding: 15px;
         border-top: 1px solid rgba($primaryLightDark, 0.5);
         position: relative;
-
-        @media screen and (max-width: 1160px){
-            gap: 30px;
-        }
 
         .divider{
             position: absolute;
@@ -95,8 +90,7 @@
             width: fit-content;
             display: flex;
             flex-direction: column;
-            margin-right: 0;
-            margin-left: auto;
+            margin: 0 auto;
             h3{
                 @extend .infoName;
                 display: inline-block;
@@ -111,13 +105,6 @@
                 font-weight: normal;
                 color: $primaryLightDark;
             }
-
-        }
-
-        &Item:last-child{
-            margin-left: 0;
-            margin-right: auto;
         }
     }
-
 }
