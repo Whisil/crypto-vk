@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import styles from './styles.module.scss';
 import Link from 'next/link';
+import { formatTime } from '@/utils/formatTime';
 
 interface Props {
   bio?: string;
@@ -17,7 +18,7 @@ interface Props {
 
 const AccountInfo = ({
   bio,
-  timestamp = undefined,
+  timestamp,
   displayName,
   href = ``,
   small,
@@ -26,44 +27,18 @@ const AccountInfo = ({
 }: Props) => {
   const [time, setTime] = useState(``);
 
-  const periods = {
-    week: 7 * 24 * 60 * 60 * 1000,
-    day: 24 * 60 * 60 * 1000,
-    hour: 60 * 60 * 1000,
-    minute: 60 * 1000,
-  };
-
-  function formatTime(createdAt: string | undefined) {
-    const diff = Date.now() - Number(createdAt);
-
-    if (diff > periods.week) {
-      setTime(Math.floor(diff / periods.week) + ` weeks ago`);
-    } else if (diff > periods.day) {
-      if (Math.floor(diff / periods.day) === 1) {
-        setTime(Math.floor(diff / periods.day) + ` day ago`);
-      } else {
-        setTime(Math.floor(diff / periods.day) + ` days ago`);
-      }
-    } else if (diff > periods.hour) {
-      setTime(Math.floor(diff / periods.hour) + ` hours ago`);
-    } else if (diff > periods.minute) {
-      setTime(Math.floor(diff / periods.minute) + ` minutes ago`);
-    } else {
-      setTime(`Just now`);
-    }
-  }
-
   useEffect(() => {
-    if (time === ``) {
-      formatTime(timestamp);
+    if (time === `` && timestamp) {
+      const formattedTime = formatTime(timestamp);
+      setTime(formattedTime);
+
+      const timeResetInterval = setInterval(() => formatTime(timestamp), 60000);
+
+      return () => {
+        clearInterval(timeResetInterval);
+      };
     }
-
-    const timeResetInterval = setInterval(() => formatTime(timestamp), 60000);
-
-    return () => {
-      clearInterval(timeResetInterval);
-    };
-  }, [time]);
+  }, [timestamp]); //eslint-disable-line
 
   return (
     <div
@@ -100,7 +75,7 @@ const AccountInfo = ({
         )}
         <span className={styles.infoSecondary}>
           {bio?.length != 0 && bio}
-          {timestamp && timestamp?.length != 0 && time}
+          {timestamp?.length != 0 && time}
         </span>
       </div>
     </div>
