@@ -72,39 +72,38 @@ const Post = ({
         onClick={() => router.push(`/post/${_id}`)}
       />
 
-      <div className={styles.postWrapper}>
-        <div className={styles.header}>
-          <AccountInfo
-            timestamp={createdAt}
-            displayName={createdBy.displayName}
-            href={`/${createdBy.ethAddress}`}
-          />
+      <div className={styles.header}>
+        <AccountInfo
+          timestamp={createdAt}
+          displayName={createdBy.displayName}
+          href={`/${createdBy.ethAddress}`}
+          className={styles.accountInfo}
+        />
 
-          <PostMenu id={_id} createdBy={createdBy} isComment={isComment} />
+        <PostMenu id={_id} createdBy={createdBy} isComment={isComment} />
+      </div>
+
+      <div onClick={() => router.push(`/post/${_id}`)}>
+        {text && <span className={styles.description}>{text}</span>}
+
+        {mediaURL && <MediaContainer src={mediaURL} />}
+      </div>
+
+      <div className={styles.info}>
+        <div className={styles.likes}>
+          <Like />
+          <span className={styles.likesCount}>{likesArr.length} Likes</span>
         </div>
 
-        <div onClick={() => router.push(`/post/${_id}`)}>
-          {text && <span className={styles.description}>{text}</span>}
+        <div className={styles.comments}>0 comments</div>
+      </div>
 
-          {mediaURL && <MediaContainer src={mediaURL} />}
+      <div className={styles.interactions}>
+        <div onClick={handleLike} className={styles.btnWrapper}>
+          <PostBtn variant="like" liked={isLiked} />
         </div>
-
-        <div className={styles.info}>
-          <div className={styles.likes}>
-            <Like />
-            <span className={styles.likesCount}>{likesArr.length} Likes</span>
-          </div>
-
-          <div className={styles.comments}>0 comments</div>
-        </div>
-
-        <div className={styles.interactions}>
-          <div onClick={handleLike} className={styles.btnWrapper}>
-            <PostBtn variant="like" liked={isLiked} />
-          </div>
-          <PostBtn variant="comment" />
-          <PostBtn variant="share" bgTransparent />
-        </div>
+        <PostBtn variant={isComment ? `reply` : `comment`} />
+        <PostBtn variant="share" bgTransparent />
       </div>
     </div>
   );

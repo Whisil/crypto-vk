@@ -8,7 +8,7 @@ import styles from './styles.module.scss';
 import RippleBtn from '@/components/unknown/rippleBtn';
 
 interface Props {
-  variant: 'comment' | 'like' | 'share' | 'buy';
+  variant: 'comment' | 'like' | 'share' | 'reply';
   bgTransparent?: boolean;
   liked?: boolean;
   onClick?(): void;
@@ -29,15 +29,15 @@ const PostBtn = ({ variant, bgTransparent, liked = false, onClick }: Props) => {
             <LikeIcon />
             <span className={styles.label}>Like</span>
           </>
-        ) : variant === `comment` ? (
+        ) : variant === `comment` || variant === `reply` ? (
           <>
             <CommentIcon />
-            <span className={styles.label}>Comment</span>
+            <span className={styles.label}>
+              {variant === `reply` ? `Reply` : `Comment`}
+            </span>
           </>
         ) : variant === `share` ? (
           <ShareIcon />
-        ) : variant === `buy` ? (
-          <BuyIcon />
         ) : null}
       </div>
     </RippleBtn>

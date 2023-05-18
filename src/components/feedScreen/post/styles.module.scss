@@ -24,11 +24,6 @@
         z-index: 0;
     }
 
-    &Wrapper{
-        position: relative;
-        z-index: 1;
-    }
-
     &:hover{
         .postBackdrop{
             background-color: rgba($primaryLightDark, 0.1);
@@ -39,6 +34,11 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 15px;
+
+        .accountInfo{
+            position: relative;
+            z-index: 1;
+        }
     }
 
     .description{
