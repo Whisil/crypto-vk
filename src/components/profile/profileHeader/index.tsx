@@ -14,12 +14,14 @@ interface ProfileHeaderProps {
   displayName: string;
   username: string;
   ethAddress: string;
+  isCurrentUser: boolean;
 }
 
 const ProfileHeader = ({
   displayName,
   username,
   ethAddress,
+  isCurrentUser,
 }: ProfileHeaderProps) => {
   const router = useRouter();
 

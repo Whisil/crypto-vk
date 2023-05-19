@@ -10,6 +10,7 @@ import Loader from '@/components/unknown/loader';
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const [userInfo, setUserInfo] = useState<IUser>();
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const { token, user } = useAppSelector((state) => state.user);
@@ -18,7 +19,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
 
   const fetchUser = useCallback(async () => {
     await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/user/${router.query.profileId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/user/${router.query.userWallet}`,
       {
         method: `GET`,
         headers: { Authorization: `Bearer ${token}` },
@@ -33,17 +34,22 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
         console.log(err);
         setIsLoading(false);
       });
-  }, [router.query.profileId, token]);
+  }, [router.query.userWallet, token]);
 
   useEffect(() => {
-    const userId = router.query.profileId;
-    if (userId && userId.length !== 0 && userId !== user._id) {
+    const userWallet = router.query.userWallet;
+    if (
+      userWallet &&
+      userWallet.length !== 0 &&
+      userWallet !== user.ethAddress
+    ) {
       fetchUser();
     } else {
       setUserInfo(user);
+      setIsCurrentUser(true);
       setIsLoading(false);
     }
-  }, [router.query.profileId, user, fetchUser]);
+  }, [router.query.userWallet, user, fetchUser]);
 
   return (
     <div className="container">
@@ -56,6 +62,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
             displayName={userInfo.displayName}
             username={userInfo.username}
             ethAddress={userInfo.ethAddress}
+            isCurrentUser={isCurrentUser}
           />
         ) : null}
         {children}
