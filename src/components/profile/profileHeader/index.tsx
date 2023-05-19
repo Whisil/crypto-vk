@@ -8,6 +8,7 @@ import styles from './styles.module.scss';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import RippleBtn from '@/components/unknown/rippleBtn';
+import { walletCut } from '@/utils/walletCut';
 
 interface ProfileHeaderProps {
   displayName: string;
@@ -21,9 +22,6 @@ const ProfileHeader = ({
   ethAddress,
 }: ProfileHeaderProps) => {
   const router = useRouter();
-
-  const [isCurrentUser] = useState<boolean>();
-  // user?.id === router.query.profileId,
 
   return (
     <div className={styles.header}>
@@ -40,10 +38,9 @@ const ProfileHeader = ({
                 <span
                   onClick={() => navigator.clipboard.writeText(ethAddress)}
                   className={classNames(styles.tag, styles.walletAdress)}
-                >{`${ethAddress.slice(0, 5)}...${ethAddress.slice(
-                  ethAddress.length - 10,
-                  -5,
-                )}`}</span>
+                >
+                  {walletCut(ethAddress)}
+                </span>
               </div>
             </div>
           </div>

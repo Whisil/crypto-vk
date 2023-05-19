@@ -5,6 +5,9 @@ export interface IUser {
   updatedAt: string;
   ethAddress: string;
   displayName: string;
+  bannerURL?: string;
+  avatarURL?: string;
+  bio?: string;
   posts: string[];
   likes: string[];
 }

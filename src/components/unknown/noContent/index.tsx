@@ -1,11 +1,11 @@
-import SadFaceIcon from 'public/images/icons/sad-face.svg';
+import NoContentIcon from 'public/images/no-content.svg';
 
 import styles from './styles.module.scss';
 
 const NoContent = ({ text }: { text?: string }) => {
   return (
     <div className={styles.noContent}>
-      <SadFaceIcon className={styles.noContentIcon} />
+      <NoContentIcon />
       <span className={styles.noContentText}>
         {text ? text : `Nothing here`}
       </span>
