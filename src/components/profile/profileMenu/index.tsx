@@ -36,13 +36,13 @@ const ProfileMenu = () => {
             <Link
               href={
                 item.query
-                  ? `/[profileId]/[profileFeedVariant]`
-                  : `/[profileId]`
+                  ? `/[userWallet]/[profileFeedVariant]`
+                  : `/[userWallet]`
               }
               as={
                 item.query
-                  ? `/${router.query.profileId}/${item.query}`
-                  : `/${router.query.profileId}`
+                  ? `/${router.query.userWallet}/${item.query}`
+                  : `/${router.query.userWallet}`
               }
               key={item.title}
             >

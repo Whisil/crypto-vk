@@ -1,7 +1,6 @@
 import ProfileHeader from '@/components/profile/profileHeader';
 import ProfileMenu from '@/components/profile/profileMenu';
 import WhoToFollow from '@/components/unknown/whoToFollow';
-import React from 'react';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import { IUser } from '@/types/user';

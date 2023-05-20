@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Post from '@/components/feedScreen/post';
 import { useEffect } from 'react';
 import Loader from '@/components/unknown/loader';
+import Image from 'next/image';
+import { IPost } from '@/types/post';
+import { useAppSelector } from '@/app/hooks';
 
 import styles from './styles.module.scss';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 const ProfileFeed = ({
@@ -12,72 +14,42 @@ const ProfileFeed = ({
 }: {
   variant?: string | string[] | undefined;
 }) => {
-  const [posts, setPosts] = useState<any[]>([]);
-  const [postDeleteId, setPostDeleteId] = useState<string>(``);
-  const [loader, setLoader] = useState<boolean>(true);
-
-  // const postQuery = useMemo(() => new Moralis.Query(`Posts`), [Moralis.Query]);
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  console.log(posts);
+  const { token } = useAppSelector((state) => state.user);
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (variant.length === 0) {
-  //     Moralis.Cloud.run(`userFetch`, { id: router.query.profileId }).then(
-  //       (fetchedUser) => {
-  //         fetchedUser[0]?.attributes.posts
-  //           .query()
-  //           .find()
-  //           .then((fetchedPosts: object[]) => {
-  //             setPosts(fetchedPosts);
-  //             setLoader(false);
-  //           });
-  //       },
-  //     );
-  //   } else if (variant === `media`) {
-  //     Moralis.Cloud.run(`userFetch`, { id: router.query.profileId }).then(
-  //       (fetchedUser) => {
-  //         fetchedUser[0]?.attributes.posts
-  //           .query()
-  //           .notEqualTo(`media`, null)
-  //           .find()
-  //           .then((fetchedPosts: object[]) => {
-  //             setPosts(fetchedPosts);
-  //             setLoader(false);
-  //           });
-  //       },
-  //     );
-  //   }
-  // }, [variant, Moralis.Cloud, router.query.profileId]);
+  const fetchPosts = useCallback(async () => {
+    const baseURL = `${process.env.NEXT_PUBLIC_API_URL}/user/${
+      router.query.userWallet
+    }/posts${variant === `media` ? `/media` : ``}`;
 
-  // useEffect(() => {
-  //   if (postDeleteId !== ``) {
-  //     postQuery.get(postDeleteId).then(async (post) => {
-  //       await post.attributes.likes
-  //         .query()
-  //         .find()
-  //         .then((res: any[]) => Moralis.Object.destroyAll(res));
-  //       await post.attributes.comments
-  //         .query()
-  //         .find()
-  //         .then((res: any[]) => Moralis.Object.destroyAll(res));
-  //       post.destroy();
+    await fetch(baseURL, {
+      method: `GET`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((posts) => {
+        setPosts(posts);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }, [token, variant, router.query.userWallet]);
 
-  //       setPosts((feedPosts) =>
-  //         feedPosts.filter((post) => post.id !== postDeleteId),
-  //       );
-
-  //       setPostDeleteId(``);
-  //     });
-  //   }
-  // }, [postDeleteId, Moralis.Object, postQuery]);
-
-  const handlePostDelete = (id: string) => {
-    setPostDeleteId(id);
-  };
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   return (
     <>
-      {loader ? (
+      {isLoading ? (
         <div className={styles.loaderWrapper}>
           <Loader variant="small" />
         </div>
@@ -95,18 +67,18 @@ const ProfileFeed = ({
             </div>
           ) : (
             <>
-              {/* {posts.map((item) => (
+              {posts.map((item) => (
                 <Post
-                  key={item.id}
-                  _id={item.id}
-                  createdAt={item.attributes.createdAt}
-                  text={item.attributes.text}
-                  mediaURL={item.attributes.media && item.attributes.media._url}
-                  createdBy={item.attributes.createdBy}
-                  // commentCount={item.attributes.commentCount}
-                  likeCount={item.attributes.likeCount}
+                  key={item._id}
+                  _id={item._id}
+                  createdAt={item.createdAt}
+                  text={item.text}
+                  mediaURL={item.mediaURL && item.mediaURL}
+                  createdBy={item.createdBy}
+                  comments={item.comments}
+                  likes={item.likes}
                 />
-              ))} */}
+              ))}
             </>
           )}
         </>

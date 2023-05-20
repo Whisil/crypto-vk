@@ -5,8 +5,6 @@ import SettingsBtn from '@/public/images/icons/settings.svg';
 import ProfileCounter from '../profileCounter';
 
 import styles from './styles.module.scss';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
 import RippleBtn from '@/components/unknown/rippleBtn';
 import { walletCut } from '@/utils/walletCut';
 
@@ -23,8 +21,6 @@ const ProfileHeader = ({
   ethAddress,
   isCurrentUser,
 }: ProfileHeaderProps) => {
-  const router = useRouter();
-
   return (
     <div className={styles.header}>
       <div className={styles.banner} />
