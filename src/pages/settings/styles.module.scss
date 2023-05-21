@@ -1,0 +1,18 @@
+@import "../../styles/colors.scss";
+
+.settingsContainer{
+    display: flex;
+    gap: 40px;
+    justify-content: space-between;
+
+    .settingsMenu{
+        width: 25%;
+    }
+
+    .settings{
+        padding: 20px 10px;
+        width: 80%;
+        border-radius: 14px;
+        border: 2px solid rgba($primaryLightDark, 0.8);
+    }
+}

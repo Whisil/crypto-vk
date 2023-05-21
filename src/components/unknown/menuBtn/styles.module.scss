@@ -1,37 +1,50 @@
 @import '@/styles/colors.scss';
 
 .menuItem {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    background: transparent;
-    transition: background 0.2s ease;
-    cursor: pointer;
-    position: relative;
-    z-index: 2;
-    
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: transparent;
+  transition: background 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
 
-    span {
-      font-size: 16px;
-      line-height: 1;
-      font-weight: 500;
-      color: $primaryLight;
-      pointer-events: none;
-    }
-    svg{
-      pointer-events: none;
-    }
+  span {
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 500;
+    color: $primaryLight;
+    pointer-events: none;
+  }
+  svg {
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+  }
 
-    &:hover {
-      background: rgba($primaryLight, 0.15);
-    }
-
+  &:hover {
+    background: rgba($primaryLight, 0.15);
+  }
 }
 
 .accentBtn {
-    span {
-        color: $secondaryAccent;
-    }
+  span {
+    color: $secondaryAccent;
+  }
+}
+
+.large {
+  gap: 15px;
+
+  svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  span {
+    font-size: 20px;
+  }
 }

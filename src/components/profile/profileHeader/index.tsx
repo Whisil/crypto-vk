@@ -3,12 +3,11 @@ import AccentBtn from '@/components/unknown/accentBtn';
 import DmIcon from '@/public/images/icons/messages.svg';
 import SettingsBtn from '@/public/images/icons/settings.svg';
 import ProfileCounter from '../profileCounter';
-
-import styles from './styles.module.scss';
 import RippleBtn from '@/components/unknown/rippleBtn';
 import { walletCut } from '@/utils/walletCut';
 import Link from 'next/link';
-import { useAppSelector } from '@/app/hooks';
+
+import styles from './styles.module.scss';
 
 interface ProfileHeaderProps {
   displayName: string;
@@ -23,8 +22,6 @@ const ProfileHeader = ({
   ethAddress,
   isCurrentUser,
 }: ProfileHeaderProps) => {
-  const { user } = useAppSelector((state) => state.user);
-
   return (
     <div className={styles.header}>
       <div className={styles.banner} />
@@ -48,7 +45,7 @@ const ProfileHeader = ({
           </div>
           {isCurrentUser ? (
             <RippleBtn className={styles.settingsRipple}>
-              <Link href={`/${user.ethAddress}/edit`} passHref>
+              <Link href={`/settings`} passHref>
                 <a className={styles.upperSettingsBtn}>
                   <SettingsBtn />
                   <span>Edit</span>
