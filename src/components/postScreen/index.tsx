@@ -4,13 +4,12 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import Post from '@/components/feedScreen/post';
 import { IPost } from '@/types/post';
 import Loader from '@/components/unknown/loader';
-
-import GoBackIcon from '@/public/images/icons/go-back.svg';
-
-import styles from './styles.module.scss';
 import PostInput from '../feedScreen/postInput';
 import { setComments } from '@/features/commentsSlice';
 import NoContent from '../unknown/noContent';
+
+import styles from './styles.module.scss';
+import GoBackBtn from '../unknown/goBackBtn';
 
 const PostScreen = () => {
   const [mainLoader, setMainLoader] = useState(true);
@@ -50,10 +49,7 @@ const PostScreen = () => {
 
   return (
     <div>
-      <button className={styles.goBackBtn} onClick={() => router.back()}>
-        <GoBackIcon />
-        <span className={styles.goBackBtnText}>Go Back</span>
-      </button>
+      <GoBackBtn link="/" />
 
       {mainLoader ? (
         <Loader />
