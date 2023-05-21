@@ -16,7 +16,7 @@ const ProfileFeed = ({
 }) => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  console.log(posts);
+
   const { token } = useAppSelector((state) => state.user);
 
   const router = useRouter();

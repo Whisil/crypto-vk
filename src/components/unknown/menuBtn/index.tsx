@@ -28,7 +28,7 @@ const MenuBtn = ({ icon, text, accent, onClick, link }: Props) => {
       ) : (
         <Link href={link} passHref>
           <a>
-            <div
+            <span
               className={classNames(
                 styles.menuItem,
                 accent && styles.accentBtn,
@@ -37,7 +37,7 @@ const MenuBtn = ({ icon, text, accent, onClick, link }: Props) => {
             >
               <Icon />
               <span>{text}</span>
-            </div>
+            </span>
           </a>
         </Link>
       )}

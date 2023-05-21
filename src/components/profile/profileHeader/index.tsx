@@ -7,6 +7,8 @@ import ProfileCounter from '../profileCounter';
 import styles from './styles.module.scss';
 import RippleBtn from '@/components/unknown/rippleBtn';
 import { walletCut } from '@/utils/walletCut';
+import Link from 'next/link';
+import { useAppSelector } from '@/app/hooks';
 
 interface ProfileHeaderProps {
   displayName: string;
@@ -21,6 +23,8 @@ const ProfileHeader = ({
   ethAddress,
   isCurrentUser,
 }: ProfileHeaderProps) => {
+  const { user } = useAppSelector((state) => state.user);
+
   return (
     <div className={styles.header}>
       <div className={styles.banner} />
@@ -44,10 +48,12 @@ const ProfileHeader = ({
           </div>
           {isCurrentUser ? (
             <RippleBtn className={styles.settingsRipple}>
-              <div className={styles.upperSettingsBtn}>
-                <SettingsBtn />
-                <span>Edit</span>
-              </div>
+              <Link href={`/${user.ethAddress}/edit`} passHref>
+                <a className={styles.upperSettingsBtn}>
+                  <SettingsBtn />
+                  <span>Edit</span>
+                </a>
+              </Link>
             </RippleBtn>
           ) : (
             <div className={styles.upperBtns}>

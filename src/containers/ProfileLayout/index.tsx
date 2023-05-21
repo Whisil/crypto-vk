@@ -7,7 +7,13 @@ import { IUser } from '@/types/user';
 import { useAppSelector } from '@/app/hooks';
 import Loader from '@/components/unknown/loader';
 
-const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
+const ProfileLayout = ({
+  children,
+  noHeader,
+}: {
+  children: React.ReactNode;
+  noHeader?: boolean;
+}) => {
   const [userInfo, setUserInfo] = useState<IUser>();
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +62,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
       <div>
         {isLoading && !userInfo ? (
           <Loader />
-        ) : userInfo ? (
+        ) : userInfo && !noHeader ? (
           <ProfileHeader
             displayName={userInfo.displayName}
             username={userInfo.username}
