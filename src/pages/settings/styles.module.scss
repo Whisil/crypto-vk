@@ -10,9 +10,15 @@
     }
 
     .settings{
-        padding: 20px 10px;
+        padding: 20px 15px;
         width: 80%;
         border-radius: 14px;
         border: 2px solid rgba($primaryLightDark, 0.8);
+
+        &Form{
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
     }
 }
