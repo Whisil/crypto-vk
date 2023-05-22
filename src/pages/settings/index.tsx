@@ -4,6 +4,7 @@ import styles from './styles.module.scss';
 import classNames from 'classnames';
 import SettingsItem from '@/components/profile/settingsItem';
 import { useAppSelector } from '@/app/hooks';
+import AccentBtn from '@/components/unknown/accentBtn';
 
 const Settings = () => {
   const { username, displayName, bio, websiteURL } = useAppSelector(
@@ -34,6 +35,12 @@ const Settings = () => {
             initialValue={websiteURL}
           />
           <SettingsItem label="Bio" inputName="bio" initialValue={bio} />
+
+          <AccentBtn
+            text="Save"
+            containerClassName={styles.settingsFormBtnContainer}
+            className={styles.settingsFormBtn}
+          />
         </form>
       </div>
     </div>

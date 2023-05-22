@@ -1,23 +1,45 @@
-@import "../../../styles/colors.scss";
+@import '../../../styles/colors.scss';
 
-.label{
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+@mixin text {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: normal;
+  color: $primaryLight;
+}
 
-    &Text{
-        display: inline-block;
-        font-size: 16px;
-        line-height: 1;
-        font-weight: normal;
-        color: $primaryLight;
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &Text {
+    display: inline-block;
+    @include text;
+  }
+
+  .input {
+    padding: 10px 15px;
+    border: 1px solid $primaryLightDark;
+    border-radius: 10px;
+    background-color: rgba($primaryLightDark, 0.15);
+    color: $primaryLight;
+    transition: .3s ease border-color, .3s ease background-color;
+    @include text;
+
+    &:focus-visible {
+      border-color: $primaryAccent;
+      background-color: rgba($primaryLightDark, 0.22);
     }
-    
-    .input{
-        padding: 10px 15px;
-        border: 1px solid $primaryLightDark;
-        border-radius: 10px;
-        background-color: rgba($primaryLightDark, 0.15);
-        color: $primaryLight;
-    }
+  }
+
+  .textarea {
+    padding: 15px;
+    @extend .input;
+    @include text;
+    max-width: 100%;
+    max-height: 200px;
+    min-height: 50px;
+    resize: vertical;
+    outline: none;
+  }
 }
