@@ -1,17 +1,19 @@
+import { UseFormRegister } from 'react-hook-form';
+import { FieldValues } from 'react-hook-form/dist/types';
 import styles from './styles.module.scss';
 
 interface SettingsItemsProps {
   label: string;
   inputName: string;
   initialValue: string | null;
-  ref?: React.Ref<HTMLInputElement> | React.Ref<HTMLTextAreaElement>;
+  rHFRegister: UseFormRegister<FieldValues>;
 }
 
 const SettingsItem = ({
   label,
   inputName,
   initialValue,
-  ref,
+  rHFRegister,
 }: SettingsItemsProps) => {
   const placeholder =
     inputName === `displayName`
@@ -30,19 +32,17 @@ const SettingsItem = ({
       {inputName === `bio` ? (
         <textarea
           className={styles.textarea}
-          name={inputName}
-          ref={ref as React.Ref<HTMLTextAreaElement>}
           defaultValue={initialValue ? initialValue : ``}
           placeholder={placeholder}
+          {...rHFRegister(inputName)}
         />
       ) : (
         <input
           className={styles.input}
           type="text"
-          name={inputName}
-          ref={ref as React.Ref<HTMLInputElement>}
           defaultValue={initialValue ? initialValue : ``}
           placeholder={placeholder}
+          {...rHFRegister(inputName)}
         />
       )}
     </label>
