@@ -17,7 +17,11 @@ const Settings = () => {
 
   const dispatch = useAppDispatch();
 
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
 
   const handleUpdateSettings = useCallback(
     async (data: FieldValues) => {
@@ -57,25 +61,60 @@ const Settings = () => {
             label="Display Name"
             inputName="displayName"
             initialValue={displayName}
-            rHFRegister={register}
+            rHFRegister={register(`displayName`, {
+              required: `Display name is required`,
+              minLength: {
+                value: 4,
+                message: `Must be at least 4 characters long`,
+              },
+              maxLength: {
+                value: 35,
+                message: `Must be 35 characters or less`,
+              },
+            })}
+            error={errors.displayName && `${errors.displayName.message}`}
           />
           <SettingsItem
             label="Username"
             inputName="username"
             initialValue={username}
-            rHFRegister={register}
+            rHFRegister={register(`username`, {
+              required: `Username name is required`,
+              minLength: {
+                value: 4,
+                message: `Must be at least 4 characters long`,
+              },
+              maxLength: {
+                value: 15,
+                message: `Must be 15 characters or less`,
+              },
+            })}
+            error={errors.username && `${errors.username.message}`}
           />
           <SettingsItem
             label="Website"
             inputName="websiteURL"
             initialValue={websiteURL}
-            rHFRegister={register}
+            rHFRegister={register(`websiteURL`, {
+              pattern: {
+                value:
+                  /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
+                message: `Invalid URL`,
+              },
+            })}
+            error={errors.websiteURL && `${errors.websiteURL.message}`}
           />
           <SettingsItem
             label="Bio"
             inputName="bio"
             initialValue={bio}
-            rHFRegister={register}
+            rHFRegister={register(`bio`, {
+              maxLength: {
+                value: 100,
+                message: `Must be 200 characters or less`,
+              },
+            })}
+            error={errors.bio && `${errors.bio.message}`}
           />
 
           <AccentBtn

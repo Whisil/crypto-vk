@@ -42,4 +42,15 @@
     resize: vertical;
     outline: none;
   }
+
+  .error{
+    font-size: 16px;
+    color: $secondaryAccent;
+  }
+}
+
+.errorLabel{
+  .input, .textarea{
+    border-color: $secondaryAccent;
+  }
 }
