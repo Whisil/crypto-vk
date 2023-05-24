@@ -47,8 +47,11 @@
 
 
 .accentBtn{
-    padding: 10px;
+    padding: 10px !important;
     text-align: center;
+}
+.accentBtnContainer{
+    display: inline-block !important;
 }
 .submitBtnDisabled{
     filter: brightness(50%);

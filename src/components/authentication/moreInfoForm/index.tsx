@@ -1,117 +1,108 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import AccentBtn from '@/components/unknown/accentBtn';
-import RippleBtn from '@/components/unknown/rippleBtn';
 import { setUser } from '@/features/userSlice';
 import classNames from 'classnames';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 
 import styles from './styles.module.scss';
+import { FieldValues, useForm } from 'react-hook-form';
 
 const MoreInfoForm = () => {
   const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  const formik = useFormik({
-    initialValues: {
-      username: ``,
-      displayName: ``,
-    },
-    validationSchema: Yup.object({
-      username: Yup.string()
-        .max(15, `Must be 15 characters or less`)
-        .min(4, `Must be at least 4 characters long`)
-        .strict()
-        .trim(`Don't start or end with a white-space`)
-        .matches(
-          /^[a-zA-Z0-9_]+$/,
-          `You can only use English letters, numbers and underscores`,
-        )
-        .required(`Required`),
-      displayName: Yup.string()
-        .max(35, `Must be 35 characters or less`)
-        .min(4, `Must be at least 4 characters long`)
-        .strict()
-        .trim(`Don't start or end with a white-space`)
-        .matches(
-          /^([\u0400-\u052Fa-zA-Z0-9_,.-]\s?)+$/,
-          `You can only use letters, numbers, dots, commas and underscores`,
-        )
-        .required(`Required`),
-    }),
-    onSubmit: async (values) => {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
-        method: `POST`,
-        headers: { 'Content-Type': `application/json` },
-        body: JSON.stringify({
-          ethAddress: user.ethAddress,
-          username: values.username,
-          displayName: values.displayName,
-        }),
-      })
-        .then((res) => res.json())
-        .then((userInfo) => dispatch(setUser(userInfo)))
-        .catch((err) => console.log(err));
-    },
-  });
+  const {
+    register,
+    formState: { errors, isValid },
+    handleSubmit,
+  } = useForm();
+
+  const handleSignUp = async (data: FieldValues) => {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+      method: `POST`,
+      headers: { 'Content-Type': `application/json` },
+      body: JSON.stringify({
+        ethAddress: user.ethAddress,
+        username: data.username,
+        displayName: data.displayName,
+      }),
+    })
+      .then((res) => res.json())
+      .then((userInfo) => dispatch(setUser(userInfo)))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
       <h1 className={styles.heading}>Just a bit more</h1>
-      <label htmlFor="displayName" className={styles.inputLabel}>
-        <span className={styles.labelText}>Display name</span>
-        <input
-          id="displayName"
-          name="displayName"
-          type="text"
-          className={classNames(
-            styles.input,
-            formik.touched.displayName &&
-              formik.errors.displayName &&
-              styles.errorBorder,
-          )}
-          placeholder="Joe Biden"
-          autoComplete="off"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.displayName}
-        />
-        {formik.touched.displayName && formik.errors.displayName ? (
-          <span className={styles.errorLabel}>{formik.errors.displayName}</span>
-        ) : null}
-      </label>
+      <form onSubmit={handleSubmit(handleSignUp)}>
+        <label htmlFor="displayName" className={styles.inputLabel}>
+          <span className={styles.labelText}>Display name</span>
+          <input
+            id="displayName"
+            type="text"
+            className={classNames(
+              styles.input,
+              errors.displayName && styles.errorBorder,
+            )}
+            placeholder="Joe Biden"
+            autoComplete="off"
+            {...register(`displayName`, {
+              required: `Display name is required`,
+              minLength: {
+                value: 4,
+                message: `Must be at least 4 characters long`,
+              },
+              maxLength: {
+                value: 35,
+                message: `Must be 35 characters or less`,
+              },
+            })}
+          />
+          {errors.displayName ? (
+            <span
+              className={styles.errorLabel}
+            >{`${errors.displayName.message}`}</span>
+          ) : null}
+        </label>
 
-      <label htmlFor="username" className={styles.inputLabel}>
-        <span className={styles.labelText}>Username</span>
-        <input
-          id="username"
-          name="username"
-          type="text"
-          className={classNames(
-            styles.input,
-            formik.touched.username &&
-              formik.errors.username &&
-              styles.errorBorder,
-          )}
-          placeholder="JoeBiden322"
-          autoComplete="off"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.username}
-        />
-        {formik.touched.username && formik.errors.username ? (
-          <span className={styles.errorLabel}>{formik.errors.username}</span>
-        ) : null}
-      </label>
+        <label htmlFor="username" className={styles.inputLabel}>
+          <span className={styles.labelText}>Username</span>
+          <input
+            id="username"
+            type="text"
+            className={classNames(
+              styles.input,
+              errors.username && styles.errorBorder,
+            )}
+            placeholder="JoeBiden322"
+            autoComplete="off"
+            {...register(`username`, {
+              required: `Username name is required`,
+              minLength: {
+                value: 4,
+                message: `Must be at least 4 characters long`,
+              },
+              maxLength: {
+                value: 15,
+                message: `Must be 15 characters or less`,
+              },
+            })}
+          />
+          {errors.username ? (
+            <span
+              className={styles.errorLabel}
+            >{`${errors.username.message}`}</span>
+          ) : null}
+        </label>
 
-      <div
-        className={!formik.isValid ? styles.submitBtnDisabled : ``}
-        onClick={formik.handleSubmit as any}
-      >
-        <RippleBtn variant="accent">
-          <AccentBtn text="Sign me up!" className={styles.accentBtn} />
-        </RippleBtn>
-      </div>
+        <div className={!isValid ? styles.submitBtnDisabled : ``}>
+          <AccentBtn
+            text="Sign me up!"
+            className={styles.accentBtn}
+            containerClassName={styles.accentBtnContainer}
+          />
+        </div>
+      </form>
     </>
   );
 };
