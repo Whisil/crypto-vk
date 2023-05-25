@@ -2,9 +2,9 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import AccentBtn from '@/components/unknown/accentBtn';
 import { setUser } from '@/features/userSlice';
 import classNames from 'classnames';
+import { FieldValues, useForm } from 'react-hook-form';
 
 import styles from './styles.module.scss';
-import { FieldValues, useForm } from 'react-hook-form';
 
 const MoreInfoForm = () => {
   const { user } = useAppSelector((state) => state.user);
@@ -12,23 +12,39 @@ const MoreInfoForm = () => {
 
   const {
     register,
+    setError,
     formState: { errors, isValid },
     handleSubmit,
   } = useForm();
 
   const handleSignUp = async (data: FieldValues) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
-      method: `POST`,
-      headers: { 'Content-Type': `application/json` },
-      body: JSON.stringify({
-        ethAddress: user.ethAddress,
-        username: data.username,
-        displayName: data.displayName,
-      }),
-    })
-      .then((res) => res.json())
-      .then((userInfo) => dispatch(setUser(userInfo)))
-      .catch((err) => console.log(err));
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
+        {
+          method: `POST`,
+          headers: { 'Content-Type': `application/json` },
+          body: JSON.stringify({
+            ethAddress: user.ethAddress,
+            username: data.username,
+            displayName: data.displayName,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error);
+      }
+
+      const userInfo = await response.json();
+      dispatch(setUser(userInfo));
+    } catch (err: any) {
+      setError(`username`, {
+        type: `manual`,
+        message: err.message,
+      });
+    }
   };
 
   return (
