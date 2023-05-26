@@ -1,9 +1,8 @@
-import { UseFormRegister } from 'react-hook-form';
-import { FieldValues, UseFormRegisterReturn } from 'react-hook-form/dist/types';
+import { UseFormRegisterReturn } from 'react-hook-form/dist/types';
 import styles from './styles.module.scss';
 import classNames from 'classnames';
 
-interface SettingsItemsProps {
+interface SettingsInputProps {
   label: string;
   inputName: string;
   initialValue: string | null;
@@ -11,13 +10,13 @@ interface SettingsItemsProps {
   error?: string | undefined;
 }
 
-const SettingsItem = ({
+const SettingsInput = ({
   label,
   inputName,
   initialValue,
   rHFRegister,
   error,
-}: SettingsItemsProps) => {
+}: SettingsInputProps) => {
   const placeholder =
     inputName === `displayName`
       ? `Joe Biden`
@@ -53,4 +52,4 @@ const SettingsItem = ({
   );
 };
 
-export default SettingsItem;
+export default SettingsInput;

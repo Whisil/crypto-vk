@@ -1,6 +1,6 @@
 import MenuBtn from '@/components/unknown/menuBtn';
 import classNames from 'classnames';
-import SettingsItem from '@/components/profile/settingsItem';
+import SettingsInput from '@/components/settings/settingsInput';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import AccentBtn from '@/components/unknown/accentBtn';
 import { useCallback } from 'react';
@@ -9,11 +9,11 @@ import { FieldValues } from 'react-hook-form/dist/types';
 import styles from './styles.module.scss';
 import { setUser } from '@/features/userSlice';
 
-const Settings = () => {
+const SettingsScreen = () => {
   const { username, displayName, bio, websiteURL } = useAppSelector(
     (state) => state.user.user,
   );
-  const { token, user } = useAppSelector((state) => state.user);
+  const { token } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
 
@@ -57,7 +57,7 @@ const Settings = () => {
           className={styles.settingsForm}
           onSubmit={handleSubmit(handleUpdateSettings)}
         >
-          <SettingsItem
+          <SettingsInput
             label="Display Name"
             inputName="displayName"
             initialValue={displayName}
@@ -74,7 +74,7 @@ const Settings = () => {
             })}
             error={errors.displayName && `${errors.displayName.message}`}
           />
-          <SettingsItem
+          <SettingsInput
             label="Username"
             inputName="username"
             initialValue={username}
@@ -91,7 +91,7 @@ const Settings = () => {
             })}
             error={errors.username && `${errors.username.message}`}
           />
-          <SettingsItem
+          <SettingsInput
             label="Website"
             inputName="websiteURL"
             initialValue={websiteURL}
@@ -104,7 +104,7 @@ const Settings = () => {
             })}
             error={errors.websiteURL && `${errors.websiteURL.message}`}
           />
-          <SettingsItem
+          <SettingsInput
             label="Bio"
             inputName="bio"
             initialValue={bio}
@@ -128,4 +128,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default SettingsScreen;
