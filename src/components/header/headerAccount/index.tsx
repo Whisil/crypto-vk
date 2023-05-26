@@ -7,9 +7,10 @@ import Switch from '@/components/unknown/switch';
 import MenuBtn from '@/components/unknown/menuBtn';
 import { clearUser } from '@/features/userSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useDisconnect } from 'wagmi';
+import { useRouter } from 'next/router';
 
 import styles from './styles.module.scss';
-import { useDisconnect } from 'wagmi';
 
 const HeaderAccount = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -21,6 +22,8 @@ const HeaderAccount = () => {
 
   const { disconnect } = useDisconnect();
 
+  const router = useRouter();
+
   useEffect(() => {
     if (!showMenu) return;
     function handleOutsideClick(e: Event) {
@@ -31,7 +34,13 @@ const HeaderAccount = () => {
     window.addEventListener(`click`, handleOutsideClick);
 
     return () => window.removeEventListener(`click`, handleOutsideClick);
-  }, [showMenu]);
+  }, []); //eslint-disable-line
+
+  useEffect(() => {
+    if (showMenu) {
+      setShowMenu(false);
+    }
+  }, [router.pathname]); //eslint-disable-line
 
   const handleWalletDisconnect = () => {
     disconnect();
@@ -71,7 +80,7 @@ const HeaderAccount = () => {
           <span className={styles.divider} />
 
           <MenuBtn icon="help" text="About & help" />
-          <MenuBtn icon="settings" text="Settings" />
+          <MenuBtn link="/settings" icon="settings" text="Settings" />
 
           <span className={styles.divider} />
 

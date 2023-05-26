@@ -13,7 +13,7 @@ const Settings = () => {
   const { username, displayName, bio, websiteURL } = useAppSelector(
     (state) => state.user.user,
   );
-  const { token } = useAppSelector((state) => state.user);
+  const { token, user } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
 
@@ -49,7 +49,7 @@ const Settings = () => {
   return (
     <div className={classNames(styles.settingsContainer, `container`)}>
       <div className={styles.settingsMenu}>
-        <MenuBtn text="Profile" icon="avatar" link="/" large />
+        <MenuBtn text="Profile" icon="avatar" large />
       </div>
 
       <div className={styles.settings}>
