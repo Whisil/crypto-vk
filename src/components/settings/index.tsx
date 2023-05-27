@@ -8,14 +8,13 @@ import { useForm } from 'react-hook-form';
 import { FieldValues } from 'react-hook-form/dist/types';
 import styles from './styles.module.scss';
 import { setUser } from '@/features/userSlice';
+import useMediaBlob from '@/hooks/useMediaBlob';
 
 const SettingsScreen = () => {
-  const [banner, setBanner] = useState(``);
-
   const { username, displayName, bio, websiteURL } = useAppSelector(
     (state) => state.user.user,
   );
-  const { token } = useAppSelector((state) => state.user);
+  const { token, user } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
 
@@ -24,6 +23,8 @@ const SettingsScreen = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
+
+  const { mediaURL, handleFileChange } = useMediaBlob();
 
   const handleUpdateSettings = useCallback(
     async (data: FieldValues) => {
@@ -118,13 +119,24 @@ const SettingsScreen = () => {
             })}
             error={errors.bio && `${errors.bio.message}`}
           />
-          <img src="/images/banner.jpg" alt="ad" className={styles.banner} />
+          <img
+            src={
+              mediaURL
+                ? mediaURL
+                : user.bannerURL
+                ? user.bannerURL
+                : `/images/banner.jpg`
+            }
+            alt="profile banner"
+            className={styles.banner}
+          />
           <div className={styles.bannerInputContainer}>
             <input
               type="file"
               name="banner"
               accept=".png, .jpg, .jpeg, .gif, .webp"
               className={styles.bannerInput}
+              onChange={handleFileChange}
             />
           </div>
           <AccentBtn

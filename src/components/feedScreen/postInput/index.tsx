@@ -13,6 +13,7 @@ import { addCommentToPost, setNewPost } from '@/features/postsSlice';
 import styles from './styles.module.scss';
 import { addUserPost } from '@/features/userSlice';
 import { setNewComment } from '@/features/commentsSlice';
+import useMediaBlob from '@/hooks/useMediaBlob';
 
 interface Props {
   commentInput?: boolean;
@@ -23,21 +24,14 @@ interface Props {
 const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
-  const [mediaURI, setMediaURI] = useState<string>(``);
 
   const { token } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
+  const { mediaURL, handleFileChange, handleClose } = useMediaBlob();
+
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
-
-  const handleCloseBtn = async () => {
-    URL.revokeObjectURL(mediaURI);
-    setMediaURI(``);
-    if (fileInput.current) {
-      fileInput.current.value = ``;
-    }
-  };
 
   const handleFormData = () => {
     const formData = new FormData();
@@ -56,7 +50,7 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
   };
 
   const endOfInteraction = () => {
-    handleCloseBtn();
+    handleClose(fileInput);
     setInputText(``);
     if (textInput.current) {
       textInput.current.textContent = ``;
@@ -107,30 +101,6 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
       .catch((err) => console.log(err));
   };
 
-  const handleFileInputChange = (
-    e: Event | React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const target = e.target as HTMLInputElement;
-    if (target.files && target.files[0]) {
-      const reader = new FileReader();
-
-      reader.readAsArrayBuffer(target.files[0]);
-      reader.onload = function () {
-        let blob = new Blob();
-        if (target.files && target.files[0]) {
-          blob = new Blob([reader.result as BlobPart], {
-            type: target.files[0].type,
-          });
-        }
-
-        const mediaBlobURI = URL.createObjectURL(blob);
-        setMediaURI(mediaBlobURI);
-      };
-    }
-  };
-
-  //Reply username push
-
   const setEndOfInput = (target: HTMLDivElement) => {
     const range = document.createRange();
     const sel = window.getSelection();
@@ -151,14 +121,14 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
   useEffect(() => {
     if (
       inputText.length > 500 ||
-      (inputText.length === 0 && mediaURI === ``) ||
+      (inputText.length === 0 && mediaURL === ``) ||
       (inputText.length !== 0 && /^\s*$/.test(inputText))
     ) {
       setBtnDissable(true);
     } else {
       setBtnDissable(false);
     }
-  }, [inputText, mediaURI]);
+  }, [inputText, mediaURL]);
 
   return (
     <div
@@ -189,19 +159,22 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
             onFocus={(e) => setEndOfInput(e.target)}
           />
         </div>
-        {mediaURI && (
+        {mediaURL && (
           <div
             className={styles.mediaContainer}
             style={
-              mediaURI && mediaURI.length !== 0
-                ? { backgroundImage: `url(${mediaURI})` }
+              mediaURL && mediaURL.length !== 0
+                ? { backgroundImage: `url(${mediaURL})` }
                 : {}
             }
           >
-            <div className={styles.clearMediaBtn} onClick={handleCloseBtn}>
+            <div
+              className={styles.clearMediaBtn}
+              onClick={() => handleClose(fileInput)}
+            >
               <CloseIcon />
             </div>
-            <img src={mediaURI} className={styles.mediaFile} alt="thumbnail" />
+            <img src={mediaURL} className={styles.mediaFile} alt="thumbnail" />
           </div>
         )}
         <div className={styles.bottomRow}>
@@ -215,7 +188,7 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
               }
               className={classNames(
                 styles.iconWrapper,
-                mediaURI.length !== 0 && styles.inputDisabled,
+                mediaURL.length !== 0 && styles.inputDisabled,
               )}
             >
               <ImageIcon />
@@ -229,9 +202,9 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
                 name="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 className={styles.mediaInput}
-                onChange={handleFileInputChange}
+                onChange={handleFileChange}
                 ref={fileInput}
-                disabled={mediaURI.length !== 0 ? true : false}
+                disabled={mediaURL.length !== 0 ? true : false}
               />
             </label>
           </div>
