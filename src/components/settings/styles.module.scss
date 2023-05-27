@@ -28,6 +28,37 @@
             &Btn{
                 padding: 8px 16px;
             }
+
+            .banner{
+                border-radius: 14px;
+                height: 240px;
+                object-fit: cover;
+                object-position: top;
+            }
+
+            .bannerInputContainer{
+                max-width: 40%;
+            }
+
+            .bannerInput{
+                cursor: pointer;
+                border-radius: 14px;
+                border: 2px solid rgba($primaryLightDark, 0.8);
+                height: 40px;
+                width: 100%;
+
+                &::file-selector-button{
+                    cursor: pointer;
+                    background-color: $primaryLightDark;
+                    height: 100%;
+                    padding: 0 10px;
+                    margin: 0;
+                    outline: none;
+                    border: none;
+                    margin-right: 10px;
+                    color: $primaryLight;
+                }
+            }
         }
     }
 }

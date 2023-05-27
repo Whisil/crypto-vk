@@ -3,13 +3,15 @@ import classNames from 'classnames';
 import SettingsInput from '@/components/settings/settingsInput';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import AccentBtn from '@/components/unknown/accentBtn';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FieldValues } from 'react-hook-form/dist/types';
 import styles from './styles.module.scss';
 import { setUser } from '@/features/userSlice';
 
 const SettingsScreen = () => {
+  const [banner, setBanner] = useState(``);
+
   const { username, displayName, bio, websiteURL } = useAppSelector(
     (state) => state.user.user,
   );
@@ -116,7 +118,15 @@ const SettingsScreen = () => {
             })}
             error={errors.bio && `${errors.bio.message}`}
           />
-
+          <img src="/images/banner.jpg" alt="ad" className={styles.banner} />
+          <div className={styles.bannerInputContainer}>
+            <input
+              type="file"
+              name="banner"
+              accept=".png, .jpg, .jpeg, .gif, .webp"
+              className={styles.bannerInput}
+            />
+          </div>
           <AccentBtn
             text="Save"
             containerClassName={styles.settingsFormBtnContainer}
