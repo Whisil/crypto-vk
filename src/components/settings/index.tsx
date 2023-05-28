@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import SettingsInput from '@/components/settings/settingsInput';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import AccentBtn from '@/components/unknown/accentBtn';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { FieldValues } from 'react-hook-form/dist/types';
 import styles from './styles.module.scss';
@@ -21,7 +21,9 @@ const SettingsScreen = () => {
   const {
     register,
     formState: { errors },
+    setError,
     handleSubmit,
+    reset,
   } = useForm();
 
   const { mediaURL, handleFileChange } = useMediaBlob();
@@ -31,7 +33,9 @@ const SettingsScreen = () => {
       const formData = new FormData();
       formData.append(`username`, data.username);
       formData.append(`displayName`, data.displayName);
-      formData.append(`bannerURL`, data.bannerURL);
+      if (data.banner && data.banner[0]) {
+        formData.append(`file`, data.banner[0]);
+      }
       formData.append(`avatarURL`, data.avatarURL);
       formData.append(`bio`, data.bio);
       formData.append(`websiteURL`, data.websiteURL);
@@ -48,6 +52,22 @@ const SettingsScreen = () => {
     },
     [token, dispatch],
   );
+
+  const handleBannerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files && files[0]) {
+      if (files[0].size > 1024 * 1024 * 5) {
+        reset({ banner: `` });
+        setError(`banner`, {
+          type: `manual`,
+          message: `File size should be less than 5MB`,
+        });
+      } else {
+        handleFileChange(e);
+      }
+    }
+  };
 
   return (
     <div className={classNames(styles.settingsContainer, `container`)}>
@@ -125,7 +145,7 @@ const SettingsScreen = () => {
                 ? mediaURL
                 : user.bannerURL
                 ? user.bannerURL
-                : `/images/banner.jpg`
+                : `/images/banner-placeholder.webp`
             }
             alt="profile banner"
             className={styles.banner}
@@ -133,12 +153,20 @@ const SettingsScreen = () => {
           <div className={styles.bannerInputContainer}>
             <input
               type="file"
-              name="banner"
               accept=".png, .jpg, .jpeg, .gif, .webp"
               className={styles.bannerInput}
-              onChange={handleFileChange}
+              {...register(`banner`, {
+                onChange: (e) => {
+                  handleBannerInputChange(e);
+                },
+              })}
             />
           </div>
+          {errors.bannerURL && (
+            <span className={styles.error}>
+              {errors.bannerURL.message as string}
+            </span>
+          )}
           <AccentBtn
             text="Save"
             containerClassName={styles.settingsFormBtnContainer}

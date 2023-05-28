@@ -1,9 +1,10 @@
 import AccountImage from '@/components/unknown/accountImage';
 import Link from 'next/link';
-import styles from './styles.module.scss';
 import LinkRippleBtn from '@/components/unknown/linkRippleBtn';
 import { useAppSelector } from '@/app/hooks';
 import { walletCut } from '@/utils/walletCut';
+
+import styles from './styles.module.scss';
 
 const ProfileBlock = () => {
   const { user } = useAppSelector((state) => state.user);
@@ -12,7 +13,11 @@ const ProfileBlock = () => {
     <div className={styles.container}>
       <div
         className={styles.banner}
-        style={{ backgroundImage: `url('/images/banner.jpg')` }}
+        style={{
+          backgroundImage: `url(${
+            user.bannerURL ? user.bannerURL : `/images/banner-placeholder.webp`
+          })`,
+        }}
       />
 
       <div className={styles.info}>
@@ -50,7 +55,7 @@ const ProfileBlock = () => {
         </div>
       </div>
 
-      {/* <LinkRippleBtn text="My profile" link={`/${user?.id}`} /> */}
+      <LinkRippleBtn text="My profile" link={`/${user.ethAddress}`} />
     </div>
   );
 };

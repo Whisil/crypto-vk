@@ -8,6 +8,7 @@ import { walletCut } from '@/utils/walletCut';
 import Link from 'next/link';
 
 import styles from './styles.module.scss';
+import { useAppSelector } from '@/app/hooks';
 
 interface ProfileHeaderProps {
   displayName: string;
@@ -22,9 +23,20 @@ const ProfileHeader = ({
   ethAddress,
   isCurrentUser,
 }: ProfileHeaderProps) => {
+  const { bannerURL, avatarURL, bio } = useAppSelector(
+    (state) => state.user.user,
+  );
+
   return (
     <div className={styles.header}>
-      <div className={styles.banner} />
+      <div
+        className={styles.banner}
+        style={{
+          backgroundImage: `url(${
+            bannerURL ? bannerURL : `/images/banner-placeholder.webp`
+          })`,
+        }}
+      />
       <div className={styles.headerContent}>
         <div className={styles.upper}>
           <div className={styles.upperAvatarSide}>
@@ -63,12 +75,7 @@ const ProfileHeader = ({
         </div>
 
         <div className={styles.middle}>
-          <span className={styles.bio}>
-            This is my bio, it’s optional but I still decided to include it, so
-            enjoy This is my bio, it’s optional but I still decided to include
-            it, so enjoy This is my bio, it’s optional but I still decided to
-            include it, so enjoy
-          </span>
+          <span className={styles.bio}>{bio}</span>
         </div>
 
         <div className={styles.bottom}>
