@@ -6,9 +6,10 @@ import ProfileCounter from '../profileCounter';
 import RippleBtn from '@/components/unknown/rippleBtn';
 import { walletCut } from '@/utils/walletCut';
 import Link from 'next/link';
+import { useAppSelector } from '@/app/hooks';
+import LinkIcon from '@/public/images/icons/link.svg';
 
 import styles from './styles.module.scss';
-import { useAppSelector } from '@/app/hooks';
 
 interface ProfileHeaderProps {
   displayName: string;
@@ -23,7 +24,7 @@ const ProfileHeader = ({
   ethAddress,
   isCurrentUser,
 }: ProfileHeaderProps) => {
-  const { bannerURL, avatarURL, bio } = useAppSelector(
+  const { bannerURL, avatarURL, bio, websiteURL } = useAppSelector(
     (state) => state.user.user,
   );
 
@@ -75,7 +76,18 @@ const ProfileHeader = ({
         </div>
 
         <div className={styles.middle}>
-          <span className={styles.bio}>{bio}</span>
+          {websiteURL && (
+            <a
+              className={styles.website}
+              href={websiteURL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <LinkIcon />
+              {websiteURL.split(`/`)[2]}
+            </a>
+          )}
+          {bio && <span className={styles.bio}>{bio}</span>}
         </div>
 
         <div className={styles.bottom}>

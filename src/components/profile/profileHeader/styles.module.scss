@@ -128,11 +128,40 @@
 
         .middle{
             margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
             .bio{
                 font-size: 16px;
                 color: $primaryLight;
                 line-height: 1.15;
                 font-weight: normal;
+            }
+            .website{
+                display: flex;
+                width: fit-content;
+                align-items: center;
+                color: $primaryAccent;
+                font-size: 16px;
+                line-height: 1.5;
+                font-weight: bold;
+                transition: color .2s ease;
+
+                svg{
+                    path{
+                        transition: stroke .2s ease;
+                    }
+                }
+
+                &:hover{
+                    color: rgba($primaryAccent, 0.75);
+                    svg{
+                        path{
+                            stroke: rgba($primaryAccent, 0.75);
+                        }
+                    }
+                }
             }
         }
 

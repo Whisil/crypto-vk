@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import AccountInfo from '@/components/unknown/accountInfo';
 import PostBtn from '../postBtn';
 import Like from 'public/images/icons/like.svg';
@@ -59,7 +59,7 @@ const Post = ({
       });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (likesArr.length !== 0 && likesArr.includes(user._id) && !isLiked) {
       setIsLiked(true);
     }
