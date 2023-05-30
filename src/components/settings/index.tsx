@@ -36,6 +36,9 @@ const SettingsScreen = () => {
       if (data.banner && data.banner[0]) {
         formData.append(`file`, data.banner[0]);
       }
+      if (user.bannerURL) {
+        formData.append(`oldBanner`, user.bannerURL);
+      }
       formData.append(`avatarURL`, data.avatarURL);
       formData.append(`bio`, data.bio);
       formData.append(`websiteURL`, data.websiteURL);
@@ -50,7 +53,7 @@ const SettingsScreen = () => {
         .then((res) => res.json())
         .then((user) => dispatch(setUser({ user, token })));
     },
-    [token, dispatch],
+    [token, dispatch, user.bannerURL],
   );
 
   const handleBannerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
