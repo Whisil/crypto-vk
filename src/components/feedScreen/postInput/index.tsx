@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import AccountImage from '@/components/unknown/accountImage';
 import AccentBtn from '@/components/unknown/accentBtn';
 import Link from 'next/link';
-import Triangle from 'public/images/icons/triangle.svg';
 import EmojiIcon from 'public/images/icons/emoji.svg';
 import ImageIcon from 'public/images/icons/image-media.svg';
 import CloseIcon from 'public/images/icons/close.svg';
@@ -28,7 +27,8 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
   const { token } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  const { mediaURL, handleFileChange, handleClose } = useMediaBlob();
+  const { mediaURLs, handleFileChange, handleClose } = useMediaBlob();
+  console.log(mediaURLs);
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
@@ -121,14 +121,14 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
   useEffect(() => {
     if (
       inputText.length > 500 ||
-      (inputText.length === 0 && mediaURL === ``) ||
+      (inputText.length === 0 && !mediaURLs) ||
       (inputText.length !== 0 && /^\s*$/.test(inputText))
     ) {
       setBtnDissable(true);
     } else {
       setBtnDissable(false);
     }
-  }, [inputText, mediaURL]);
+  }, [inputText, mediaURLs]);
 
   return (
     <div
@@ -159,12 +159,12 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
             onFocus={(e) => setEndOfInput(e.target)}
           />
         </div>
-        {mediaURL && (
+        {mediaURLs && (
           <div
             className={styles.mediaContainer}
             style={
-              mediaURL && mediaURL.length !== 0
-                ? { backgroundImage: `url(${mediaURL})` }
+              mediaURLs
+                ? { backgroundImage: `url(${mediaURLs.postInput})` }
                 : {}
             }
           >
@@ -174,7 +174,11 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
             >
               <CloseIcon />
             </div>
-            <img src={mediaURL} className={styles.mediaFile} alt="thumbnail" />
+            <img
+              src={mediaURLs.postInput}
+              className={styles.mediaFile}
+              alt="thumbnail"
+            />
           </div>
         )}
         <div className={styles.bottomRow}>
@@ -188,7 +192,7 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
               }
               className={classNames(
                 styles.iconWrapper,
-                mediaURL.length !== 0 && styles.inputDisabled,
+                mediaURLs && styles.inputDisabled,
               )}
             >
               <ImageIcon />
@@ -202,9 +206,9 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
                 name="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 className={styles.mediaInput}
-                onChange={handleFileChange}
+                onChange={(e) => handleFileChange(`postInput`, e)}
                 ref={fileInput}
-                disabled={mediaURL.length !== 0 ? true : false}
+                disabled={mediaURLs ? true : false}
               />
             </label>
           </div>
