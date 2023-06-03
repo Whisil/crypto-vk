@@ -155,63 +155,69 @@ const SettingsScreen = () => {
             })}
             error={errors.bio && `${errors.bio.message}`}
           />
-          <img
-            src={
-              mediaURLs && mediaURLs.avatar
-                ? mediaURLs.avatar
-                : user.avatarURL
-                ? user.avatarURL
-                : `/images/banner-placeholder.webp`
-            }
-            alt="profile avatar"
-            className={styles.banner}
-          />
-          <div className={styles.avatarInputContainer}>
-            <input
-              type="file"
-              accept=".png, .jpg, .jpeg, .gif, .webp"
-              className={styles.avatarInput}
-              {...register(`avatar`, {
-                onChange: (e) => {
-                  handleFileInputChange(`avatar`, e);
-                },
-              })}
-            />
-          </div>
-          {errors.avatar && (
-            <span className={styles.error}>
-              {errors.avatar.message as string}
-            </span>
-          )}
 
-          <img
-            src={
-              mediaURLs && mediaURLs.banner
-                ? mediaURLs.banner
-                : user.bannerURL
-                ? user.bannerURL
-                : `/images/banner-placeholder.webp`
-            }
-            alt="profile banner"
-            className={styles.banner}
-          />
-          <div className={styles.bannerInputContainer}>
-            <input
-              type="file"
-              accept=".png, .jpg, .jpeg, .gif, .webp"
-              className={styles.bannerInput}
-              {...register(`banner`, {
-                onChange: (e) => {
-                  handleFileInputChange(`banner`, e);
-                },
-              })}
+          <div className={styles.fileInputWrapper}>
+            <span>Avatar</span>
+            <img
+              src={
+                mediaURLs && mediaURLs.avatar
+                  ? mediaURLs.avatar
+                  : user.avatarURL
+                  ? user.avatarURL
+                  : `/images/banner-placeholder.webp`
+              }
+              alt="profile avatar"
+              className={styles.avatar}
             />
+            <div className={styles.inputContainer}>
+              <input
+                type="file"
+                accept=".png, .jpg, .jpeg, .gif, .webp"
+                className={styles.fileInput}
+                {...register(`avatar`, {
+                  onChange: (e) => {
+                    handleFileInputChange(`avatar`, e);
+                  },
+                })}
+              />
+            </div>
+            {errors.avatar && (
+              <span className={styles.error}>
+                {errors.avatar.message as string}
+              </span>
+            )}
           </div>
-          {errors.banner && (
-            <span className={styles.error}>
-              {errors.banner.message as string}
-            </span>
-          )}
+
+          <div className={styles.fileInputWrapper}>
+            <img
+              src={
+                mediaURLs && mediaURLs.banner
+                  ? mediaURLs.banner
+                  : user.bannerURL
+                  ? user.bannerURL
+                  : `/images/banner-placeholder.webp`
+              }
+              alt="profile banner"
+              className={styles.banner}
+            />
+            <div className={styles.inputContainer}>
+              <input
+                type="file"
+                accept=".png, .jpg, .jpeg, .gif, .webp"
+                className={styles.fileInput}
+                {...register(`banner`, {
+                  onChange: (e) => {
+                    handleFileInputChange(`banner`, e);
+                  },
+                })}
+              />
+            </div>
+            {errors.banner && (
+              <span className={styles.error}>
+                {errors.banner.message as string}
+              </span>
+            )}
+          </div>
           <AccentBtn
             text="Save"
             containerClassName={styles.settingsFormBtnContainer}

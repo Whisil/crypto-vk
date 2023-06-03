@@ -17,7 +17,7 @@ export const postsSlice = createSlice({
       state.posts = action.payload;
     },
     setNewPost: (state, action) => {
-      state.posts = [...state.posts, ...action.payload];
+      state.posts = [...action.payload, ...state.posts];
     },
     addCommentToPost: (state, action) => {
       const { commentId, postId } = action.payload;

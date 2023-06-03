@@ -25,7 +25,7 @@ const useMediaBlob = () => {
     }
   };
 
-  const handleClose = async (ref: React.RefObject<HTMLInputElement>) => {
+  const handleClose = (ref: React.RefObject<HTMLInputElement>) => {
     if (ref.current) {
       ref.current.value = ``;
     }

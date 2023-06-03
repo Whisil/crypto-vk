@@ -41,7 +41,14 @@ const ProfileHeader = ({
       <div className={styles.headerContent}>
         <div className={styles.upper}>
           <div className={styles.upperAvatarSide}>
-            <div className={styles.avatar} />
+            <div
+              className={styles.avatar}
+              style={{
+                backgroundImage: `url(${
+                  avatarURL ? avatarURL : `/images/clown.png`
+                })`,
+              }}
+            />
 
             <div>
               <h2 className={styles.name}>{displayName}</h2>

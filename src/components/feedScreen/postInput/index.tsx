@@ -28,7 +28,6 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
   const dispatch = useAppDispatch();
 
   const { mediaURLs, handleFileChange, handleClose } = useMediaBlob();
-  console.log(mediaURLs);
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);

@@ -4,9 +4,13 @@
     display: flex;
     gap: 40px;
     justify-content: space-between;
+    margin-bottom: 20px;
 
     .settingsMenu{
         width: 30%;
+        position: sticky;
+        top: 100px;
+        height: fit-content;
     }
 
     .settings{
@@ -29,6 +33,12 @@
                 padding: 8px 16px;
             }
 
+            .fileInputWrapper{
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
             .banner{
                 border-radius: 14px;
                 height: 240px;
@@ -36,11 +46,11 @@
                 object-position: top;
             }
 
-            .bannerInputContainer{
+            .inputContainer{
                 max-width: 40%;
             }
 
-            .bannerInput{
+            .fileInput{
                 cursor: pointer;
                 border-radius: 14px;
                 border: 2px solid rgba($primaryLightDark, 0.8);
@@ -58,6 +68,14 @@
                     margin-right: 10px;
                     color: $primaryLight;
                 }
+            }
+
+            .avatar{
+                border-radius: 14px;
+                height: 240px;
+                width: 240px;
+                object-fit: cover;
+                object-position: top;
             }
         }
     }
