@@ -26,22 +26,29 @@ const SettingsScreen = () => {
     reset,
   } = useForm();
 
-  const { mediaURL, handleFileChange } = useMediaBlob();
+  const { mediaURLs, handleFileChange } = useMediaBlob();
 
   const handleUpdateSettings = useCallback(
     async (data: FieldValues) => {
       const formData = new FormData();
+
       formData.append(`username`, data.username);
       formData.append(`displayName`, data.displayName);
       if (data.banner && data.banner[0]) {
-        formData.append(`file`, data.banner[0]);
+        const fileExtension = data.banner[0].name.split(`.`).pop();
+        formData.append(`files`, data.banner[0], `banner.${fileExtension}`);
       }
       if (user.bannerURL) {
         formData.append(`oldBanner`, user.bannerURL);
       }
-      formData.append(`avatarURL`, data.avatarURL);
+      if (data.avatar && data.avatar[0]) {
+        const fileExtension = data.avatar[0].name.split(`.`).pop();
+        formData.append(`files`, data.avatar[0], `avatar.${fileExtension}`);
+      }
+      if (user.avatarURL) {
+        formData.append(`oldAvatar`, user.avatarURL);
+      }
       formData.append(`bio`, data.bio);
-      formData.append(`websiteURL`, data.websiteURL);
 
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/settings`, {
         method: `POST`,
@@ -51,23 +58,29 @@ const SettingsScreen = () => {
         body: formData,
       })
         .then((res) => res.json())
-        .then((user) => dispatch(setUser({ user, token })));
+        .then((user) => {
+          dispatch(setUser({ user, token }));
+          reset();
+        });
     },
-    [token, dispatch, user.bannerURL],
+    [token, dispatch, user.bannerURL, user.avatarURL, reset],
   );
 
-  const handleBannerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = (
+    inputName: string,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = e.target.files;
 
     if (files && files[0]) {
       if (files[0].size > 1024 * 1024 * 5) {
         reset({ banner: `` });
-        setError(`banner`, {
+        setError(inputName, {
           type: `manual`,
           message: `File size should be less than 5MB`,
         });
       } else {
-        handleFileChange(e);
+        handleFileChange(inputName, e);
       }
     }
   };
@@ -144,8 +157,37 @@ const SettingsScreen = () => {
           />
           <img
             src={
-              mediaURL
-                ? mediaURL
+              mediaURLs && mediaURLs.avatar
+                ? mediaURLs.avatar
+                : user.avatarURL
+                ? user.avatarURL
+                : `/images/banner-placeholder.webp`
+            }
+            alt="profile avatar"
+            className={styles.banner}
+          />
+          <div className={styles.avatarInputContainer}>
+            <input
+              type="file"
+              accept=".png, .jpg, .jpeg, .gif, .webp"
+              className={styles.avatarInput}
+              {...register(`avatar`, {
+                onChange: (e) => {
+                  handleFileInputChange(`avatar`, e);
+                },
+              })}
+            />
+          </div>
+          {errors.avatar && (
+            <span className={styles.error}>
+              {errors.avatar.message as string}
+            </span>
+          )}
+
+          <img
+            src={
+              mediaURLs && mediaURLs.banner
+                ? mediaURLs.banner
                 : user.bannerURL
                 ? user.bannerURL
                 : `/images/banner-placeholder.webp`
@@ -160,14 +202,14 @@ const SettingsScreen = () => {
               className={styles.bannerInput}
               {...register(`banner`, {
                 onChange: (e) => {
-                  handleBannerInputChange(e);
+                  handleFileInputChange(`banner`, e);
                 },
               })}
             />
           </div>
-          {errors.bannerURL && (
+          {errors.banner && (
             <span className={styles.error}>
-              {errors.bannerURL.message as string}
+              {errors.banner.message as string}
             </span>
           )}
           <AccentBtn

@@ -1,32 +1,57 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+
+type MediaURLs = {
+  [inputName: string]: string;
+};
 
 const useMediaBlob = () => {
-  const [mediaURL, setMediaURL] = useState<string>(``);
+  const [mediaURLs, setMediaURLs] = useState<MediaURLs | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement;
-    if (target.files && target.files[0]) {
-      const reader = new FileReader();
+  // const handleFileChange = (
+  //   inputName: string,
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  // ) => {
+  //   const target = e.target as HTMLInputElement;
+  //   if (target.files && target.files[0]) {
+  //     const reader = new FileReader();
 
-      reader.onload = function (event) {
-        if (event.target && typeof event.target.result === `string`) {
-          setMediaURL(event.target.result);
-        }
-      };
+  //     reader.onload = function (event) {
+  //       if (event.target && typeof event.target.result === `string`) {
+  //         setMediaURL((prevMediaURLs) => ({
+  //           ...prevMediaURLs,
+  //           [inputName]: event.target.result,
+  //         }));
+  //       }
+  //     };
 
-      reader.readAsDataURL(target.files[0]);
+  //     reader.readAsDataURL(target.files[0]);
+  //   }
+  // };
+
+  const handleFileChange = (
+    inputName: string,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      const fileURL = URL.createObjectURL(file);
+      setMediaURLs((prevMediaURLs) => ({
+        ...prevMediaURLs,
+        [inputName]: fileURL,
+      }));
     }
   };
 
-  const handleClose = async (ref: React.RefObject<HTMLInputElement>) => {
-    URL.revokeObjectURL(mediaURL);
-    setMediaURL(``);
-    if (ref.current) {
-      ref.current.value = ``;
-    }
-  };
+  // const handleClose = async (ref: React.RefObject<HTMLInputElement>) => {
+  //   URL.revokeObjectURL(mediaURLs);
+  //   setMediaURLs(null);
+  //   if (ref.current) {
+  //     ref.current.value = ``;
+  //   }
+  // };
 
-  return { mediaURL, handleFileChange, handleClose };
+  return { mediaURLs, handleFileChange };
 };
 
 export default useMediaBlob;
