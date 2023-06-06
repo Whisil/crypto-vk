@@ -24,7 +24,7 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
 
-  const { token } = useAppSelector((state) => state.user);
+  const { token, user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   const { mediaURLs, handleFileChange, handleClose } = useMediaBlob();
@@ -139,7 +139,7 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
     >
       <Link href="/">
         <a className={styles.account}>
-          <AccountImage />
+          <AccountImage image={user.avatarURL} />
         </a>
       </Link>
       <div className={styles.wrapper}>

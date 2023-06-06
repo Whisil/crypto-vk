@@ -78,6 +78,7 @@ const Post = ({
           displayName={createdBy.displayName}
           href={`/${createdBy.ethAddress}`}
           className={styles.accountInfo}
+          image={createdBy.avatarURL}
         />
 
         <PostMenu id={_id} createdBy={createdBy} isComment={isComment} />

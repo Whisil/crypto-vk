@@ -2,4 +2,8 @@
     display: flex;
     justify-content: center;
     border-radius: 100px;
+    overflow: hidden;
+    img{
+        object-fit: cover;
+    }
 }

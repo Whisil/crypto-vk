@@ -23,7 +23,7 @@ const ProfileBlock = () => {
       <div className={styles.info}>
         <Link href="/">
           <a className={styles.infoAvatar}>
-            <AccountImage large />
+            <AccountImage large image={user.avatarURL} />
           </a>
         </Link>
 

@@ -12,4 +12,6 @@ export interface IUser {
   posts: string[];
   likes: string[];
   comments: string[];
+  followsCount: number;
+  followersCount: number;
 }

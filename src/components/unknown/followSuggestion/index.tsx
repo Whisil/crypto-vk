@@ -10,6 +10,7 @@ const FollowSuggestion = () => {
         <AccountInfo
           bio="That's my bio, it's not much but"
           className={styles.infoResponsive}
+          image={``}
         />
         <div
           onClick={(e) => {
