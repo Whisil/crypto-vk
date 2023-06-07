@@ -6,11 +6,11 @@ import ProfileCounter from '../profileCounter';
 import RippleBtn from '@/components/unknown/rippleBtn';
 import { walletCut } from '@/utils/walletCut';
 import Link from 'next/link';
-import { useAppSelector } from '@/app/hooks';
 import LinkIcon from '@/public/images/icons/link.svg';
 import { IUser } from '@/types/user';
 
 import styles from './styles.module.scss';
+import { useAppSelector } from '@/app/hooks';
 
 interface ProfileHeaderProps {
   isCurrentUser: boolean;
@@ -18,6 +18,20 @@ interface ProfileHeaderProps {
 }
 
 const ProfileHeader = ({ isCurrentUser, userInfo }: ProfileHeaderProps) => {
+  const { token } = useAppSelector((state) => state.user);
+
+  const handleFollow = async () => {
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/createFollow/${userInfo.ethAddress}`,
+      {
+        method: `POST`,
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    ).catch((err) => {
+      console.log(err);
+    });
+  };
+
   return (
     <div className={styles.header}>
       <div
@@ -71,7 +85,12 @@ const ProfileHeader = ({ isCurrentUser, userInfo }: ProfileHeaderProps) => {
               <div className={styles.dmBtn}>
                 <DmIcon />
               </div>
-              <AccentBtn text="Follow" className={styles.followBtn} />
+              <AccentBtn
+                text="Follow"
+                className={styles.followBtn}
+                containerClassName={styles.followeBtnContainer}
+                onClick={handleFollow}
+              />
             </div>
           )}
         </div>
