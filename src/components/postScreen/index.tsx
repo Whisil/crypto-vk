@@ -7,8 +7,6 @@ import Loader from '@/components/unknown/loader';
 import PostInput from '../feedScreen/postInput';
 import { setComments } from '@/features/commentsSlice';
 import NoContent from '../unknown/noContent';
-
-import styles from './styles.module.scss';
 import GoBackBtn from '../unknown/goBackBtn';
 
 const PostScreen = () => {

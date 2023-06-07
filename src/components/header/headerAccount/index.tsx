@@ -56,7 +56,7 @@ const HeaderAccount = () => {
         )}
         onClick={() => setShowMenu(!showMenu)}
       >
-        <AccountImage />
+        <AccountImage image={user.avatarURL} />
         <div className={styles.nameWrapper}>
           <span className={styles.name}>{user.displayName}</span>
         </div>

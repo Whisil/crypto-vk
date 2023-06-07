@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import LikeIcon from 'public/images/icons/like.svg';
 import CommentIcon from 'public/images/icons/comments.svg';
 import ShareIcon from 'public/images/icons/share.svg';
-import BuyIcon from 'public/images/icons/buy.svg';
 
 import styles from './styles.module.scss';
 import RippleBtn from '@/components/unknown/rippleBtn';
