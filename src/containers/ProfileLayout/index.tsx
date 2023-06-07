@@ -63,12 +63,7 @@ const ProfileLayout = ({
         {isLoading && !userInfo ? (
           <Loader />
         ) : userInfo && !noHeader ? (
-          <ProfileHeader
-            displayName={userInfo.displayName}
-            username={userInfo.username}
-            ethAddress={userInfo.ethAddress}
-            isCurrentUser={isCurrentUser}
-          />
+          <ProfileHeader isCurrentUser={isCurrentUser} userInfo={userInfo} />
         ) : null}
         {children}
       </div>

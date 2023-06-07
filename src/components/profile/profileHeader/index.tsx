@@ -8,33 +8,25 @@ import { walletCut } from '@/utils/walletCut';
 import Link from 'next/link';
 import { useAppSelector } from '@/app/hooks';
 import LinkIcon from '@/public/images/icons/link.svg';
+import { IUser } from '@/types/user';
 
 import styles from './styles.module.scss';
 
 interface ProfileHeaderProps {
-  displayName: string;
-  username: string;
-  ethAddress: string;
   isCurrentUser: boolean;
+  userInfo: IUser;
 }
 
-const ProfileHeader = ({
-  displayName,
-  username,
-  ethAddress,
-  isCurrentUser,
-}: ProfileHeaderProps) => {
-  const { bannerURL, avatarURL, bio, websiteURL } = useAppSelector(
-    (state) => state.user.user,
-  );
-
+const ProfileHeader = ({ isCurrentUser, userInfo }: ProfileHeaderProps) => {
   return (
     <div className={styles.header}>
       <div
         className={styles.banner}
         style={{
           backgroundImage: `url(${
-            bannerURL ? bannerURL : `/images/banner-placeholder.webp`
+            userInfo.bannerURL
+              ? userInfo.bannerURL
+              : `/images/banner-placeholder.webp`
           })`,
         }}
       />
@@ -45,20 +37,22 @@ const ProfileHeader = ({
               className={styles.avatar}
               style={{
                 backgroundImage: `url(${
-                  avatarURL ? avatarURL : `/images/clown.png`
+                  userInfo.avatarURL ? userInfo.avatarURL : `/images/clown.png`
                 })`,
               }}
             />
 
             <div>
-              <h2 className={styles.name}>{displayName}</h2>
+              <h2 className={styles.name}>{userInfo.displayName}</h2>
               <div className={styles.infoTags}>
-                <span className={styles.tag}>@{username}</span>
+                <span className={styles.tag}>@{userInfo.username}</span>
                 <span
-                  onClick={() => navigator.clipboard.writeText(ethAddress)}
+                  onClick={() =>
+                    navigator.clipboard.writeText(userInfo.ethAddress)
+                  }
                   className={classNames(styles.tag, styles.walletAdress)}
                 >
-                  {walletCut(ethAddress)}
+                  {walletCut(userInfo.ethAddress)}
                 </span>
               </div>
             </div>
@@ -83,18 +77,23 @@ const ProfileHeader = ({
         </div>
 
         <div className={styles.middle}>
-          {websiteURL && (
+          {userInfo.websiteURL && (
             <a
               className={styles.website}
-              href={websiteURL}
+              href={userInfo.websiteURL ? userInfo.websiteURL : ``}
               target="_blank"
               rel="noreferrer"
             >
-              <LinkIcon />
-              {websiteURL.split(`/`)[2]}
+              {userInfo.websiteURL ? (
+                <>
+                  <LinkIcon /> {userInfo.websiteURL.split(`/`)[2]}
+                </>
+              ) : null}
             </a>
           )}
-          {bio && <span className={styles.bio}>{bio}</span>}
+          {userInfo.bio ? (
+            <span className={styles.bio}>{userInfo.bio}</span>
+          ) : null}
         </div>
 
         <div className={styles.bottom}>
