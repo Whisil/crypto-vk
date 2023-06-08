@@ -11,25 +11,37 @@ import { IUser } from '@/types/user';
 
 import styles from './styles.module.scss';
 import { useAppSelector } from '@/app/hooks';
+import { useState } from 'react';
 
 interface ProfileHeaderProps {
   isCurrentUser: boolean;
   userInfo: IUser;
+  isFollowed: boolean;
 }
 
-const ProfileHeader = ({ isCurrentUser, userInfo }: ProfileHeaderProps) => {
+const ProfileHeader = ({
+  isCurrentUser,
+  userInfo,
+  isFollowed,
+}: ProfileHeaderProps) => {
+  const [isUserFollowed, setIsUserFollowed] = useState(isFollowed);
+
   const { token } = useAppSelector((state) => state.user);
 
-  const handleFollow = async () => {
+  const handleFollowLogic = async () => {
     await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/user/createFollow/${userInfo.ethAddress}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/user/${
+        !isUserFollowed ? `createFollow` : `removeFollow`
+      }/${userInfo.ethAddress}`,
       {
         method: `POST`,
         headers: { Authorization: `Bearer ${token}` },
       },
-    ).catch((err) => {
-      console.log(err);
-    });
+    )
+      .then(() => setIsUserFollowed((prevState) => !prevState))
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -86,10 +98,13 @@ const ProfileHeader = ({ isCurrentUser, userInfo }: ProfileHeaderProps) => {
                 <DmIcon />
               </div>
               <AccentBtn
-                text="Follow"
-                className={styles.followBtn}
+                text={isUserFollowed ? `Unfollow` : `Follow`}
+                className={classNames(
+                  styles.followBtn,
+                  isUserFollowed && styles.isFollowedBtn,
+                )}
                 containerClassName={styles.followeBtnContainer}
-                onClick={handleFollow}
+                onClick={handleFollowLogic}
               />
             </div>
           )}

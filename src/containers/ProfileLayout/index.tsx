@@ -17,6 +17,7 @@ const ProfileLayout = ({
   const [userInfo, setUserInfo] = useState<IUser>();
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFollowed, setIsFollowed] = useState(false);
 
   const { token, user } = useAppSelector((state) => state.user);
 
@@ -32,7 +33,8 @@ const ProfileLayout = ({
     )
       .then((res) => res.json())
       .then((resUser) => {
-        setUserInfo(resUser);
+        setUserInfo(resUser.user);
+        setIsFollowed(resUser.isFollowed);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -62,8 +64,12 @@ const ProfileLayout = ({
       <div>
         {isLoading && !userInfo ? (
           <Loader />
-        ) : userInfo && !noHeader ? (
-          <ProfileHeader isCurrentUser={isCurrentUser} userInfo={userInfo} />
+        ) : !isLoading && userInfo && !noHeader ? (
+          <ProfileHeader
+            isCurrentUser={isCurrentUser}
+            userInfo={userInfo}
+            isFollowed={isFollowed}
+          />
         ) : null}
         {children}
       </div>
