@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import classNames from 'classnames';
 import MenuBtn from '@/components/unknown/menuBtn';
 import DotsIcon from 'public/images/icons/dots.svg';
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { deletePost } from '@/features/postsSlice';
 import { deleteUserPost } from '@/features/userSlice';
 import { deleteComment } from '@/features/commentsSlice';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 interface Props {
   createdBy?: IUser;
@@ -57,21 +58,12 @@ const PostMenu = ({ createdBy, id, isComment }: Props) => {
     }
   };
 
-  useEffect(() => {
-    if (!showMenu) return;
-    function handleOutsideClick(e: Event) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Document)) {
-        setShowMenu(false);
-      }
-    }
-    window.addEventListener(`click`, handleOutsideClick);
-
-    return () => window.removeEventListener(`click`, handleOutsideClick);
-  }, [showMenu]);
+  useOutsideClick(menuRef, () => setShowMenu(false));
 
   return (
     <div
       className={classNames(styles.postMenu, isComment && styles.commentMenu)}
+      ref={menuRef}
     >
       <span
         className={classNames(styles.dots, showMenu && styles.activeDots)}
@@ -86,7 +78,6 @@ const PostMenu = ({ createdBy, id, isComment }: Props) => {
       {showMenu && (
         <div
           className={styles.menuList}
-          ref={menuRef}
           onAnimationEnd={() => {
             if (menuMounted) setShowMenu(false);
           }}

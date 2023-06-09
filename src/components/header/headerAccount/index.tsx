@@ -9,6 +9,7 @@ import { clearUser } from '@/features/userSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useDisconnect } from 'wagmi';
 import { useRouter } from 'next/router';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 import styles from './styles.module.scss';
 
@@ -23,6 +24,11 @@ const HeaderAccount = () => {
   const { disconnect } = useDisconnect();
 
   const router = useRouter();
+
+  const handleWalletDisconnect = () => {
+    disconnect();
+    dispatch(clearUser());
+  };
 
   useEffect(() => {
     if (!showMenu) return;
@@ -42,13 +48,10 @@ const HeaderAccount = () => {
     }
   }, [router.pathname]); //eslint-disable-line
 
-  const handleWalletDisconnect = () => {
-    disconnect();
-    dispatch(clearUser());
-  };
+  useOutsideClick(menuRef, () => setShowMenu(false));
 
   return (
-    <div className={styles.headerAccount}>
+    <div className={styles.headerAccount} ref={menuRef}>
       <div
         className={classNames(
           styles.headerAccountBtn,
@@ -64,7 +67,7 @@ const HeaderAccount = () => {
       </div>
 
       {showMenu && (
-        <div className={styles.headerAccountMenu} ref={menuRef}>
+        <div className={styles.headerAccountMenu}>
           <MenuBtn icon="avatar" text="Profile" link={`/${user.ethAddress}`} />
 
           <span className={styles.divider} />
