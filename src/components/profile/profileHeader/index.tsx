@@ -131,8 +131,11 @@ const ProfileHeader = ({
         </div>
 
         <div className={styles.bottom}>
-          <ProfileCounter number={533} title="Posts" />
-          <ProfileCounter number={533} title="Followers" />
+          <ProfileCounter number={userInfo.posts.length} title="Posts" />
+          <ProfileCounter
+            number={userInfo.followersCount}
+            title={userInfo.followersCount === 1 ? `Follower` : `Followers`}
+          />
           <ProfileCounter number={533} title="NFTs" />
         </div>
       </div>
