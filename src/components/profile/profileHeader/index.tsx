@@ -103,7 +103,7 @@ const ProfileHeader = ({
                   styles.followBtn,
                   isUserFollowed && styles.isFollowedBtn,
                 )}
-                containerClassName={styles.followeBtnContainer}
+                containerClassName={styles.followedBtnContainer}
                 onClick={handleFollowLogic}
               />
             </div>

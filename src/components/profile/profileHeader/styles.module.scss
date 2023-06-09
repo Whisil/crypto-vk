@@ -91,6 +91,8 @@
                 }
                 
                 .followBtn{
+                    width: 100px;
+                    height: 40px;
                     border-radius: 20px;
                     padding: 10px 15px;
                 }
@@ -100,8 +102,8 @@
                     border: 2px solid $primaryAccent;
                 }
 
-                .followeBtnContainer{
-                    border-radius: 20px;
+                .followedBtnContainer{
+                    border-radius: 20px; 
                 }
             }
 

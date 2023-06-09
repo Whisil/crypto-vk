@@ -35,7 +35,7 @@ const RippleBtn = ({ children, className, variant }: Props) => {
         btnRef?.current?.removeChild(bubble);
       }, 401);
     }
-  }, [clicked]);
+  }, [clicked]); //eslint-disable-line
 
   return (
     <div
