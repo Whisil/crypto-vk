@@ -22,7 +22,6 @@ const initialState: UserState = {
     likes: [],
     comments: [],
     followersCount: 0,
-    followsCount: 0,
   },
   token: ``,
 };
