@@ -1,59 +1,74 @@
 @import '@/styles/colors.scss';
 
-.container{
-    height: fit-content;
-    border-radius: 20px;
-    background: $primaryDark;
-    overflow: hidden;
-    position: sticky;
-    top: 100px;
+.container {
+  height: fit-content;
+  border-radius: 20px;
+  background: $primaryDark;
+  overflow: hidden;
+  position: sticky;
+  top: 100px;
 
-    .title{
-        font-size: 24px;
-        line-height: 1.15;
-        font-weight: bold;
-        color: $primaryLight;
-        padding: 20px 20px 10px 20px;
-    }
+  .title {
+    font-size: 24px;
+    line-height: 1.15;
+    font-weight: bold;
+    color: $primaryLight;
+    padding: 20px 20px 10px 20px;
+  }
+  
+  .loaderContainer{
+    margin-bottom: 30px;
+  }
 
-    .followList{
-        li:nth-child(n+5){
-            display: none;
-        }
-    }
-    .showAll{
-        li:nth-child(n+5){
-            display: block;
-        }
-    }
-    .showMoreRipple{
-        border-radius: 0;
-    }
-    .showMoreBtn{
-        display: block;
-        padding: 20px 40px;
-        width: 100%;
-        text-align: center;
-        color: $primaryAccent;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 1;
-        cursor: pointer;
-        transition: background-color .2s ease;
-        border-top: 1px solid rgba($primaryLightDark, 0.5);
-        position: relative;
-        z-index: 2;
+  .emptyText{
+    display: block;
+    margin: 0 auto 20px auto;
+    color: $primaryAccent;
+    font-size: 34px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1;
+  }
 
-        &:hover{
-            background-color: rgba($primaryLightDark, 0.25);
-        }
-    }
-
-    @media screen and (max-width: 1160px){
-        .title{
-            font-size: 20px;
-            padding: 15px 15px 5px 15px;
-        }
-    }
+  .followList {
+    padding-bottom: 10px;
     
+    li:nth-child(n + 5) {
+      display: none;
+    }
+  }
+  .showAll {
+    li:nth-child(n + 5) {
+      display: block;
+    }
+  }
+  .showMoreRipple {
+    border-radius: 0;
+  }
+  .showMoreBtn {
+    display: block;
+    padding: 20px 40px;
+    width: 100%;
+    text-align: center;
+    color: $primaryAccent;
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-top: 1px solid rgba($primaryLightDark, 0.5);
+    position: relative;
+    z-index: 2;
+
+    &:hover {
+      background-color: rgba($primaryLightDark, 0.25);
+    }
+  }
+
+  @media screen and (max-width: 1160px) {
+    .title {
+      font-size: 20px;
+      padding: 15px 15px 5px 15px;
+    }
+  }
 }

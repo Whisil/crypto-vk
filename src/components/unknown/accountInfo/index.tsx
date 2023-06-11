@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { formatTime } from '@/utils/formatTime';
 
 interface Props {
-  bio?: string;
+  username?: string;
   timestamp?: string;
   displayName?: string;
   href?: string;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 const AccountInfo = ({
-  bio,
+  username,
   timestamp,
   displayName,
   href = ``,
@@ -69,13 +69,7 @@ const AccountInfo = ({
           xs={xs}
         />
       )}
-      <div
-        className={classNames(
-          styles.info,
-          bio?.length != 0 && styles.textCut,
-          className,
-        )}
-      >
+      <div className={classNames(styles.info, className)}>
         {href.length !== 0 ? (
           <Link href={href}>
             <a>
@@ -86,8 +80,8 @@ const AccountInfo = ({
           <h4 className={styles.name}>{displayName}</h4>
         )}
         <span className={styles.infoSecondary}>
-          {bio?.length != 0 && bio}
           {timestamp?.length != 0 && time}
+          {username && `@` + username}
         </span>
       </div>
     </div>
