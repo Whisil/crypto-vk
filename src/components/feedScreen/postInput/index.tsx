@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import classNames from 'classnames';
 import AccountImage from '@/components/unknown/accountImage';
 import AccentBtn from '@/components/unknown/accentBtn';
@@ -13,16 +13,19 @@ import styles from './styles.module.scss';
 import { addUserPost } from '@/features/userSlice';
 import { setNewComment } from '@/features/commentsSlice';
 import useMediaBlob from '@/hooks/useMediaBlob';
+import Picker from '@emoji-mart/react';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 interface Props {
   commentInput?: boolean;
   commentOnPostId?: string;
-  isReply?: boolean;
 }
 
-const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
+const PostInput = ({ commentInput, commentOnPostId }: Props) => {
   const [inputText, setInputText] = useState(``);
   const [btnDissable, setBtnDissable] = useState(false);
+  const [emojiData, setEmojiData] = useState();
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const { token, user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
@@ -31,6 +34,9 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
 
   const fileInput = useRef<HTMLInputElement>(null);
   const textInput = useRef<HTMLInputElement>(null);
+  const emojiContainerRef = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(emojiContainerRef, () => setShowEmojiPicker(false));
 
   const handleFormData = () => {
     const formData = new FormData();
@@ -111,11 +117,31 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
     range.detach();
   };
 
+  //emojis
+
+  const handleFetchEmojiData = useCallback(async () => {
+    if (!emojiData) {
+      await fetch(`https://cdn.jsdelivr.net/npm/@emoji-mart/data`)
+        .then((res) => res.json())
+        .then((data) => setEmojiData(data))
+        .catch((err) => console.log(err.message));
+    }
+    setShowEmojiPicker((prevState) => !prevState);
+  }, []); //eslint-disable-line
+
   useEffect(() => {
     if (textInput && textInput.current) {
       textInput.current.focus();
     }
   }, [textInput]);
+
+  const handleEmojiSelect = (data: any) => {
+    if (textInput && textInput.current) {
+      textInput.current.innerText = textInput.current.innerText + data.native;
+    }
+    setInputText((prev) => prev + data.native);
+    setShowEmojiPicker(false);
+  };
 
   useEffect(() => {
     if (
@@ -182,13 +208,28 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
         )}
         <div className={styles.bottomRow}>
           <div className={styles.icons}>
-            <div className={styles.iconWrapper}>
-              <EmojiIcon />
+            <div className={styles.emojiContainer} ref={emojiContainerRef}>
+              <div
+                className={classNames(
+                  styles.iconWrapper,
+                  showEmojiPicker && styles.activeIconWrapper,
+                )}
+                onClick={handleFetchEmojiData}
+              >
+                <EmojiIcon />
+              </div>
+              {showEmojiPicker && emojiData && (
+                <div className={styles.emojiPicker}>
+                  <Picker
+                    data={emojiData}
+                    theme="dark"
+                    onEmojiSelect={handleEmojiSelect}
+                  />
+                </div>
+              )}
             </div>
             <label
-              htmlFor={
-                commentInput || isReply ? `commentMediaInput` : `postMediaInput`
-              }
+              htmlFor="mediaInput"
               className={classNames(
                 styles.iconWrapper,
                 mediaURLs && styles.inputDisabled,
@@ -196,11 +237,7 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
             >
               <ImageIcon />
               <input
-                id={
-                  commentInput || isReply
-                    ? `commentMediaInput`
-                    : `postMediaInput`
-                }
+                id="mediaInput"
                 type="file"
                 name="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
@@ -224,7 +261,7 @@ const PostInput = ({ commentInput, isReply, commentOnPostId }: Props) => {
             </span>
 
             <AccentBtn
-              text={commentInput ? `Comment` : isReply ? `Reply` : `Post it!`}
+              text={commentInput ? `Comment` : `Post it!`}
               className={btnDissable && styles.btnDissabled}
               onClick={commentInput ? handleComment : handlePost}
             />

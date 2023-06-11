@@ -94,6 +94,11 @@
         .icons{
             display: flex;
             margin-left: -10px;
+
+            .emojiContainer{
+                position: relative;
+            }
+
             .iconWrapper{
                 width: 40px;
                 position: relative;
@@ -114,6 +119,17 @@
                     height: 0.1px;
                     visibility: hidden;
                 }
+            }
+
+            .activeIconWrapper{
+                background-color: rgba($primaryAccent, 0.25);
+            }
+
+            .emojiPicker{
+                position: absolute;
+                z-index: 10;
+                top: 40px;
+                left: 0;
             }
 
             .inputDisabled{
