@@ -19,6 +19,7 @@ const initialState: UserState = {
     bio: null,
     websiteURL: null,
     posts: [],
+    savedPosts: [],
     likes: [],
     comments: [],
     followersCount: 0,
@@ -40,6 +41,14 @@ const userSlice = createSlice({
     addUserPost: (state, action) => {
       state.user.posts = [...state.user.posts, action.payload];
     },
+    addSavedPost: (state, action) => {
+      state.user.savedPosts = [...state.user.savedPosts, action.payload];
+    },
+    removeSavedPost: (state, action) => {
+      state.user.savedPosts = state.user.savedPosts.filter(
+        (postId) => postId !== action.payload,
+      );
+    },
     deleteUserPost: (state, action) => {
       state.user.posts = state.user.posts.filter(
         (postId) => postId !== action.payload,
@@ -54,6 +63,8 @@ export const {
   setUser,
   addUserPost,
   clearUser,
+  addSavedPost,
+  removeSavedPost,
   deleteUserPost,
 } = userSlice.actions;
 

@@ -10,6 +10,7 @@ export interface IUser {
   bio: string | null;
   websiteURL: string | null;
   posts: string[];
+  savedPosts: string[];
   likes: string[];
   comments: string[];
   followersCount: number;
