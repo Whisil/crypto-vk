@@ -43,14 +43,14 @@ const ProfileBlock = () => {
 
       <div className={styles.numbers}>
         <div className={styles.numbersItem}>
-          <h3>11</h3>
+          <h3>{user.posts.length}</h3>
           <span>Posts</span>
         </div>
 
         <span className={styles.divider} />
 
         <div className={styles.numbersItem}>
-          <h3>6,475</h3>
+          <h3>{user.followersCount}</h3>
           <span>Followers</span>
         </div>
       </div>
