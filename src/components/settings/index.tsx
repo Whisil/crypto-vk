@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import SettingsInput from '@/components/settings/settingsInput';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import AccentBtn from '@/components/unknown/accentBtn';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FieldValues } from 'react-hook-form/dist/types';
 import styles from './styles.module.scss';
@@ -13,6 +13,7 @@ import Toast from '../unknown/toast';
 
 const SettingsScreen = () => {
   const [showToast, setShowToast] = useState(false);
+  const [updateError, setUpdateError] = useState<string>(``);
 
   const { username, displayName, bio, websiteURL } = useAppSelector(
     (state) => state.user.user,
@@ -64,6 +65,11 @@ const SettingsScreen = () => {
         .then((user) => {
           dispatch(setUser({ user, token }));
           reset();
+          setShowToast(true);
+        })
+        .catch(() => {
+          setShowToast(true);
+          setUpdateError(`Sorry, something went wrong :(`);
         });
     },
     [token, dispatch, user.bannerURL, user.avatarURL, reset],
@@ -87,10 +93,6 @@ const SettingsScreen = () => {
       }
     }
   };
-
-  useEffect(() => {
-    setShowToast(true);
-  }, []);
 
   return (
     <div className={classNames(styles.settingsContainer, `container`)}>
@@ -234,9 +236,9 @@ const SettingsScreen = () => {
       </div>
       {showToast && (
         <Toast
-          type="OK"
+          type={updateError ? `Error` : `OK`}
           onClose={() => setShowToast(false)}
-          text="Updated successfully"
+          text={updateError ? updateError : `Updated successfully`}
         />
       )}
     </div>
