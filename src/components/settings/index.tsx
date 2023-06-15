@@ -3,14 +3,17 @@ import classNames from 'classnames';
 import SettingsInput from '@/components/settings/settingsInput';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import AccentBtn from '@/components/unknown/accentBtn';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FieldValues } from 'react-hook-form/dist/types';
 import styles from './styles.module.scss';
 import { setUser } from '@/features/userSlice';
 import useMediaBlob from '@/hooks/useMediaBlob';
+import Toast from '../unknown/toast';
 
 const SettingsScreen = () => {
+  const [showToast, setShowToast] = useState(false);
+
   const { username, displayName, bio, websiteURL } = useAppSelector(
     (state) => state.user.user,
   );
@@ -84,6 +87,10 @@ const SettingsScreen = () => {
       }
     }
   };
+
+  useEffect(() => {
+    setShowToast(true);
+  }, []);
 
   return (
     <div className={classNames(styles.settingsContainer, `container`)}>
@@ -225,6 +232,13 @@ const SettingsScreen = () => {
           />
         </form>
       </div>
+      {showToast && (
+        <Toast
+          type="OK"
+          onClose={() => setShowToast(false)}
+          text="Updated successfully"
+        />
+      )}
     </div>
   );
 };
